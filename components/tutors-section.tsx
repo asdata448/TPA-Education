@@ -15,7 +15,10 @@ import {
   Calculator,
   Atom,
   FlaskConical,
-  CheckCircle2,
+  Lightbulb,
+  Users,
+  Star,
+  Clock,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -34,13 +37,13 @@ export function TutorsSection() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <p className="text-[#D8B76A] font-semibold text-sm uppercase tracking-wider mb-3">
-            Đội ngũ
+            Đội ngũ gia sư
           </p>
           <h2 className="text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
-            Gặp gỡ đội ngũ gia sư TPA+
+            Những người sẽ đồng hành cùng con bạn
           </h2>
           <p className="text-[#6B7280] text-lg text-pretty">
-            Sinh viên xuất sắc từ Đại học Khoa học Tự nhiên ĐHQG-HCM — tận tâm, giàu thành tích, phương pháp hiện đại
+            Mỗi gia sư tại TPA+ là một sinh viên xuất sắc từ Đại học Khoa học Tự nhiên ĐHQG-HCM, mang theo câu chuyện riêng và phương pháp giảng dạy độc đáo.
           </p>
         </div>
 
@@ -70,12 +73,12 @@ export function TutorsSection() {
                   </div>
                 </div>
 
-                {/* Avatar — real photo, face-focused */}
+                {/* Avatar */}
                 <div className="flex justify-center -mt-14 relative z-10">
                   <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-[#D8B76A]">
                     <Image
                       src={tutor.avatar}
-                      alt={`Ảnh gia sư ${tutor.name}`}
+                      alt={`Gia sư ${tutor.name}`}
                       width={112}
                       height={112}
                       className={`w-full h-full object-cover ${tutor.avatarPosition}`}
@@ -84,28 +87,44 @@ export function TutorsSection() {
                 </div>
 
                 {/* Name & role */}
-                <div className="text-center px-6 mt-3 mb-4">
+                <div className="text-center px-6 mt-3 mb-2">
                   <h3 className="text-xl font-bold text-[#0F2A44]">{tutor.name}</h3>
                   <p className="text-[#D8B76A] font-semibold text-sm mt-0.5">{tutor.role}</p>
                   <p className="text-[#6B7280] text-xs mt-1 leading-relaxed">{tutor.education}</p>
                 </div>
 
+                {/* Stats row */}
+                <div className="flex justify-center gap-6 px-6 py-3 border-y border-[#F3F4F6] mx-6 mb-4">
+                  <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
+                    <Clock className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <span>{tutor.experience}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
+                    <Users className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <span>{tutor.students} học sinh</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
+                    <Star className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <span>{tutor.rating}</span>
+                  </div>
+                </div>
+
                 {/* Tabs */}
                 <div className="px-6 flex-1">
-                  <Tabs defaultValue="achievements" className="w-full">
+                  <Tabs defaultValue="story" className="w-full">
                     <TabsList className="w-full bg-[#F8F5EC] p-1 mb-4 rounded-lg">
                       <TabsTrigger
-                        value="achievements"
+                        value="story"
                         className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm"
                       >
                         <Award className="w-3 h-3 mr-1" />
-                        Thành tích
+                        Hành trình
                       </TabsTrigger>
                       <TabsTrigger
-                        value="method"
+                        value="approach"
                         className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm"
                       >
-                        <GraduationCap className="w-3 h-3 mr-1" />
+                        <Lightbulb className="w-3 h-3 mr-1" />
                         Phương pháp
                       </TabsTrigger>
                       <TabsTrigger
@@ -117,27 +136,32 @@ export function TutorsSection() {
                       </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="achievements" className="mt-0 min-h-[160px]">
-                      <ul className="space-y-2">
-                        {tutor.achievements.map((achievement, idx) => (
-                          <li
+                    <TabsContent value="story" className="mt-0 min-h-[180px]">
+                      <p className="text-sm text-[#374151] leading-relaxed mb-4">
+                        {tutor.narrative}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {tutor.keyHighlights.map((highlight, idx) => (
+                          <Badge
                             key={idx}
-                            className="flex items-start gap-2 text-sm text-[#374151]"
+                            variant="outline"
+                            className="text-[10px] border-[#E5E7EB] text-[#6B7280] font-normal"
                           >
-                            <CheckCircle2 className="w-4 h-4 text-[#D8B76A] mt-0.5 flex-shrink-0" />
-                            <span className="leading-relaxed">{achievement}</span>
-                          </li>
+                            {highlight}
+                          </Badge>
                         ))}
-                      </ul>
+                      </div>
                     </TabsContent>
 
-                    <TabsContent value="method" className="mt-0 min-h-[160px]">
+                    <TabsContent value="approach" className="mt-0 min-h-[180px]">
                       <p className="text-sm text-[#374151] leading-relaxed">
-                        {tutor.teachingMethod}
+                        {tutor.approach}
                       </p>
                       {"languages" in tutor && tutor.languages && (
                         <div className="mt-4">
-                          <p className="text-xs font-semibold text-[#0F2A44] mb-2 uppercase tracking-wide">Kỹ năng</p>
+                          <p className="text-xs font-semibold text-[#0F2A44] mb-2 uppercase tracking-wide">
+                            Ngôn ngữ & Công nghệ
+                          </p>
                           <div className="flex flex-wrap gap-1.5">
                             {tutor.languages.map((lang) => (
                               <Badge
@@ -153,7 +177,7 @@ export function TutorsSection() {
                       )}
                     </TabsContent>
 
-                    <TabsContent value="contact" className="mt-0 min-h-[160px]">
+                    <TabsContent value="contact" className="mt-0 min-h-[180px]">
                       <div className="space-y-3">
                         <a
                           href={`tel:${tutor.contact.phone.replace(/\s/g, "")}`}
@@ -192,7 +216,7 @@ export function TutorsSection() {
                   >
                     <Link href="#contact">
                       <MessageCircle className="w-4 h-4 mr-2" />
-                      Liên hệ gia sư
+                      Đặt lịch tư vấn
                     </Link>
                   </Button>
                 </div>
