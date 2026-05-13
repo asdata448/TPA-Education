@@ -7,7 +7,7 @@ export const tutors = [
     avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/NguyenAnh-XPZSf8rgFny6gCo35jsAH5NZhUfQN5.jpg",
     avatarPosition: "object-top",
     education: "ĐH Khoa học Tự nhiên, ĐHQG-HCM — Cử nhân Khoa học và CN Vật liệu (Bán dẫn) · GPA 8.0",
-    narrative: "Nguyên Anh bắt đầu hành trình với tin học từ lớp Chuyên Tin tại THPT Gia Định TP.HCM. Năm 2024, anh được chọn vào Vòng tuyển Đội tuyển Quốc gia môn Tin học. Không dừng lại ở lý thuyết, anh đã giành Giải Ba tại SEAL Hackathon Fall 2025 (bảng AI Innovation) và trở thành Quán quân Crane Battle Innovation với dự án CaFLOW. Hiện tại, anh đang là Mentor lập trình tại CyberSoft Academy, nơi anh thiết kế giáo trình thực chiến cho học viên từ 12 tuổi trở lên.",
+    narrative: "Em bắt đầu hành trình với tin học từ lớp Chuyên Tin tại THPT Gia Định TP.HCM. Năm 2024, em được chọn vào Vòng tuyển Đội tuyển Quốc gia môn Tin học. Không dừng lại ở lý thuyết, em đã giành Giải Ba tại SEAL Hackathon Fall 2025 (bảng AI Innovation) và trở thành Quán quân Crane Battle Innovation với dự án CaFLOW. Hiện tại, em đang là Mentor lập trình tại CyberSoft Academy, nơi em thiết kế giáo trình thực chiến cho học viên từ 12 tuổi trở lên.",
     keyHighlights: [
       "Vòng chọn Đội tuyển Quốc gia Tin học 2024",
       "Giải Ba SEAL Hackathon — AI Innovation",
@@ -17,7 +17,7 @@ export const tutors = [
     experience: "2+ năm",
     students: "30+",
     rating: "4.9/5",
-    approach: "Anh xem mỗi buổi học như một tấm canvas trắng. Thay vì giảng theo khuôn mẫu, anh lồng ghép các ví dụ từ Marvel hay Iron Man vào bài giảng, biến code thành câu chuyện. Học sinh không chỉ viết chương trình mà còn tự tay xây dựng sản phẩm: từ robot đơn giản đến video AI. Lộ trình được cá nhân hóa hoàn toàn, điển hình là giáo trình 3 tháng dành cho một học sinh 12 tuổi muốn làm quen với lập trình robot.",
+    approach: "Em xem mỗi buổi học như một tấm canvas trắng. Thay vì giảng theo khuôn mẫu, em lồng ghép các ví dụ từ Marvel hay Iron Man vào bài giảng, biến code thành câu chuyện. Học sinh không chỉ viết chương trình mà còn tự tay xây dựng sản phẩm: từ robot đơn giản đến video AI. Lộ trình được cá nhân hóa hoàn toàn, điển hình là giáo trình 3 tháng em thiết kế dành cho một học sinh 12 tuổi muốn làm quen với lập trình robot.",
     languages: ["Python", "C++", "Scratch", "HTML/CSS", "React"],
     contact: {
       phone: "0899 736 669",
@@ -32,7 +32,7 @@ export const tutors = [
     avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/thien-296Ar7kDTpat2qRpLAam23lbAfJsX9.jpg",
     avatarPosition: "object-top",
     education: "ĐH Khoa học Tự nhiên, ĐHQG-HCM — Cử nhân CN Vật liệu (Bán dẫn) · GPA 8.5/10",
-    narrative: "Lê Thiện giữ điểm trung bình 9.6+ suốt 4 năm THCS và 9.0+ trong 3 năm THPT tại Trường Chuyên Trần Hưng Đạo (Bình Thuận). Anh từng đạt giải HSG môn Lý cấp trường lẫn cấp huyện, đồng thời nhận Học bổng khuyến khích học tập môn Lý lớp 12. Tại đại học, các môn Vật lý Đại cương, Vật lý Hiện đại của anh đều đạt trên 9.5. Hiện tại, anh có kinh nghiệm dạy gia sư cho học sinh từ lớp 6 đến lớp 11.",
+    narrative: "Em giữ điểm trung bình 9.6+ suốt 4 năm THCS và 9.0+ trong 3 năm THPT tại Trường Chuyên Trần Hưng Đạo (Bình Thuận). Em từng đạt giải HSG môn Lý cấp trường lẫn cấp huyện, đồng thời nhận Học bổng khuyến khích học tập môn Lý lớp 12. Tại đại học, các môn Vật lý Đại cương, Vật lý Hiện đại của em đều đạt trên 9.5. Hiện tại, em có kinh nghiệm dạy gia sư cho học sinh từ lớp 6 đến lớp 11.",
     keyHighlights: [
       "ĐTB THCS 9.6+ | THPT 9.0+",
       "Học sinh chuyên Lý — THPT Chuyên Trần Hưng Đạo",
@@ -42,7 +42,7 @@ export const tutors = [
     experience: "2+ năm",
     students: "20+",
     rating: "4.9/5",
-    approach: "Thiện không chấp nhận việc học vẹt. Anh dành thời gian vẽ lại bức tranh vật lý trên một tấm canvas khái niệm: từ nguyên lý cơ bản đến hiện tượng thực tế, mỗi định luật được liên kết với ví dụ trực quan. Phương pháp này phù hợp cho cả học sinh mất gốc cần xây lại nền tảng lẫn học sinh khá giỏi muốn đào sâu hơn.",
+    approach: "Em không chấp nhận việc học vẹt. Em dành thời gian vẽ lại bức tranh vật lý trên một tấm canvas khái niệm: từ nguyên lý cơ bản đến hiện tượng thực tế, mỗi định luật được liên kết với ví dụ trực quan. Phương pháp này phù hợp cho cả học sinh mất gốc cần xây lại nền tảng lẫn học sinh khá giỏi muốn đào sâu hơn.",
     contact: {
       phone: "0945 245 977",
       email: "nglethien2006cv@gmail.com",
@@ -56,7 +56,7 @@ export const tutors = [
     avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/phuc-mEzRSPDYRQDlJbmroFFfVWBsYg3a8s.jpg",
     avatarPosition: "object-[50%_20%]",
     education: "ĐH Khoa học Tự nhiên, ĐHQG-HCM — CN Vật liệu Polymer Composite · Điểm đầu vào 25đ",
-    narrative: "Trọng Phúc tốt nghiệp THPT Thuận Hưng với loại Giỏi và điểm trung bình môn Hóa trên 9.0 từ lớp 8 đến lớp 12. Anh từng đạt Giải Ba HSG Hóa lý thuyết cấp Thành phố năm lớp 9, cùng các giải Khuyến khích ở cấp Quận và Thành phố cho cả phần lý thuyết lẫn thực hành. Ngoài Hóa học, anh còn tham gia HSG KHTN tiếng Anh và HSG Tiếng Anh cấp Thành phố. Hiện tại, anh đã giúp nhiều học sinh mất gốc thi đỗ vào các trường THPT.",
+    narrative: "Em tốt nghiệp THPT Thuận Hưng với loại Giỏi và điểm trung bình môn Hóa trên 9.0 từ lớp 8 đến lớp 12. Em từng đạt Giải Ba HSG Hóa lý thuyết cấp Thành phố năm lớp 9, cùng các giải Khuyến khích ở cấp Quận và Thành phố cho cả phần lý thuyết lẫn thực hành. Ngoài Hóa học, em còn tham gia HSG KHTN tiếng Anh và HSG Tiếng Anh cấp Thành phố. Hiện tại, em đã giúp nhiều học sinh mất gốc thi đỗ vào các trường THPT.",
     keyHighlights: [
       "Tốt nghiệp THPT loại Giỏi — ĐTB 9.0+",
       "Giải Ba HSG Hóa lý thuyết cấp Thành phố",
@@ -66,7 +66,7 @@ export const tutors = [
     experience: "2+ năm",
     students: "25+",
     rating: "4.9/5",
-    approach: "Phúc tin rằng hóa học không nên là môn học thuộc lòng. Anh kết hợp lý thuyết với hình ảnh thực tế, biến mỗi phản ứng thành một bức tranh sinh động trên canvas kiến thức. Với sự nhiệt tình và tình yêu dành cho trẻ, anh đặc biệt giỏi giúp những học sinh đang chật vật tìm lại nền tảng và sự tự tin.",
+    approach: "Em tin rằng hóa học không nên là môn học thuộc lòng. Em kết hợp lý thuyết với hình ảnh thực tế, biến mỗi phản ứng thành một bức tranh sinh động trên canvas kiến thức. Với sự nhiệt tình và tình yêu dành cho trẻ, em đặc biệt giỏi giúp những học sinh đang chật vật tìm lại nền tảng và sự tự tin.",
     contact: {
       phone: "0393 404 842",
       email: "trongphuc20075858@gmail.com",
