@@ -12,8 +12,6 @@ const navItems = [
   { label: "Giới thiệu", href: "#about" },
   { label: "Môn học", href: "#subjects" },
   { label: "Đội ngũ", href: "#tutors" },
-  { label: "Lộ trình", href: "#process" },
-  { label: "Gói học", href: "#packages" },
   { label: "Cam kết", href: "#commitments" },
 ]
 
