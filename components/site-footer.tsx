@@ -51,7 +51,7 @@ export function SiteFooter() {
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link
-                href="mailto:tpatutor@gmail.com"
+                href="mailto:tpagiasu.education@gmail.com"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#D8B76A] transition-colors"
               >
                 <Mail className="w-5 h-5" />
@@ -66,14 +66,14 @@ export function SiteFooter() {
               <div className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium">0898 232 279</p>
+                  <p className="font-medium">0899 736 669</p>
                   <p className="text-sm text-white/70">Hotline tư vấn</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium">tpatutor@gmail.com</p>
+                  <p className="font-medium">tpagiasu.education@gmail.com</p>
                   <p className="text-sm text-white/70">Email liên hệ</p>
                 </div>
               </div>

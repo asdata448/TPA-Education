@@ -297,7 +297,7 @@ export function ContactSection() {
 
                 <div className="space-y-4">
                   <Link
-                    href="tel:0898232279"
+                    href="tel:0899736669"
                     className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
                   >
                     <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
@@ -305,12 +305,12 @@ export function ContactSection() {
                     </div>
                     <div>
                       <p className="text-white/70 text-sm">Hotline</p>
-                      <p className="text-white font-bold">0898 232 279</p>
+                      <p className="text-white font-bold">0899 736 669</p>
                     </div>
                   </Link>
 
                   <Link
-                    href="mailto:tpatutor@gmail.com"
+                    href="mailto:tpagiasu.education@gmail.com"
                     className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
                   >
                     <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
@@ -318,7 +318,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <p className="text-white/70 text-sm">Email</p>
-                      <p className="text-white font-bold">tpatutor@gmail.com</p>
+                      <p className="text-white font-bold">tpagiasu.education@gmail.com</p>
                     </div>
                   </Link>
 
@@ -337,7 +337,7 @@ export function ContactSection() {
                   </Link>
 
                   <Link
-                    href="https://zalo.me/0898232279"
+                    href="https://zalo.me/0899736669"
                     target="_blank"
                     className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
                   >
@@ -346,7 +346,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <p className="text-white/70 text-sm">Zalo</p>
-                      <p className="text-white font-bold">0898 232 279</p>
+                      <p className="text-white font-bold">0899 736 669</p>
                     </div>
                   </Link>
                 </div>
