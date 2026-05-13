@@ -40,7 +40,7 @@ export function TutorsSection() {
             Đội ngũ gia sư
           </p>
           <h2 className="text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
-            Những người sẽ đồng hành cùng con bạn
+            Những người sẽ đồng hành cùng các em học sinh
           </h2>
           <p className="text-[#6B7280] text-lg text-pretty">
             Mỗi gia sư tại TPA+ là một sinh viên xuất sắc từ Đại học Khoa học Tự nhiên ĐHQG-HCM, mang theo câu chuyện riêng và phương pháp giảng dạy độc đáo.
