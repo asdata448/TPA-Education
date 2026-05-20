@@ -87,9 +87,9 @@ export function SiteHeader() {
               className="border-[#0F2A44] text-[#0F2A44] hover:bg-[#0F2A44] hover:text-white"
               asChild
             >
-              <Link href="tel:0898232279">
+              <Link href="tel:0899736669">
                 <Phone className="w-4 h-4 mr-2" />
-                0898 232 279
+                089 9736 669
               </Link>
             </Button>
             <Button
@@ -135,9 +135,9 @@ export function SiteHeader() {
                   className="w-full border-[#0F2A44] text-[#0F2A44]"
                   asChild
                 >
-                  <Link href="tel:0898232279">
+                  <Link href="tel:0899736669">
                     <Phone className="w-4 h-4 mr-2" />
-                    0898 232 279
+                    0899 736 669
                   </Link>
                 </Button>
                 <Button
