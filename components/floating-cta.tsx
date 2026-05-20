@@ -32,15 +32,15 @@ export function FloatingCta() {
         )}
       >
         <Link
-          href="tel:0898232279"
+          href="tel:0899736669"
           className="flex items-center gap-3 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-600 transition-colors"
         >
           <Phone className="w-5 h-5" />
-          <span className="font-medium hidden sm:block">0898 232 279</span>
+          <span className="font-medium hidden sm:block">0899736669</span>
         </Link>
 
         <Link
-          href="https://facebook.com/tpatutor"
+          href="https://www.facebook.com/profile.php?id=61568038735619"
           target="_blank"
           className="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
         >
@@ -49,7 +49,7 @@ export function FloatingCta() {
         </Link>
 
         <Link
-          href="https://zalo.me/0898232279"
+          href="https://zalo.me/0899736669"
           target="_blank"
           className="flex items-center gap-3 bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
         >
