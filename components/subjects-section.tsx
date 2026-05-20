@@ -55,7 +55,7 @@ export function SubjectsSection() {
             Các môn học tại TPA+
           </h2>
           <p className="text-[#6B7280] text-lg">
-            Chuyên sâu 4 môn học chính với đội ngũ gia sư giỏi chuyên môn
+            Chuyên sâu 6 môn học chính với đội ngũ gia sư giỏi chuyên môn
           </p>
         </div>
 

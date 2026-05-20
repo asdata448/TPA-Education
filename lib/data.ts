@@ -109,64 +109,7 @@ export const subjects = [
   },
 ]
 
-export const packages = [
-  {
-    id: 1,
-    name: "Gói Lấy Gốc",
-    duration: "4 tuần",
-    sessions: "8 buổi",
-    description: "Dành cho học sinh mất gốc, cần củng cố kiến thức nền tảng",
-    features: [
-      "Đánh giá trình độ ban đầu",
-      "Lộ trình cá nhân hóa",
-      "Bài tập về nhà hàng ngày",
-      "Báo cáo tiến độ hàng tuần",
-    ],
-    popular: false,
-  },
-  {
-    id: 2,
-    name: "Gói Tăng Điểm",
-    duration: "8 tuần",
-    sessions: "16 buổi",
-    description: "Nâng cao điểm số, cải thiện thứ hạng trong lớp",
-    features: [
-      "Tất cả quyền lợi Gói Lấy Gốc",
-      "Luyện đề kiểm tra thường xuyên",
-      "Hỗ trợ giải đáp 24/7",
-      "Tài liệu học tập độc quyền",
-    ],
-    popular: true,
-  },
-  {
-    id: 3,
-    name: "Gói Ôn Thi",
-    duration: "12 tuần",
-    sessions: "24 buổi",
-    description: "Chuẩn bị thi chuyển cấp, THPT Quốc gia",
-    features: [
-      "Tất cả quyền lợi Gói Tăng Điểm",
-      "Luyện đề thi thực tế",
-      "Phân tích điểm mạnh/yếu",
-      "Chiến lược làm bài thi",
-    ],
-    popular: false,
-  },
-  {
-    id: 4,
-    name: "TPA+ Coding Lab",
-    duration: "Linh hoạt",
-    sessions: "Theo nhu cầu",
-    description: "Học lập trình từ cơ bản đến nâng cao",
-    features: [
-      "Scratch cho người mới bắt đầu",
-      "Python & C++ nâng cao",
-      "Dự án thực tế",
-      "Chuẩn bị thi Tin học trẻ",
-    ],
-    popular: false,
-  },
-]
+
 
 export const faqs = [
   {
@@ -226,55 +169,17 @@ export const consultationProcess = [
     title: "Buổi học thử",
     description: "1 buổi học thử MIỄN PHÍ để trải nghiệm phương pháp giảng dạy",
     icon: "BookOpen",
-    duration: "60-90 phút",
+    duration: "30 - 60 phút",
   },
   {
     step: 5,
     title: "Xác nhận đăng ký",
-    description: "Chọn gói học, xác nhận lịch học và bắt đầu hành trình tiến bộ",
+    description: "Xác nhận lịch học và bắt đầu hành trình tiến bộ",
     icon: "CheckCircle2",
     duration: "Linh hoạt",
   },
 ]
 
-export const learningPaths = [
-  {
-    duration: "4 tuần",
-    name: "Gói Nền Tảng",
-    target: "Học sinh mất gốc",
-    milestones: [
-      { week: 1, content: "Đánh giá & xây dựng lộ trình" },
-      { week: 2, content: "Củng cố kiến thức cơ bản" },
-      { week: 3, content: "Luyện tập & áp dụng" },
-      { week: 4, content: "Kiểm tra & đánh giá tiến bộ" },
-    ],
-    outcome: "Nắm vững kiến thức nền tảng, sẵn sàng học nâng cao",
-  },
-  {
-    duration: "8 tuần",
-    name: "Gói Tăng Tốc",
-    target: "Muốn cải thiện điểm số",
-    milestones: [
-      { week: "1-2", content: "Hoàn thiện kiến thức cơ bản" },
-      { week: "3-4", content: "Nâng cao và mở rộng" },
-      { week: "5-6", content: "Luyện đề và kỹ năng làm bài" },
-      { week: "7-8", content: "Ôn tập tổng hợp & đánh giá" },
-    ],
-    outcome: "Tăng 1.5-2 điểm, tự tin trong các bài kiểm tra",
-  },
-  {
-    duration: "12 tuần",
-    name: "Gói Chinh Phục",
-    target: "Chuẩn bị thi quan trọng",
-    milestones: [
-      { week: "1-3", content: "Hệ thống hóa toàn bộ kiến thức" },
-      { week: "4-6", content: "Chuyên sâu các dạng bài khó" },
-      { week: "7-9", content: "Luyện đề thi thực tế" },
-      { week: "10-12", content: "Tổng ôn & chiến lược làm bài" },
-    ],
-    outcome: "Đạt mục tiêu điểm số, tự tin bước vào phòng thi",
-  },
-]
 
 export const commitments = [
   {
