@@ -42,8 +42,8 @@ export function MidCtaSection() {
               className="border-2 border-[#0F2A44] text-[#0F2A44] hover:bg-[#0F2A44] hover:text-white font-semibold text-base px-8 py-6"
               asChild
             >
-              <Link href="tel:0898232279">
-                Gọi ngay: 0898 232 279
+              <Link href="tel:0899736669">
+                Gọi ngay: 0899736669
               </Link>
             </Button>
           </div>
