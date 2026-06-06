@@ -31,9 +31,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="vi" className="bg-background">
+    <html lang="vi" className="bg-background" suppressHydrationWarning>
       <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
-        {children}
+        {/* Skip to content link for accessibility */}
+        <a href="#main-content" className="skip-to-content">
+          Bỏ qua đến nội dung chính
+        </a>
+        <div id="main-content" tabIndex={-1}>
+          {children}
+        </div>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

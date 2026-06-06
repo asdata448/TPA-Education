@@ -25,7 +25,11 @@ export function SiteFooter() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
           <div className="space-y-6">
-            <Link href="#home" className="flex items-center gap-3">
+            <Link
+              href="#home"
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity rounded-lg focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
+              aria-label="TPA+ Trang chủ"
+            >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-NLxJNyWoYzdwoFfmXDqnXTfschlJc2.png"
                 alt="TPA+ Logo"
@@ -39,20 +43,23 @@ export function SiteFooter() {
               </div>
             </Link>
             <p className="text-white/70 text-sm leading-relaxed">
-              Trung tâm gia sư chất lượng cao chuyên Toán, Tin học lập trình, Vật lý, Hóa học 
+              Trung tâm gia sư chất lượng cao chuyên Toán, Tin học lập trình, Vật lý, Hóa học
               cho học sinh THCS và THPT tại Dĩ An, Thủ Đức và các khu vực lân cận.
             </p>
             <div className="flex items-center gap-3">
               <Link
                 href="https://facebook.com/tpatutor"
                 target="_blank"
-                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#D8B76A] transition-colors"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#D8B76A] hover:scale-110 transition-all duration-200 focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
+                aria-label="Theo dõi Facebook TPA+"
               >
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link
                 href="mailto:tpagiasu.education@gmail.com"
-                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#D8B76A] transition-colors"
+                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-[#D8B76A] hover:scale-110 transition-all duration-200 focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
+                aria-label="Gửi email đến tpagiasu.education@gmail.com"
               >
                 <Mail className="w-5 h-5" />
               </Link>
@@ -64,21 +71,21 @@ export function SiteFooter() {
             <h4 className="font-bold text-lg">Liên hệ</h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" />
+                <Phone className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
                   <p className="font-medium">0899 736 669</p>
                   <p className="text-sm text-white/70">Hotline tư vấn</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" />
+                <Mail className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
-                  <p className="font-medium">tpagiasu.education@gmail.com</p>
+                  <p className="font-medium break-all">tpagiasu.education@gmail.com</p>
                   <p className="text-sm text-white/70">Email liên hệ</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-[#D8B76A] flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
                   <p className="font-medium">Dĩ An, Thủ Đức</p>
                   <p className="text-sm text-white/70">Khu vực hoạt động</p>
@@ -95,7 +102,7 @@ export function SiteFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-white/70 hover:text-[#D8B76A] transition-colors"
+                    className="text-white/70 hover:text-[#D8B76A] transition-colors duration-200 cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-inset rounded"
                   >
                     {link.label}
                   </Link>
@@ -112,7 +119,7 @@ export function SiteFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-white/70 hover:text-[#D8B76A] transition-colors"
+                    className="text-white/70 hover:text-[#D8B76A] transition-colors duration-200 cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-inset rounded"
                   >
                     {link.label}
                   </Link>

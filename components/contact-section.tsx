@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,8 +23,10 @@ import {
   MapPin,
   Clock,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 const subjects = [
   { id: "toan", label: "Toán học" },
@@ -40,32 +42,66 @@ const goals = [
   { id: "laptrinh", label: "Học lập trình" },
 ]
 
+// Vietnamese phone regex
+const VN_PHONE_REGEX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/
+
 export function ContactSection() {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([])
   const [selectedGoals, setSelectedGoals] = useState<string[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formError, setFormError] = useState("")
+  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handleSubjectChange = (subjectId: string, checked: boolean) => {
-    if (checked) {
-      setSelectedSubjects([...selectedSubjects, subjectId])
-    } else {
-      setSelectedSubjects(selectedSubjects.filter((id) => id !== subjectId))
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current)
+      }
     }
-  }
+  }, [])
 
-  const handleGoalChange = (goalId: string, checked: boolean) => {
+  const handleSubjectChange = useCallback((subjectId: string, checked: boolean) => {
     if (checked) {
-      setSelectedGoals([...selectedGoals, goalId])
+      setSelectedSubjects(prev => [...prev, subjectId])
     } else {
-      setSelectedGoals(selectedGoals.filter((id) => id !== goalId))
+      setSelectedSubjects(prev => prev.filter((id) => id !== subjectId))
     }
-  }
+    // Clear error when user makes selection
+    if (formError) setFormError("")
+  }, [formError])
+
+  const handleGoalChange = useCallback((goalId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedGoals(prev => [...prev, goalId])
+    } else {
+      setSelectedGoals(prev => prev.filter((id) => id !== goalId))
+    }
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitted(true)
-    // Reset after 3 seconds
-    setTimeout(() => setIsSubmitted(false), 3000)
+
+    // Validate: At least one subject must be selected
+    if (selectedSubjects.length === 0) {
+      setFormError("Vui lòng chọn ít nhất một môn học")
+      return
+    }
+
+    setIsSubmitting(true)
+    setFormError("")
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+
+      // Reset after 3 seconds with cleanup
+      submitTimeoutRef.current = setTimeout(() => {
+        setIsSubmitted(false)
+      }, 3000)
+    }, 1000)
   }
 
   return (
@@ -87,10 +123,10 @@ export function ContactSection() {
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Contact Form */}
           <div className="lg:col-span-3">
-            <Card className="border-2 border-[#E5E7EB] shadow-lg">
+            <Card className="border-2 border-[#E5E7EB] shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardContent className="p-6 lg:p-8">
                 {isSubmitted ? (
-                  <div className="text-center py-12">
+                  <div className="text-center py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="w-10 h-10 text-green-600" />
                     </div>
@@ -102,30 +138,45 @@ export function ContactSection() {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                    {/* Form Error */}
+                    {formError && (
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm text-red-800" role="alert">{formError}</p>
+                      </div>
+                    )}
+
                     {/* Personal Info */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name" className="text-[#0F2A44] font-medium">
-                          Họ và tên <span className="text-red-500">*</span>
+                          Họ và tên <span className="text-red-500" aria-label="Bắt buộc">*</span>
                         </Label>
                         <Input
                           id="name"
+                          name="name"
                           placeholder="Nguyễn Văn A"
                           required
-                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A]"
+                          autoComplete="name"
+                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] transition-all duration-200"
+                          aria-describedby="name-error"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="phone" className="text-[#0F2A44] font-medium">
-                          Số điện thoại <span className="text-red-500">*</span>
+                          Số điện thoại <span className="text-red-500" aria-label="Bắt buộc">*</span>
                         </Label>
                         <Input
                           id="phone"
+                          name="phone"
                           type="tel"
                           placeholder="0901 234 567"
                           required
-                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A]"
+                          pattern={VN_PHONE_REGEX.source}
+                          autoComplete="tel"
+                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] transition-all duration-200"
+                          aria-describedby="phone-error"
                         />
                       </div>
                     </div>
@@ -137,17 +188,19 @@ export function ContactSection() {
                         </Label>
                         <Input
                           id="email"
+                          name="email"
                           type="email"
                           placeholder="email@example.com"
-                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A]"
+                          autoComplete="email"
+                          className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] transition-all duration-200"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="grade" className="text-[#0F2A44] font-medium">
-                          Lớp hiện tại <span className="text-red-500">*</span>
+                          Lớp hiện tại <span className="text-red-500" aria-label="Bắt buộc">*</span>
                         </Label>
-                        <Select required>
-                          <SelectTrigger className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A]">
+                        <Select name="grade" required>
+                          <SelectTrigger className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] transition-all duration-200">
                             <SelectValue placeholder="Chọn lớp" />
                           </SelectTrigger>
                           <SelectContent>
@@ -164,92 +217,99 @@ export function ContactSection() {
                     </div>
 
                     {/* Subject Selection */}
-                    <div className="space-y-3">
-                      <Label className="text-[#0F2A44] font-medium">
-                        Môn học quan tâm <span className="text-red-500">*</span>
-                      </Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {subjects.map((subject) => (
-                          <div
-                            key={subject.id}
-                            className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                              selectedSubjects.includes(subject.id)
-                                ? "border-[#D8B76A] bg-[#F8F5EC]"
-                                : "border-[#E5E7EB] hover:border-[#D8B76A]/50"
-                            }`}
-                            onClick={() =>
-                              handleSubjectChange(
-                                subject.id,
-                                !selectedSubjects.includes(subject.id)
-                              )
-                            }
-                          >
-                            <Checkbox
-                              id={subject.id}
-                              checked={selectedSubjects.includes(subject.id)}
-                              onCheckedChange={(checked) =>
-                                handleSubjectChange(subject.id, checked as boolean)
-                              }
-                              className="data-[state=checked]:bg-[#D8B76A] data-[state=checked]:border-[#D8B76A]"
-                            />
-                            <label
-                              htmlFor={subject.id}
-                              className="text-sm font-medium cursor-pointer"
+                    <fieldset className="space-y-3">
+                      <Legend className="text-[#0F2A44] font-medium">
+                        Môn học quan tâm <span className="text-red-500" aria-label="Bắt buộc">*</span>
+                      </Legend>
+                      {formError && selectedSubjects.length === 0 && (
+                        <p id="subjects-error" className="text-sm text-red-600" role="alert">
+                          {formError}
+                        </p>
+                      )}
+                      <div
+                        className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+                        role="group"
+                        aria-label="Chọn môn học"
+                        aria-describedby={formError && selectedSubjects.length === 0 ? "subjects-error" : undefined}
+                      >
+                        {subjects.map((subject) => {
+                          const isSelected = selectedSubjects.includes(subject.id)
+                          return (
+                            <div
+                              key={subject.id}
+                              className={cn(
+                                "flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all duration-200",
+                                isSelected
+                                  ? "border-[#D8B76A] bg-[#F8F5EC] shadow-sm"
+                                  : "border-[#E5E7EB] hover:border-[#D8B76A]/50 hover:shadow-sm",
+                                formError && selectedSubjects.length === 0 && "border-red-300"
+                              )}
                             >
-                              {subject.label}
-                            </label>
-                          </div>
-                        ))}
+                              <Checkbox
+                                id={subject.id}
+                                checked={isSelected}
+                                onCheckedChange={(checked) =>
+                                  handleSubjectChange(subject.id, checked as boolean)
+                                }
+                                className="data-[state=checked]:bg-[#D8B76A] data-[state=checked]:border-[#D8B76A]"
+                              />
+                              <label
+                                htmlFor={subject.id}
+                                className="text-sm font-medium cursor-pointer select-none"
+                              >
+                                {subject.label}
+                              </label>
+                            </div>
+                          )
+                        })}
                       </div>
-                    </div>
+                    </fieldset>
 
                     {/* Goal Selection */}
-                    <div className="space-y-3">
-                      <Label className="text-[#0F2A44] font-medium">
+                    <fieldset className="space-y-3">
+                      <Legend className="text-[#0F2A44] font-medium">
                         Mục tiêu học tập
-                      </Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {goals.map((goal) => (
-                          <div
-                            key={goal.id}
-                            className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                              selectedGoals.includes(goal.id)
-                                ? "border-[#D8B76A] bg-[#F8F5EC]"
-                                : "border-[#E5E7EB] hover:border-[#D8B76A]/50"
-                            }`}
-                            onClick={() =>
-                              handleGoalChange(
-                                goal.id,
-                                !selectedGoals.includes(goal.id)
-                              )
-                            }
-                          >
-                            <Checkbox
-                              id={goal.id}
-                              checked={selectedGoals.includes(goal.id)}
-                              onCheckedChange={(checked) =>
-                                handleGoalChange(goal.id, checked as boolean)
-                              }
-                              className="data-[state=checked]:bg-[#D8B76A] data-[state=checked]:border-[#D8B76A]"
-                            />
-                            <label
-                              htmlFor={goal.id}
-                              className="text-sm font-medium cursor-pointer"
+                      </Legend>
+                      <div className="grid grid-cols-2 gap-3" role="group" aria-label="Chọn mục tiêu">
+                        {goals.map((goal) => {
+                          const isSelected = selectedGoals.includes(goal.id)
+                          return (
+                            <div
+                              key={goal.id}
+                              className={cn(
+                                "flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all duration-200",
+                                isSelected
+                                  ? "border-[#D8B76A] bg-[#F8F5EC] shadow-sm"
+                                  : "border-[#E5E7EB] hover:border-[#D8B76A]/50 hover:shadow-sm"
+                              )}
                             >
-                              {goal.label}
-                            </label>
-                          </div>
-                        ))}
+                              <Checkbox
+                                id={goal.id}
+                                checked={isSelected}
+                                onCheckedChange={(checked) =>
+                                  handleGoalChange(goal.id, checked as boolean)
+                                }
+                                className="data-[state=checked]:bg-[#D8B76A] data-[state=checked]:border-[#D8B76A]"
+                              />
+                              <label
+                                htmlFor={goal.id}
+                                className="text-sm font-medium cursor-pointer select-none"
+                              >
+                                {goal.label}
+                              </label>
+                            </div>
+                          )
+                        })}
                       </div>
-                    </div>
+                    </fieldset>
 
                     {/* Learning Format */}
                     <div className="space-y-2">
                       <Label htmlFor="format" className="text-[#0F2A44] font-medium">
                         Hình thức học
                       </Label>
-                      <Select>
-                        <SelectTrigger className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A]">
+                      <Select name="format">
+                        <SelectTrigger className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] transition-all duration-200">
                           <SelectValue placeholder="Chọn hình thức" />
                         </SelectTrigger>
                         <SelectContent>
@@ -267,9 +327,11 @@ export function ContactSection() {
                       </Label>
                       <Textarea
                         id="message"
+                        name="message"
                         placeholder="Ví dụ: Em muốn học thứ 3, 5, 7 lúc 19h..."
                         rows={4}
-                        className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] resize-none"
+                        maxLength={500}
+                        className="border-[#E5E7EB] focus:border-[#D8B76A] focus:ring-[#D8B76A] resize-none transition-all duration-200"
                       />
                     </div>
 
@@ -277,10 +339,20 @@ export function ContactSection() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full bg-[#D8B76A] text-[#0F2A44] hover:bg-[#c9a555] font-semibold text-base py-6"
+                      disabled={isSubmitting}
+                      className="w-full bg-[#D8B76A] text-[#0F2A44] hover:bg-[#c9a555] font-semibold text-base py-6 transition-all duration-200 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <Send className="w-5 h-5 mr-2" />
-                      Gửi yêu cầu tư vấn
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-5 h-5 mr-2 border-2 border-[#0F2A44] border-t-transparent rounded-full animate-spin" />
+                          Đang gửi...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5 mr-2" />
+                          Gửi yêu cầu tư vấn
+                        </>
+                      )}
                     </Button>
                   </form>
                 )}
@@ -291,16 +363,16 @@ export function ContactSection() {
           {/* Contact Info Sidebar */}
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Contact Card */}
-            <Card className="bg-[#0F2A44] border-0">
+            <Card className="bg-[#0F2A44] border-0 shadow-lg">
               <CardContent className="p-6 space-y-6">
                 <h3 className="text-xl font-bold text-white">Liên hệ nhanh</h3>
 
                 <div className="space-y-4">
                   <Link
                     href="tel:0899736669"
-                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
+                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 group cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
                   >
-                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                       <Phone className="w-6 h-6 text-[#0F2A44]" />
                     </div>
                     <div>
@@ -311,23 +383,24 @@ export function ContactSection() {
 
                   <Link
                     href="mailto:tpagiasu.education@gmail.com"
-                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
+                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 group cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
                   >
-                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                       <Mail className="w-6 h-6 text-[#0F2A44]" />
                     </div>
                     <div>
                       <p className="text-white/70 text-sm">Email</p>
-                      <p className="text-white font-bold">tpagiasu.education@gmail.com</p>
+                      <p className="text-white font-bold break-all">tpagiasu.education@gmail.com</p>
                     </div>
                   </Link>
 
                   <Link
                     href="https://facebook.com/tpatutor"
                     target="_blank"
-                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 group cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
                   >
-                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                       <Facebook className="w-6 h-6 text-[#0F2A44]" />
                     </div>
                     <div>
@@ -339,9 +412,10 @@ export function ContactSection() {
                   <Link
                     href="https://zalo.me/0899736669"
                     target="_blank"
-                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-colors group"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 group cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2 focus:ring-offset-[#0F2A44]"
                   >
-                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#D8B76A] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                       <MessageCircle className="w-6 h-6 text-[#0F2A44]" />
                     </div>
                     <div>
@@ -354,7 +428,7 @@ export function ContactSection() {
             </Card>
 
             {/* Location Card */}
-            <Card className="border border-[#E5E7EB]">
+            <Card className="border border-[#E5E7EB] hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-[#F8F5EC] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -386,4 +460,9 @@ export function ContactSection() {
       </div>
     </section>
   )
+}
+
+// Helper component for fieldset legend
+function Legend({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <legend className={className}>{children}</legend>
 }

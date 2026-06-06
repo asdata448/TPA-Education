@@ -48,16 +48,16 @@ export function TutorsSection() {
         </div>
 
         {/* Tutor Cards */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 stagger-children">
           {tutors.map((tutor) => (
             <Card
               key={tutor.id}
-              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
+              className="bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group flex flex-col hover:-translate-y-2"
             >
               <CardContent className="p-0 flex flex-col flex-1">
                 {/* Header navy band */}
                 <div className="bg-[#0F2A44] px-6 pt-6 pb-20 relative">
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5" role="list" aria-label="Các môn dạy">
                     {tutor.subjects.map((subject) => {
                       const Icon = subjectIcons[subject] || Calculator
                       return (
@@ -65,7 +65,7 @@ export function TutorsSection() {
                           key={subject}
                           className="bg-[#D8B76A] text-[#0F2A44] border-0 font-semibold"
                         >
-                          <Icon className="w-3 h-3 mr-1" />
+                          <Icon className="w-3 h-3 mr-1" aria-hidden="true" />
                           {subject}
                         </Badge>
                       )
@@ -75,7 +75,7 @@ export function TutorsSection() {
 
                 {/* Avatar */}
                 <div className="flex justify-center -mt-14 relative z-10">
-                  <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-[#D8B76A]">
+                  <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-[#D8B76A] group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={tutor.avatar}
                       alt={`Gia sư ${tutor.name}`}
@@ -96,15 +96,15 @@ export function TutorsSection() {
                 {/* Stats row */}
                 <div className="flex justify-center gap-6 px-6 py-3 border-y border-[#F3F4F6] mx-6 mb-4">
                   <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
-                    <Clock className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <Clock className="w-3.5 h-3.5 text-[#D8B76A]" aria-hidden="true" />
                     <span>{tutor.experience}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
-                    <Users className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <Users className="w-3.5 h-3.5 text-[#D8B76A]" aria-hidden="true" />
                     <span>{tutor.students} học sinh</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-[#6B7280]">
-                    <Star className="w-3.5 h-3.5 text-[#D8B76A]" />
+                    <Star className="w-3.5 h-3.5 text-[#D8B76A]" aria-hidden="true" />
                     <span>{tutor.rating}</span>
                   </div>
                 </div>
@@ -115,23 +115,23 @@ export function TutorsSection() {
                     <TabsList className="w-full bg-[#F8F5EC] p-1 mb-4 rounded-lg">
                       <TabsTrigger
                         value="story"
-                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm"
+                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm transition-all duration-200"
                       >
-                        <Award className="w-3 h-3 mr-1" />
+                        <Award className="w-3 h-3 mr-1" aria-hidden="true" />
                         Hành trình
                       </TabsTrigger>
                       <TabsTrigger
                         value="approach"
-                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm"
+                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm transition-all duration-200"
                       >
-                        <Lightbulb className="w-3 h-3 mr-1" />
+                        <Lightbulb className="w-3 h-3 mr-1" aria-hidden="true" />
                         Phương pháp
                       </TabsTrigger>
                       <TabsTrigger
                         value="contact"
-                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm"
+                        className="flex-1 text-xs data-[state=active]:bg-white data-[state=active]:text-[#0F2A44] data-[state=active]:shadow-sm transition-all duration-200"
                       >
-                        <Phone className="w-3 h-3 mr-1" />
+                        <Phone className="w-3 h-3 mr-1" aria-hidden="true" />
                         Liên hệ
                       </TabsTrigger>
                     </TabsList>
@@ -181,7 +181,7 @@ export function TutorsSection() {
                       <div className="space-y-3">
                         <a
                           href={`tel:${tutor.contact.phone.replace(/\s/g, "")}`}
-                          className="flex items-center gap-3 p-3 rounded-lg bg-[#F8F5EC] hover:bg-[#f0ebe0] transition-colors"
+                          className="flex items-center gap-3 p-3 rounded-lg bg-[#F8F5EC] hover:bg-[#f0ebe0] hover:shadow-sm transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2"
                         >
                           <div className="w-8 h-8 bg-[#0F2A44] rounded-full flex items-center justify-center flex-shrink-0">
                             <Phone className="w-4 h-4 text-[#D8B76A]" />
@@ -193,7 +193,7 @@ export function TutorsSection() {
                         </a>
                         <a
                           href={`mailto:${tutor.contact.email}`}
-                          className="flex items-center gap-3 p-3 rounded-lg bg-[#F8F5EC] hover:bg-[#f0ebe0] transition-colors"
+                          className="flex items-center gap-3 p-3 rounded-lg bg-[#F8F5EC] hover:bg-[#f0ebe0] hover:shadow-sm transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2"
                         >
                           <div className="w-8 h-8 bg-[#0F2A44] rounded-full flex items-center justify-center flex-shrink-0">
                             <Mail className="w-4 h-4 text-[#D8B76A]" />
@@ -211,7 +211,7 @@ export function TutorsSection() {
                 {/* CTA */}
                 <div className="px-6 pb-6 mt-6">
                   <Button
-                    className="w-full bg-[#0F2A44] hover:bg-[#1a3a5c] text-white font-semibold"
+                    className="w-full bg-[#0F2A44] hover:bg-[#1a3a5c] text-white font-semibold transition-all duration-200 hover:scale-[1.02]"
                     asChild
                   >
                     <Link href="#contact">

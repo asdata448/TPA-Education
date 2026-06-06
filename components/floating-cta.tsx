@@ -21,7 +21,7 @@ export function FloatingCta() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3" role="complementary" aria-label="Liên hệ nhanh">
       {/* Expanded Contact Options */}
       <div
         className={cn(
@@ -30,30 +30,36 @@ export function FloatingCta() {
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-4 pointer-events-none"
         )}
+        aria-hidden={!isExpanded}
       >
         <Link
           href="tel:0899736669"
-          className="flex items-center gap-3 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-600 transition-colors"
+          className="flex items-center gap-3 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-600 hover:scale-105 transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+          aria-label="Gọi điện thoại: 0899736669"
         >
-          <Phone className="w-5 h-5" />
+          <Phone className="w-5 h-5" aria-hidden="true" />
           <span className="font-medium hidden sm:block">0899736669</span>
         </Link>
 
         <Link
           href="https://www.facebook.com/profile.php?id=61568038735619"
           target="_blank"
-          className="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 hover:scale-105 transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Mở Facebook TPA+"
         >
-          <Facebook className="w-5 h-5" />
+          <Facebook className="w-5 h-5" aria-hidden="true" />
           <span className="font-medium hidden sm:block">Facebook</span>
         </Link>
 
         <Link
           href="https://zalo.me/0899736669"
           target="_blank"
-          className="flex items-center gap-3 bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-600 hover:scale-105 transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+          aria-label="Mở Zalo: 0899736669"
         >
-          <MessageCircle className="w-5 h-5" />
+          <MessageCircle className="w-5 h-5" aria-hidden="true" />
           <span className="font-medium hidden sm:block">Zalo</span>
         </Link>
       </div>
@@ -62,8 +68,10 @@ export function FloatingCta() {
       <Button
         onClick={() => setIsExpanded(!isExpanded)}
         size="lg"
+        aria-label={isExpanded ? "Đóng menu liên hệ" : "Mở menu liên hệ"}
+        aria-expanded={isExpanded}
         className={cn(
-          "rounded-full w-14 h-14 shadow-xl transition-all duration-300",
+          "rounded-full w-14 h-14 shadow-xl transition-all duration-300 hover:scale-110",
           isExpanded
             ? "bg-[#0F2A44] hover:bg-[#1a3a5c]"
             : "bg-[#D8B76A] hover:bg-[#c9a555]"
@@ -79,7 +87,8 @@ export function FloatingCta() {
       {/* CTA to Contact Section (Desktop only) */}
       <Link
         href="#contact"
-        className="hidden lg:flex items-center gap-2 bg-[#D8B76A] text-[#0F2A44] px-6 py-3 rounded-full shadow-lg hover:bg-[#c9a555] transition-colors font-semibold"
+        className="hidden lg:flex items-center gap-2 bg-[#D8B76A] text-[#0F2A44] px-6 py-3 rounded-full shadow-lg hover:bg-[#c9a555] hover:scale-105 transition-all duration-200 font-semibold cursor-pointer focus:ring-2 focus:ring-[#D8B76A] focus:ring-offset-2"
+        aria-label="Đặt lịch tư vấn gia sư"
       >
         Đặt gia sư ngay
       </Link>
