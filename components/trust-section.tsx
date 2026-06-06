@@ -1,5 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { BookX, TrendingUp, FileCheck, Code } from "lucide-react"
+import { Card3D } from "@/components/ui/card-3d"
+import { GlassCard } from "@/components/ui/glass-card"
 
 const trustItems = [
   {
@@ -51,26 +53,52 @@ export function TrustSection() {
 
         {/* Trust Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
-          {trustItems.map((item, index) => (
-            <Card
-              key={index}
-              className="group border-2 border-transparent hover:border-[#D8B76A]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer"
-            >
-              <CardContent className="p-6 lg:p-8">
-                <div
-                  className={`w-14 h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+          {trustItems.map((item, index) => {
+            // Use glassmorphism for the last card as example
+            const useGlass = index === trustItems.length - 1
+
+            if (useGlass) {
+              return (
+                <Card3D key={index} intensity={15}>
+                  <GlassCard intensity="light" blur="8px" className="group cursor-pointer">
+                    <div
+                      className={`w-14 h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+                    >
+                      <item.icon className={`w-7 h-7 ${item.color}`} />
+                    </div>
+                    <h3 className="text-lg font-bold text-[#0F2A44] mb-2 group-hover:text-[#D8B76A] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-[#6B7280] text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </GlassCard>
+                </Card3D>
+              )
+            }
+
+            return (
+              <Card3D key={index} intensity={15}>
+                <Card
+                  className="group border-2 border-transparent hover:border-[#D8B76A]/30 transition-all duration-300 hover:shadow-xl cursor-pointer"
                 >
-                  <item.icon className={`w-7 h-7 ${item.color}`} />
-                </div>
-                <h3 className="text-lg font-bold text-[#0F2A44] mb-2 group-hover:text-[#D8B76A] transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-[#6B7280] text-sm leading-relaxed">
-                  {item.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                  <CardContent className="p-6 lg:p-8">
+                    <div
+                      className={`w-14 h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+                    >
+                      <item.icon className={`w-7 h-7 ${item.color}`} />
+                    </div>
+                    <h3 className="text-lg font-bold text-[#0F2A44] mb-2 group-hover:text-[#D8B76A] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-[#6B7280] text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Card3D>
+            )
+          })}
         </div>
       </div>
     </section>

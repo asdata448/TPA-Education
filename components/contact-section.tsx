@@ -27,6 +27,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { Confetti } from "@/components/ui/confetti"
 
 const subjects = [
   { id: "toan", label: "Toán học" },
@@ -106,6 +107,7 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="py-20 lg:py-28 bg-white">
+      <Confetti trigger={isSubmitted} />
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

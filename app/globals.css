@@ -3,6 +3,32 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Page transition animation */
+.page-transition {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth anchor link scrolling */
+a[href^="#"] {
+  scroll-margin-top: 100px;
+}
+
 :root {
   /* TPA+ Brand Colors */
   --navy: #0F2A44;

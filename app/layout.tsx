@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ScrollProgress } from '@/components/ui/scroll-progress'
 import './globals.css'
 
 const plusJakartaSans = Plus_Jakarta_Sans({ 
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="vi" className="bg-background" suppressHydrationWarning>
       <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
+        <ScrollProgress />
         {/* Skip to content link for accessibility */}
         <a href="#main-content" className="skip-to-content">
           Bỏ qua đến nội dung chính

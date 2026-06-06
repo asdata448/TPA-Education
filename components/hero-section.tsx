@@ -3,14 +3,25 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Users, BookOpen, Target, GraduationCap, ArrowRight, Sparkles } from "lucide-react"
+import { Counter } from "@/components/ui/counter-animation"
+import { GradientText } from "@/components/ui/gradient-text"
+import { MagneticButton } from "@/components/ui/magnetic-button"
+import { ParallaxBg } from "@/components/ui/parallax-bg"
+import { TextReveal } from "@/components/ui/text-reveal"
+import { FloatingShapes } from "@/components/ui/floating-particles"
 
 export function HeroSection() {
   return (
     <section id="home" className="relative min-h-screen pt-28 pb-20 lg:pt-32 lg:pb-24 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-[#F8F5EC]/30 to-white" aria-hidden="true" />
-      <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-[#D8B76A]/5 rounded-full blur-3xl" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#0F2A44]/5 rounded-full blur-3xl" aria-hidden="true" />
+      <FloatingShapes className="opacity-30" />
+      <ParallaxBg speed={0.3} className="absolute top-20 right-0 w-[600px] h-[600px] bg-[#D8B76A]/5 rounded-full blur-3xl" aria-hidden="true">
+        <div className="w-full h-full bg-[#D8B76A]/5 rounded-full" />
+      </ParallaxBg>
+      <ParallaxBg speed={0.2} direction="down" className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#0F2A44]/5 rounded-full blur-3xl" aria-hidden="true">
+        <div className="w-full h-full bg-[#0F2A44]/5 rounded-full" />
+      </ParallaxBg>
 
       <div className="container mx-auto px-4 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -24,15 +35,24 @@ export function HeroSection() {
 
             {/* Main Heading */}
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0F2A44] leading-tight text-balance">
-                Học vững gốc
-                <span className="block text-[#D8B76A]">Tăng điểm nhanh</span>
-                Tự tin thi cử
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-balance">
+                <GradientText colors={["#0F2A44", "#1a3a5c", "#0F2A44"]} duration={4}>
+                  Học vững gốc
+                </GradientText>
+                <GradientText colors={["#D8B76A", "#e5c988", "#D8B76A"]} duration={3}>
+                  <span className="block">Tăng điểm nhanh</span>
+                </GradientText>
+                <GradientText colors={["#0F2A44", "#1a3a5c", "#0F2A44"]} duration={4}>
+                  Tự tin thi cử
+                </GradientText>
               </h1>
-              <p className="text-lg lg:text-xl text-[#6B7280] max-w-xl text-pretty leading-relaxed">
-                TPA+ đồng hành cùng học sinh THCS & THPT với đội ngũ gia sư từ các trường Đại học hàng đầu.
-                Phương pháp cá nhân hóa, cam kết tiến bộ rõ rệt.
-              </p>
+              <div className="text-lg lg:text-xl text-[#6B7280] max-w-xl text-pretty leading-relaxed">
+                <TextReveal
+                  text="TPA+ đồng hành cùng học sinh THCS & THPT với đội ngũ gia sư từ các trường Đại học hàng đầu. Phương pháp cá nhân hóa, cam kết tiến bộ rõ rệt."
+                  delay={0.3}
+                  stagger={0.02}
+                />
+              </div>
             </div>
 
             {/* Highlight Badges */}
@@ -69,24 +89,21 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                className="bg-[#D8B76A] text-[#0F2A44] hover:bg-[#c9a555] hover:scale-105 font-semibold text-base px-8 py-6 shadow-lg shadow-[#D8B76A]/25 transition-all duration-200"
-                asChild
+              <MagneticButton
+                strength={15}
+                className="bg-[#D8B76A] text-[#0F2A44] hover:bg-[#c9a555] font-semibold text-base px-8 py-6 shadow-lg shadow-[#D8B76A]/25 rounded-lg transition-all duration-200 border-0"
               >
-                <Link href="#contact">
+                <Link href="#contact" className="flex items-center">
                   Đăng ký học thử miễn phí
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-[#0F2A44] text-[#0F2A44] hover:bg-[#0F2A44] hover:text-white font-semibold text-base px-8 py-6 transition-all duration-200"
-                asChild
+              </MagneticButton>
+              <MagneticButton
+                strength={15}
+                className="border-2 border-[#0F2A44] text-[#0F2A44] hover:bg-[#0F2A44] hover:text-white font-semibold text-base px-8 py-6 rounded-lg transition-all duration-200 bg-transparent"
               >
                 <Link href="#about">Tìm hiểu thêm</Link>
-              </Button>
+              </MagneticButton>
             </div>
           </div>
 
@@ -112,7 +129,9 @@ export function HeroSection() {
                     <Users className="w-6 h-6 text-[#D8B76A]" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-[#0F2A44]" aria-label="95 học sinh">95+</p>
+                    <p className="text-2xl font-bold text-[#0F2A44]" aria-label="95 học sinh">
+                      <Counter end={95} prefix="" suffix="+" duration={2000} />
+                    </p>
                     <p className="text-sm text-[#6B7280]">Học sinh tin tưởng</p>
                   </div>
                 </div>
@@ -137,11 +156,15 @@ export function HeroSection() {
           <div className="bg-[#0F2A44] rounded-2xl lg:rounded-3xl p-8 lg:p-10 shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
               <div className="text-center">
-                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">3+</p>
+                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">
+                  <Counter end={3} prefix="" suffix="+" duration={1500} />
+                </p>
                 <p className="text-white/80 mt-1 text-sm lg:text-base">Gia sư chuyên môn</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">4</p>
+                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">
+                  <Counter end={4} duration={1500} />
+                </p>
                 <p className="text-white/80 mt-1 text-sm lg:text-base">Môn học chính</p>
               </div>
               <div className="text-center">
@@ -149,7 +172,9 @@ export function HeroSection() {
                 <p className="text-white/80 mt-1 text-sm lg:text-base">Dạy kèm cá nhân</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">100%</p>
+                <p className="text-3xl lg:text-4xl font-bold text-[#D8B76A]">
+                  <Counter end={100} prefix="" suffix="%" duration={1500} />
+                </p>
                 <p className="text-white/80 mt-1 text-sm lg:text-base">Cam kết tiến bộ</p>
               </div>
             </div>
