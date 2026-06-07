@@ -1,4 +1,4 @@
-import Image from "next/image"
+﻿import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -7,7 +7,7 @@ import { Counter } from "@/components/ui/counter-animation"
 import { GradientText } from "@/components/ui/gradient-text"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { ParallaxBg } from "@/components/ui/parallax-bg"
-import { TextReveal } from "@/components/ui/text-reveal"
+import { FadeInText } from "@/components/ui/text-reveal"
 import { FloatingShapes } from "@/components/ui/floating-particles"
 
 export function HeroSection() {
@@ -46,13 +46,12 @@ export function HeroSection() {
                   Tự tin thi cử
                 </GradientText>
               </h1>
-              <div className="text-lg lg:text-xl text-[#6B7280] max-w-xl text-pretty leading-relaxed">
-                <TextReveal
-                  text="TPA+ đồng hành cùng học sinh THCS & THPT với đội ngũ gia sư từ các trường Đại học hàng đầu. Phương pháp cá nhân hóa, cam kết tiến bộ rõ rệt."
-                  delay={0.3}
-                  stagger={0.02}
-                />
-              </div>
+              <FadeInText
+                className="text-lg lg:text-xl text-[#6B7280] max-w-xl text-pretty leading-relaxed"
+                delay={0.3}
+              >
+                TPA+ đồng hành cùng học sinh THCS & THPT với đội ngũ gia sư từ các trường Đại học hàng đầu. Phương pháp cá nhân hóa, cam kết tiến bộ rõ rệt.
+              </FadeInText>
             </div>
 
             {/* Highlight Badges */}
@@ -184,3 +183,4 @@ export function HeroSection() {
     </section>
   )
 }
+
