@@ -1,0 +1,82 @@
+# generated: 2026-06-08T01:22:25
+# last_updated: 2026-06-08T01:32:36
+# project: TPA-Education
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: 2026-06-08T01:22:25
+last_updated: 2026-06-08T01:22:25
+project: TPA-Education
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-configure-supabase-clients-and-environment: review
+  1-2-create-profiles-schema-and-role-model: review
+  1-3-implement-login-and-session-middleware: backlog
+  1-4-protect-dashboard-routes-by-role: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-create-tutor-database-model: backlog
+  2-2-admin-creates-tutor-account-with-generated-password: backlog
+  2-3-admin-views-and-edits-tutor-profiles: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-create-student-records: backlog
+  3-2-create-parent-records: backlog
+  3-3-link-students-and-parents: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-create-class-and-subject-schema: backlog
+  4-2-admin-creates-a-class: backlog
+  4-3-admin-updates-class-details-and-status: backlog
+  4-4-admin-manages-official-weekly-schedules: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-tutor-views-assigned-classes: backlog
+  5-2-tutor-views-assigned-class-detail: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-tutor-browses-open-classes: backlog
+  6-2-tutor-requests-an-open-class: backlog
+  6-3-admin-reviews-class-requests: backlog
+  epic-6-retrospective: optional
+  epic-7: backlog
+  7-1-tutor-creates-schedule-proposal: backlog
+  7-2-admin-reviews-schedule-proposal: backlog
+  epic-7-retrospective: optional
+  epic-8: backlog
+  8-1-admin-creates-library-item-with-files: backlog
+  8-2-tutor-browses-and-downloads-library-items: backlog
+  epic-8-retrospective: optional
+  epic-9: backlog
+  9-1-tutor-creates-material-request: backlog
+  9-2-admin-fulfills-material-request-with-files: backlog
+  9-3-tutor-downloads-fulfilled-request-materials: backlog
+  epic-9-retrospective: optional
+  epic-10: backlog
+  10-1-create-monthly-report-draft: backlog
+  10-2-fill-monthly-progress-and-evaluation-form: backlog
+  10-3-generate-and-download-branded-report-image: backlog
+  epic-10-retrospective: optional
