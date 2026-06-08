@@ -8,7 +8,7 @@
 
 ## Scope Update - 2026-06-08
 - Open Class browsing/request flow added to MVP.
-- Schedule Proposal workflow added to MVP; Admin remains official source of truth.
+- Schedule Proposal workflow removed from MVP; Tutors self-coordinate schedule changes with parents outside the app.
 - Teaching Material Library added to MVP.
 - 5% monthly center fee excluded from app scope.
 - Chatbot lesson-prep assistant deferred.

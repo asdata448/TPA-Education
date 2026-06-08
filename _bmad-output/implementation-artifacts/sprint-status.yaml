@@ -24,7 +24,7 @@
 #   - done: Retrospective has been completed
 
 generated: 2026-06-08T01:22:25
-last_updated: 2026-06-09T02:15:00
+last_updated: 2026-06-09T03:00:00
 project: TPA-Education
 project_key: NOKEY
 tracking_system: file-system
@@ -47,24 +47,24 @@ development_status:
   3-2-create-parent-records: done
   3-3-link-students-and-parents: done
   epic-3-retrospective: optional
-  epic-4: backlog
-  4-1-create-class-and-subject-schema: backlog
-  4-2-admin-creates-a-class: backlog
-  4-3-admin-updates-class-details-and-status: backlog
-  4-4-admin-manages-official-weekly-schedules: backlog
+  epic-4: review
+  4-1-create-class-and-subject-schema: review
+  4-2-admin-creates-a-class: review
+  4-3-admin-updates-class-details-and-status: review
+  4-4-admin-manages-official-weekly-schedules: review
   epic-4-retrospective: optional
-  epic-5: backlog
-  5-1-tutor-views-assigned-classes: backlog
-  5-2-tutor-views-assigned-class-detail: backlog
+  epic-5: review
+  5-1-tutor-views-assigned-classes: review
+  5-2-tutor-views-assigned-class-detail: review
   epic-5-retrospective: optional
-  epic-6: backlog
-  6-1-tutor-browses-open-classes: backlog
-  6-2-tutor-requests-an-open-class: backlog
-  6-3-admin-reviews-class-requests: backlog
+  epic-6: review
+  6-1-tutor-browses-open-classes: review
+  6-2-tutor-requests-an-open-class: review
+  6-3-admin-reviews-class-requests: review
   epic-6-retrospective: optional
-  epic-7: backlog
-  7-1-tutor-creates-schedule-proposal: backlog
-  7-2-admin-reviews-schedule-proposal: backlog
+  epic-7: done
+  7-1-tutor-creates-schedule-proposal: done
+  7-2-admin-reviews-schedule-proposal: done
   epic-7-retrospective: optional
   epic-8: backlog
   8-1-admin-creates-library-item-with-files: backlog
@@ -80,6 +80,7 @@ development_status:
   10-2-fill-monthly-progress-and-evaluation-form: backlog
   10-3-generate-and-download-branded-report-image: backlog
   epic-10-retrospective: optional
+
 
 
 

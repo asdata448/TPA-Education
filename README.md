@@ -138,6 +138,14 @@ Reason: Student/Parent information will be attached later to the class/schedule 
 9. Try Tutor login -> should be blocked from Tutor dashboard
 10. Toggle Tutor active again
 
+### Class Workflow
+1. Create a class with subject, student grade, parent contact, tuition fee, optional start date, and schedule notes
+2. Leave tutor set to `Open/unassigned` to publish an open class
+3. Tutor opens `/dashboard/tutor/open-classes`
+4. Tutor requests the open class
+5. Admin approves or rejects the request
+6. Assigned Tutor views the class in `/dashboard/tutor/classes`
+
 ## Validation Commands
 
 ```bash
@@ -161,6 +169,11 @@ Set environment variables in Vercel project settings before deploying.
 - [x] Epic 1: Auth foundation with role-based routing
 - [x] Epic 2: Tutor management foundation
 - [x] Epic 3: Removed from current implementation scope
-- [ ] Epic 4: Class + subject + schedule workflow
+- [ ] Epic 4: Class + subject + schedule workflow (in progress)
 - [ ] Epic 5: Tutor class workspace / open class flow
 - [ ] Epic 6+: Remaining business workflows
+
+
+## Schedule Proposal Scope
+
+Schedule proposal workflow is removed from current scope. Tutors self-coordinate schedule changes directly with parents outside the app, so no Tutor proposal or Admin approval workflow should be built for Epic 7.

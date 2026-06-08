@@ -67,3 +67,8 @@ These browser console messages are not the Tutor-create bug:
 - `Vercel Web Analytics failed to load` -> analytics config issue only
 
 The real production Tutor-create bug was previously caused by invalid `'use server'` exports and has been fixed.
+
+
+## Schedule Proposal Scope
+
+Schedule proposal workflow is removed from current scope. Tutors self-coordinate schedule changes directly with parents outside the app, so no Tutor proposal or Admin approval workflow should be built for Epic 7.

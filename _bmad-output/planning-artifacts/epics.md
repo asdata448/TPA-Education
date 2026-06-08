@@ -32,8 +32,6 @@ FR-14: Tutor can view details of an assigned Class, including Student, Parent, s
 FR-15: Tutor can view Classes marked open and available for Tutor requests.
 FR-16: Tutor can submit a Class Request for an Open Class.
 FR-17: Admin can approve or reject a Class Request; approval assigns the Class to the Tutor.
-FR-18: Tutor can create a Schedule Proposal for an assigned Class.
-FR-19: Admin can approve or reject a Schedule Proposal; approval updates the official Class Schedule.
 FR-20: Admin can publish Teaching Material Library items with title, subject, grade, description, and one or more Google Drive file/folder links.
 FR-21: Tutor can browse and download active Teaching Material Library items.
 FR-22: Tutor can create a Material Request linked either to a specific Class or a general topic request.
@@ -81,7 +79,7 @@ NFR-10: Deployment readiness - env vars, Supabase migrations, and RLS policies m
 
 No UX Design document found. UX requirements inferred from PRD/architecture only:
 UX-DR1: Provide role-specific Admin and Tutor dashboard navigation.
-UX-DR2: Provide clear form flows for Tutor, Student, Parent, Class, Schedule, Open Class Request, Schedule Proposal, Material Request, Library item, and Monthly Report creation.
+UX-DR2: Provide clear form flows for Tutor, Student, Parent, Class, Schedule, Open Class Request, Material Request, Library item, and Monthly Report creation.
 UX-DR3: Tutor-facing Open Class list must clearly show available safe fields while hiding sensitive Parent contact data.
 UX-DR4: Monthly Report flow must provide preview and image download.
 UX-DR5: File upload/download UI must support multiple files for Teaching Material Requests and Library items.
@@ -95,7 +93,7 @@ Epic 3: Student and Parent Management ? FR-6, FR-7
 Epic 4: Class and Schedule Management ? FR-8, FR-9, FR-10, FR-11
 Epic 5: Tutor Class Workspace ? FR-12, FR-13, FR-14
 Epic 6: Open Class Request Workflow ? FR-15, FR-16, FR-17
-Epic 7: Schedule Proposal Workflow ? FR-18, FR-19
+Epic 7: Removed - Tutor self-schedules with parent outside app
 Epic 8: Teaching Material Library ? FR-20, FR-21
 Epic 9: Material Request Workflow ? FR-22, FR-23, FR-24
 Epic 10: Monthly Report Generation ? FR-25, FR-26, FR-27, FR-28
@@ -108,7 +106,7 @@ Epic 10: Monthly Report Generation ? FR-25, FR-26, FR-27, FR-28
 4. **Class and Schedule Management** ? Enable Admin to create, update, and manage Classes with schedules, status, and assignment tracking.
 5. **Tutor Class Workspace** ? Provide Tutors with read-only access to assigned Classes, schedules, and student information.
 6. **Open Class Request Workflow** ? Enable Tutors to browse and request Open Classes, with Admin approval assigning Classes.
-7. **Schedule Proposal Workflow** ? Enable Tutors to propose schedule changes for assigned Classes, subject to Admin approval.
+7. **Removed: Schedule Proposal Workflow** ? Tutor self-schedules with parent outside the app; no Admin approval workflow needed.
 8. **Teaching Material Library** ? Enable Admin to publish teaching materials and Tutors to browse and download active items.
 9. **Material Request Workflow** ? Enable Tutors to request teaching materials and Admin to fulfill requests with downloadable files.
 10. **Monthly Report Generation** ? Enable Tutors to create structured monthly reports and generate branded downloadable images.
@@ -414,38 +412,9 @@ So that Class assignment remains controlled by the center.
 **And** other pending requests for that Class are handled safely
 **And** rejection leaves the Class open unless Admin changes it.
 
-## Epic 7: Schedule Proposal Workflow
+## Epic 7: Removed - Schedule Proposal Workflow
 
-Enable Tutors to propose schedule changes for assigned Classes, subject to Admin approval.
-
-### Story 7.1: Tutor Creates Schedule Proposal
-
-As a Tutor,
-I want to propose schedule entries for my assigned Class,
-So that Admin can approve the official schedule.
-
-**Acceptance Criteria:**
-
-**Given** Tutor has an assigned Class
-**When** Tutor submits proposed weekly day/time slots
-**Then** a `schedule_proposals` row is created with pending status
-**And** Tutor can include notes
-**And** official `class_schedules` are not changed yet.
-
-### Story 7.2: Admin Reviews Schedule Proposal
-
-As an Admin,
-I want to approve or reject Schedule Proposals,
-So that official schedules remain accurate.
-
-**Acceptance Criteria:**
-
-**Given** a pending Schedule Proposal exists
-**When** Admin approves it
-**Then** the official `class_schedules` for that Class are updated
-**And** the proposal is marked approved
-**And** rejection leaves official schedules unchanged
-**And** Tutor can see proposal status.
+This epic is intentionally removed from current scope. Tutors coordinate schedule changes directly with parents outside the app. The system should not build Tutor schedule proposal creation or Admin approval for schedule changes.
 
 ## Epic 8: Teaching Material Library
 
@@ -604,7 +573,7 @@ All 28 Functional Requirements are covered by at least one epic/story.
 
 - Epic 1 provides shared auth/session foundation.
 - Later epics build naturally on prior data models.
-- Open Class, Schedule Proposal, Material Library, Material Request, and Monthly Report epics can be implemented independently after the required auth/data foundations exist.
+- Open Class, Material Library, Material Request, and Monthly Report epics can be implemented independently after the required auth/data foundations exist. Schedule Proposal workflow is removed.
 
 ### Final Status
 

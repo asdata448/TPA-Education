@@ -1,18 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
-export default function TutorDashboardPage() {
-  return (
-    <main className="container mx-auto flex min-h-screen items-center justify-center p-6">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle>Tutor Dashboard</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            Tutor dashboard content will be implemented in future stories.
-          </p>
-        </CardContent>
-      </Card>
-    </main>
-  )
-}
+import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+export default function TutorDashboardPage(){return <main className="container mx-auto min-h-screen space-y-6 p-6"><Card><CardHeader><CardTitle>Tutor Dashboard</CardTitle><CardDescription>Class workspace and open teaching opportunities.</CardDescription></CardHeader><CardContent className="flex flex-wrap gap-3"><Button asChild><Link href="/dashboard/tutor/classes">My classes</Link></Button><Button asChild variant="secondary"><Link href="/dashboard/tutor/open-classes">Open classes</Link></Button></CardContent></Card></main>}

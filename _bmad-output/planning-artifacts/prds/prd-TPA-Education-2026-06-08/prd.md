@@ -9,7 +9,7 @@ updated: 2026-06-08
 *Working title - confirm.*
 
 ## 0. Document Purpose
-This PRD defines the MVP requirements for an internal TPA-Education web application used to manage Tutor accounts, Classes, open-class requests, schedule proposals, teaching materials, teaching-material requests, and monthly student progress reports. It is intended for PM, architecture, UX, and implementation workflows. It builds on existing project documentation in `docs/index.md`, `docs/project-overview.md`, and `docs/architecture.md`. This document is capability-focused; technical implementation decisions belong in downstream architecture.
+This PRD defines the MVP requirements for an internal TPA-Education web application used to manage Tutor accounts, Classes, open-class requests, teaching materials, teaching-material requests, and monthly student progress reports. It is intended for PM, architecture, UX, and implementation workflows. It builds on existing project documentation in `docs/index.md`, `docs/project-overview.md`, and `docs/architecture.md`. This document is capability-focused; technical implementation decisions belong in downstream architecture.
 
 ## 1. Vision
 TPA-Education needs to move from manual class coordination through chat messages and ad hoc tracking into a centralized internal system. The MVP should let a single Admin manage Tutor accounts, organize Classes, assign Tutors, and maintain weekly schedules with less ambiguity and less manual reconciliation.
@@ -24,7 +24,6 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - As the Admin, I need to track which Tutor teaches which Class and when each Class happens every week.
 - As a Tutor, I need to see only my assigned Classes and schedules so I know what I am responsible for.
 - As a Tutor, I need to browse open Classes and request to take a suitable Class so I can find new teaching opportunities.
-- As a Tutor, I need to propose schedule changes for my assigned Classes so the center can approve an accurate weekly schedule.
 - As a Tutor, I need to access a central Teaching Material Library so I can reuse center-approved materials.
 - As a Tutor, I need to request teaching materials for a specific Class or general teaching need so the center can support lesson prep.
 - As a Tutor, I need to produce a parent-facing monthly progress report quickly without manually designing a document each time.
@@ -66,8 +65,7 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - **UJ-5. Tutor proposes a schedule for an assigned Class.**
   - **Persona + context:** Tutor and family have discussed a preferred weekly time and Tutor needs the center to confirm it.
   - **Entry state:** Tutor is authenticated and opens an assigned Class.
-  - **Path:** Tutor opens schedule proposal, enters weekly day/time slots and notes, then submits.
-  - **Climax:** The proposal becomes visible to Admin for approval.
+    - **Climax:** The proposal becomes visible to Admin for approval.
   - **Resolution:** Admin approval updates the official Class Schedule.
 
 - **UJ-6. Tutor requests teaching materials.**
@@ -93,7 +91,6 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - **Open Class** - A Class that is not yet assigned to a Tutor and is visible for Tutors to request.
 - **Class Request** - A Tutor request to take an Open Class, reviewed and approved or rejected by Admin.
 - **Schedule** - One or more weekly recurring time slots attached to a Class.
-- **Schedule Proposal** - A Tutor-submitted request to set or change the Schedule for an assigned Class, requiring Admin approval.
 - **Material Request** - A Tutor-created request asking the center for teaching materials, either tied to a Class or submitted as a general topic need.
 - **Teaching Material** - A file provided by the Admin for a Material Request. MVP supports Google Drive-hosted PDF and Word files surfaced through the web app.
 - **Teaching Material Library** - A central collection of Admin-published Teaching Materials that Tutors can browse and download.
@@ -204,7 +201,7 @@ The Admin can set and update Class status values for operational tracking. Reali
 - Status options are constrained to defined values. [ASSUMPTION: status set will include at least pending, active, paused, completed, cancelled.]
 
 ### 4.5 Weekly Schedule Management
-**Description:** Each Class may have one or more recurring weekly Schedule entries. Admin is the source of truth for official Schedule management in MVP. Tutors can view schedules and submit Schedule Proposals, but official schedule changes require Admin approval. Realizes UJ-2, UJ-3.
+**Description:** Each Class may have one or more recurring weekly Schedule entries. Admin may enter initial schedule context, but Tutors coordinate schedule changes directly with parents outside the app. Tutors can view schedule/class context but do not submit schedule proposals in-app. Realizes UJ-2, UJ-3.
 
 **Functional Requirements:**
 
@@ -274,26 +271,9 @@ Admin can approve or reject a Class Request. Realizes UJ-4.
 - Rejection keeps the Class open unless Admin changes status.
 - Tutor can see the request outcome.
 
-### 4.8 Schedule Proposals
-**Description:** Tutors can propose Schedule entries for assigned Classes, but Admin must approve before the official Class Schedule changes. This preserves Admin as the source of truth while letting Tutors reduce coordination work. Realizes UJ-5.
+### 4.8 Removed: Schedule Proposals
 
-**Functional Requirements:**
-
-#### FR-18: Create Schedule Proposal
-A Tutor can create a Schedule Proposal for an assigned Class. Realizes UJ-5.
-
-**Consequences (testable):**
-- Tutor can propose one or more weekly day/time slots.
-- Tutor can add notes for Admin.
-- Proposal is pending until Admin review.
-
-#### FR-19: Review Schedule Proposal
-Admin can approve or reject a Schedule Proposal. Realizes UJ-5.
-
-**Consequences (testable):**
-- Approval updates the official Class Schedule.
-- Rejection does not change the official Schedule.
-- Tutor can see proposal status.
+Schedule Proposal workflow is removed from MVP. Tutors self-coordinate schedule changes with parents outside the app.
 
 ### 4.9 Teaching Material Library
 **Description:** Admin can publish Teaching Materials to a central library. Tutors can browse and download published materials in addition to requesting custom materials. Realizes UJ-6.
@@ -408,8 +388,8 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - Tutor browsing of Open Classes
 - Tutor Class Request submission for Open Classes
 - Admin approval/rejection of Class Requests
-- Tutor Schedule Proposal submission
-- Admin approval/rejection of Schedule Proposals
+- Removed: Tutor Schedule Proposal submission
+- Removed: Admin approval/rejection of Schedule Proposals
 - Teaching Material Library browsing and Google Drive link access
 - Tutor Material Request creation and history
 - Admin Teaching Material link/catalog management and request fulfillment

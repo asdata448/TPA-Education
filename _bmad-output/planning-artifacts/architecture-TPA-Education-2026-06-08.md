@@ -23,7 +23,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 - **Date:** 2026-06-08
 - **Architect:** Admin
 - **Primary Input:** PRD - TPA-Education Internal Tutor and Class Management MVP
-- **Purpose:** Define solution architecture for internal tutor/class management system supporting Admin + multi-Tutor roles with Class, Open Class Request, Schedule Proposal, Teaching Material Library, Material Request, and Monthly Report management.
+- **Purpose:** Define solution architecture for internal tutor/class management system supporting Admin + multi-Tutor roles with Class, Open Class Request, Teaching Material Library, Material Request, and Monthly Report management.
 
 ## Input Documents Discovered
 
@@ -40,7 +40,7 @@ _Workflow initialized. Ready for Step 2: Input Document Review._
 ### Requirements Overview
 
 **Functional Requirements:**
-The product introduces an internal management system layered onto the existing TPA-Education project. Architecturally, the requirements break into six main capability areas: authentication and role-restricted access, Tutor management, Student/Parent/Class management, Open Class discovery/request workflows, Schedule Proposal workflows, Teaching Material Library, Teaching Material request workflows, and Monthly Report generation. This implies a shift from a static content-driven site to a transactional application with protected data, CRUD workflows, per-role dashboards, and generated artifacts.
+The product introduces an internal management system layered onto the existing TPA-Education project. Architecturally, the requirements break into six main capability areas: authentication and role-restricted access, Tutor management, Student/Parent/Class management, Open Class discovery/request workflows, Teaching Material Library, Teaching Material request workflows, and Monthly Report generation. This implies a shift from a static content-driven site to a transactional application with protected data, CRUD workflows, per-role dashboards, and generated artifacts.
 
 The Admin is the operational source of truth in MVP. The Tutor experience is intentionally narrower: view assigned Classes and Schedules, browse Open Classes, request Open Classes, propose Schedules, browse/download Teaching Material Library items, create Material Requests, download fulfilled Teaching Materials, and generate Monthly Reports. This role asymmetry is important architecturally because it favors strong server-side authorization boundaries and a data model centered on Class ownership.
 
@@ -332,7 +332,7 @@ lib/
 4. Add Admin dashboard layout and Tutor account creation.
 5. Add Class/Student/Parent/Schedule management.
 6. Add Open Class browsing and Class Request approval flow.
-7. Add Schedule Proposal flow with Admin approval.
+7. Removed: Schedule Proposal flow; Tutors self-coordinate with parents outside the app.
 8. Add Tutor dashboard and assigned Class views.
 9. Add Teaching Material Library.
 10. Add Material Request workflow and file uploads.
@@ -805,14 +805,14 @@ TPA-Education/
 - Signed URLs are generated server-side.
 - No app-hosted Teaching Material files in MVP; Google Drive permissions control underlying document access.
 
-## Architecture Update - Open Classes, Schedule Proposals, and Material Library
+## Architecture Update - Open Classes and Material Library
 
 ### Scope Delta
 
 The PRD now includes three additional MVP capabilities:
 
 1. Tutors can browse Open Classes and submit a Class Request.
-2. Tutors can submit Schedule Proposals for assigned Classes; Admin approval updates the official Schedule.
+2. Schedule Proposal workflow removed; Tutors coordinate schedule changes with parents outside the app.
 3. Tutors can browse/download a Teaching Material Library published by Admin.
 
 The PRD explicitly excludes 5% monthly center-fee tracking from app scope. The chatbot/AI lesson-prep assistant is deferred and should not be architected for MVP.
@@ -822,7 +822,6 @@ The PRD explicitly excludes 5% monthly center-fee tracking from app scope. The c
 Add the following tables to the architecture:
 
 - `class_requests` ? Tutor requests to take Open Classes.
-- `schedule_proposals` ? Tutor-proposed schedule changes pending Admin approval.
 - `teaching_material_library_items` ? Admin-published library item metadata.
 - `teaching_material_library_files` ? one row per file attached to a library item.
 
@@ -836,8 +835,6 @@ RLS must support:
 - Tutors can create Class Requests for Open Classes.
 - Tutors can view their own Class Requests.
 - Admin can view/approve/reject all Class Requests.
-- Tutors can create Schedule Proposals only for assigned Classes.
-- Admin can approve/reject all Schedule Proposals.
 - Tutors can read active Teaching Material Library items and download files through authenticated access.
 - Tutors cannot edit library items or official Class data.
 
@@ -877,13 +874,13 @@ lib/validations/material-library.ts
 ### Coherence Validation
 
 **Decision Compatibility:**
-All core decisions remain coherent after the scope update. Next.js App Router on Vercel is compatible with Supabase Auth, Postgres, Storage, RLS, and `@supabase/ssr`. Open Class Requests and Schedule Proposals fit the same request/approval pattern already used for Teaching Material Requests. The 5% monthly center-fee policy is explicitly excluded from app scope, avoiding unnecessary finance-module complexity. The chatbot/AI lesson-prep assistant is deferred and does not affect MVP architecture.
+All core decisions remain coherent after the scope update. Next.js App Router on Vercel is compatible with Supabase Auth, Postgres, Storage, RLS, and `@supabase/ssr`. Open Class Requests fit the request/approval pattern already used for Teaching Material Requests. The 5% monthly center-fee policy is explicitly excluded from app scope, avoiding unnecessary finance-module complexity. The chatbot/AI lesson-prep assistant is deferred and does not affect MVP architecture.
 
 **Pattern Consistency:**
 The existing implementation patterns support the new scope. `class_requests`, `schedule_proposals`, `teaching_material_library_items`, and `teaching_material_library_files` follow the same `snake_case` table naming, Server Action, Zod validation, and RLS policy conventions. Tutors create requests/proposals; Admin approves official mutations.
 
 **Structure Alignment:**
-The structure supports all updated capabilities through additional route/action/validation modules for Open Classes, Class Requests, Schedule Proposals, and Material Library. Admin and Tutor boundaries remain clear.
+The structure supports all updated capabilities through additional route/action/validation modules for Open Classes, Class Requests, and Material Library. Admin and Tutor boundaries remain clear.
 
 ### Requirements Coverage Validation
 
@@ -892,7 +889,7 @@ The structure supports all updated capabilities through additional route/action/
 - Tutor management: covered.
 - Student/Parent/Class/Schedule management: covered.
 - Open Classes and Class Requests: covered by `class_requests`, open-state Classes, Tutor request routes, and Admin approval routes.
-- Schedule Proposals: covered by `schedule_proposals` and Admin approval flow.
+- Schedule Proposals: removed from MVP; no `schedule_proposals` table or approval workflow should be built.
 - Teaching Material Library: covered by library item/file tables, Admin publish routes, Tutor browse/download routes, and private Storage.
 - Teaching Material Requests: covered.
 - Monthly Reports: covered.
@@ -922,7 +919,7 @@ Naming, action return shape, validation, RLS, file storage, report generation, a
 None.
 
 **Important Gaps:**
-- Exact status vocabulary needs finalization for Classes/Open Classes, Class Requests, Schedule Proposals, and Material Requests.
+- Exact status vocabulary needs finalization for Classes/Open Classes, Class Requests, and Material Requests.
 - Exact Open Class fields visible before approval need finalization.
 - Monthly Report template field order/layout remains flexible pending implementation.
 

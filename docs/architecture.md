@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The application is a monolithic Next.js 16 App Router app deployed on Vercel. The active internal workflow is Admin/Tutor authentication plus Admin-managed Tutor provisioning and Tutor profile management using Supabase Auth and Postgres.
+The application is a monolithic Next.js 16 App Router app deployed on Vercel. The active internal workflow is Admin/Tutor authentication plus Admin-managed Tutor provisioning, Tutor profile management, and class/open-class workflow using Supabase Auth and Postgres.
 
 ## Architecture Pattern
 
@@ -61,3 +61,8 @@ The application is a monolithic Next.js 16 App Router app deployed on Vercel. Th
 `'use server'` modules must export only async functions.
 
 This is now a documented architectural rule for this repo because it directly caused a production Tutor-create failure.
+
+
+## Schedule Proposal Scope
+
+Schedule proposal workflow is removed from current scope. Tutors self-coordinate schedule changes directly with parents outside the app, so no Tutor proposal or Admin approval workflow should be built for Epic 7.

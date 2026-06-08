@@ -99,3 +99,8 @@ The landing page still uses `lib/data.ts` for static marketing content such as:
 - FAQ entries
 - consultation process steps
 - commitment cards
+
+
+## Schedule Proposal Scope
+
+Schedule proposal workflow is removed from current scope. Tutors self-coordinate schedule changes directly with parents outside the app, so no Tutor proposal or Admin approval workflow should be built for Epic 7.
