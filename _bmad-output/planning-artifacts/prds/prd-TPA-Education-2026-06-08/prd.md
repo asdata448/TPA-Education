@@ -92,7 +92,7 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - **Class Request** - A Tutor request to take an Open Class, reviewed and approved or rejected by Admin.
 - **Schedule** - One or more weekly recurring time slots attached to a Class.
 - **Material Request** - A Tutor-created request asking the center for teaching materials, either tied to a Class or submitted as a general topic need.
-- **Teaching Material** - A file provided by the Admin for a Material Request. MVP supports Google Drive-hosted PDF and Word files surfaced through the web app.
+- **Teaching Material** - A file provided by the Admin for a Material Request or Library item. MVP stores files in private Cloudflare R2 and surfaces them through authorized app access.
 - **Teaching Material Library** - A central collection of Admin-published Teaching Materials that Tutors can browse and download.
 - **Monthly Report** - A Tutor-generated parent-facing progress summary for a single Class, produced as an image.
 - **Tuition Fee** - The amount charged for a Class and shown on the Monthly Report.
@@ -281,10 +281,10 @@ Schedule Proposal workflow is removed from MVP. Tutors self-coordinate schedule 
 **Functional Requirements:**
 
 #### FR-20: Admin publishes Teaching Material Library item
-Admin can create a library item with title, subject, grade, description, and one or more Google Drive file/folder links. Realizes UJ-6.
+Admin can create a library item with title, subject, grade, description, and one or more uploaded files stored in private Cloudflare R2. Realizes UJ-6.
 
 **Consequences (testable):**
-- Library item can contain multiple Google Drive links.
+- Library item can contain multiple R2-backed files.
 - Admin can mark items active/inactive.
 - Inactive items are hidden from Tutors.
 
@@ -293,7 +293,7 @@ Tutor can browse and download active Teaching Material Library items. Realizes U
 
 **Consequences (testable):**
 - Tutor can filter or search by subject/grade where implemented.
-- Tutor can open linked Google Drive files/folders from the web catalog.
+- Tutor can access authorized R2-backed files from the web catalog through app-controlled download/open flows.
 - Tutor cannot edit library items.
 
 ### 4.10 Teaching Material Requests
@@ -315,14 +315,14 @@ The Admin can view, update status, and fulfill Material Requests. Realizes UJ-6.
 **Consequences (testable):**
 - Admin can see all Material Requests.
 - Admin can mark request status values. [ASSUMPTION: status set will include submitted, in_progress, fulfilled, rejected.]
-- Admin can attach one or more Google Drive file/folder links as Teaching Materials.
+- Admin can attach one or more Cloudflare R2 file/folder links as Teaching Materials.
 
-#### FR-24: Tutor opens fulfilled Google Drive Teaching Material links
+#### FR-24: Tutor opens fulfilled Cloudflare R2 Teaching Material links
 A Tutor can view request history and download Teaching Materials attached to fulfilled requests. Realizes UJ-6.
 
 **Consequences (testable):**
 - Tutor can see status history for own requests.
-- Tutor can open/download linked Google Drive PDF or Word files according to Google Drive permissions.
+- Tutor can open/download linked Cloudflare R2 PDF or Word files according to Cloudflare R2 permissions.
 - Tutor cannot access another Tutor's Material Requests.
 
 ### 4.11 Monthly Progress Reports
@@ -373,7 +373,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - No chatbot/AI lesson-prep assistant in MVP; it is deferred for later.
 - No automated curriculum generation by AI in MVP; only request tracking, file delivery, and Admin-published library materials.
 - No center fee, commission, or 5% monthly fee tracking in the app MVP.
-- No Supabase Storage upload pipeline for Teaching Materials in MVP; Google Drive is the document source of truth.
+- No Supabase Storage upload pipeline for Teaching Materials in MVP; Cloudflare R2 is the document source of truth.
 
 ## 6. MVP Scope
 
@@ -390,7 +390,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - Admin approval/rejection of Class Requests
 - Removed: Tutor Schedule Proposal submission
 - Removed: Admin approval/rejection of Schedule Proposals
-- Teaching Material Library browsing and Google Drive link access
+- Teaching Material Library browsing and Cloudflare R2 link access
 - Tutor Material Request creation and history
 - Admin Teaching Material link/catalog management and request fulfillment
 - Monthly Report form and branded image generation
@@ -404,7 +404,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - Automatic report delivery - deferred because Tutors will send reports manually.
 - Tutor class-status editing - deferred to keep Admin as source of truth.
 - Finance automation and payroll calculation - deferred because it expands domain scope significantly.
-- Rich in-app document preview/editor for Teaching Materials - deferred; Google Drive handles viewing/downloading in MVP.
+- Rich in-app document preview/editor for Teaching Materials - deferred; Cloudflare R2 handles viewing/downloading in MVP.
 
 ## 7. Success Metrics
 
@@ -423,7 +423,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 
 ## 8. Open Questions
 1. What exact visual layout and field order should the Monthly Report template use?
-2. What Google Drive sharing permission convention should be used for Teaching Material links?
+2. What Cloudflare R2 sharing permission convention should be used for Teaching Material links?
 3. What exact status vocabulary should Material Requests use?
 4. What exact status vocabulary should Classes use?
 5. Should Tuition Fee be displayed as a single monthly number, per-session number, or flexible text value in the Monthly Report template?

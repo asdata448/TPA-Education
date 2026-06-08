@@ -104,3 +104,8 @@ The landing page still uses `lib/data.ts` for static marketing content such as:
 ## Schedule Proposal Scope
 
 Schedule proposal workflow is removed from current scope. Tutors self-coordinate schedule changes directly with parents outside the app, so no Tutor proposal or Admin approval workflow should be built for Epic 7.
+
+
+## Cloudflare R2 Material Library Scope
+
+Epic 8 is replanned away from Cloudflare R2. Teaching materials will be stored in a private Cloudflare R2 bucket, while Postgres stores item/file metadata and the app enforces authorized access for Admin/Tutor roles. Presigned URLs or Worker/server-mediated access are both valid implementation paths; MVP should prefer simpler app-controlled access first.

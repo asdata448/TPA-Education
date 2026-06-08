@@ -3,20 +3,26 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { CreateClassForm, RequestReviewForm } from './create-class-form'
+import { CreateMaterialForm } from './create-material-form'
 import { CreateTutorForm } from './create-tutor-form'
 import { getAdminClassData } from './classes-data'
+import { getAdminMaterialData } from './materials-data'
 import { listTutors } from './data'
 
 function resultValue<T>(result: PromiseSettledResult<T>, fallback: T) { return result.status === 'fulfilled' ? result.value : fallback }
 function resultError(result: PromiseSettledResult<unknown>, label: string) { return result.status === 'fulfilled' ? null : `${label}: ${result.reason instanceof Error ? result.reason.message : 'Unable to load data'}` }
 
 export default async function AdminDashboardPage() {
-  const [tutorsResult, classDataResult] = await Promise.allSettled([listTutors(), getAdminClassData()])
+  const [tutorsResult, classDataResult, materialDataResult] = await Promise.allSettled([listTutors(), getAdminClassData(), getAdminMaterialData()])
   const tutors = resultValue(tutorsResult, [])
   const classData = resultValue(classDataResult, {subjects:[], tutors:[], classes:[], requests:[]})
-  const loadErrors = [resultError(tutorsResult, 'Tutors'), resultError(classDataResult, 'Classes')].filter(Boolean)
+  const materialData = resultValue(materialDataResult, {subjects:[], items:[]})
+  const loadErrors = [resultError(tutorsResult, 'Tutors'), resultError(classDataResult, 'Classes'), resultError(materialDataResult, 'Materials')].filter(Boolean)
   return <main className="container mx-auto space-y-8 px-6 py-12">
     {loadErrors.length>0&&<Card className="border-destructive"><CardHeader><CardTitle>Some admin data could not load</CardTitle></CardHeader><CardContent className="space-y-1 text-sm text-destructive">{loadErrors.map(e=><p key={e}>{e}</p>)}</CardContent></Card>}
+
+    <Card><CardHeader><CardTitle>Teaching material library</CardTitle><CardDescription>Upload center-approved files to private Cloudflare R2 for Tutors.</CardDescription></CardHeader><CardContent><CreateMaterialForm /></CardContent></Card>
+    <Card><CardHeader><CardTitle>Library items</CardTitle><CardDescription>Uploaded material files.</CardDescription></CardHeader><CardContent><Table><TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Subject</TableHead><TableHead>Grade</TableHead><TableHead>Status</TableHead><TableHead>Files</TableHead></TableRow></TableHeader><TableBody>{materialData.items.length===0?<TableRow><TableCell colSpan={5} className="py-8 text-center text-muted-foreground">No materials yet.</TableCell></TableRow>:materialData.items.map(item=><TableRow key={item.id}><TableCell className="font-medium">{item.title}</TableCell><TableCell>{item.subjectName||'-'}</TableCell><TableCell>{item.gradeLevel||'-'}</TableCell><TableCell><Badge variant={item.active?'default':'secondary'}>{item.active?'Active':'Inactive'}</Badge></TableCell><TableCell>{item.files.map(file=><div key={file.id}>{file.fileName}</div>)}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
     <Card><CardHeader><CardTitle>Create class</CardTitle><CardDescription>Admin creates class context, parent contact, tuition fee, assignment/open status, and schedule notes.</CardDescription></CardHeader><CardContent><CreateClassForm subjects={classData.subjects} tutors={classData.tutors}/></CardContent></Card>
     <Card><CardHeader><CardTitle>Class requests</CardTitle><CardDescription>Approve Tutor requests for open classes.</CardDescription></CardHeader><CardContent><Table><TableHeader><TableRow><TableHead>Class</TableHead><TableHead>Tutor</TableHead><TableHead>Message</TableHead><TableHead>Action</TableHead></TableRow></TableHeader><TableBody>{classData.requests.length===0?<TableRow><TableCell colSpan={4} className="py-8 text-center text-muted-foreground">No pending requests.</TableCell></TableRow>:classData.requests.map(r=><TableRow key={r.id}><TableCell>{r.classLabel}</TableCell><TableCell>{r.tutorName}</TableCell><TableCell>{r.message||'-'}</TableCell><TableCell><RequestReviewForm request={r}/></TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
     <Card><CardHeader><CardTitle>Classes</CardTitle><CardDescription>All classes, assignment state, schedule context, and pricing.</CardDescription></CardHeader><CardContent><Table><TableHeader><TableRow><TableHead>Student</TableHead><TableHead>Subject</TableHead><TableHead>Tutor</TableHead><TableHead>Status</TableHead><TableHead>Parent</TableHead><TableHead>Tuition fee</TableHead><TableHead>Schedule</TableHead></TableRow></TableHeader><TableBody>{classData.classes.length===0?<TableRow><TableCell colSpan={7} className="py-8 text-center text-muted-foreground">No classes yet.</TableCell></TableRow>:classData.classes.map(c=><TableRow key={c.id}><TableCell className="font-medium">{c.studentName}{c.studentGrade?` (${c.studentGrade})`:''}</TableCell><TableCell>{c.subjectName||'-'}</TableCell><TableCell>{c.tutorName||'Open'}</TableCell><TableCell><Badge variant={c.status==='open'?'secondary':'default'}>{c.status}</Badge></TableCell><TableCell>{c.parentName||'-'}{c.parentPhone?` / ${c.parentPhone}`:''}</TableCell><TableCell>{c.tuitionFee??'-'}</TableCell><TableCell>{c.scheduleNotes||'-'}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>

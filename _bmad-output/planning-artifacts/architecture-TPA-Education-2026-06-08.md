@@ -163,7 +163,7 @@ Project initialization is not needed. The first implementation story should inst
 3. Auth/session: Supabase Auth with `@supabase/ssr`.
 4. Authorization: database role model plus Supabase RLS.
 5. Data model: relational Postgres centered on `Class`.
-6. Teaching Material storage: Google Drive links/catalog metadata; generated Monthly Report storage remains optional.
+6. Teaching Material storage: private Cloudflare R2 objects + catalog metadata in Postgres; generated Monthly Report storage remains optional.
 7. Protected app structure: Next.js route groups for public, auth, and dashboard surfaces.
 
 **Important Decisions (Shape Architecture):**
@@ -205,6 +205,7 @@ Project initialization is not needed. The first implementation story should inst
 - `material_requests`
 - `teaching_material_library_items`
 - `teaching_materials`
+- `teaching_material_library_files`
 - `monthly_reports`
 
 **Migration approach:** SQL migrations managed in the repo.
@@ -306,10 +307,10 @@ lib/
 **Decision:** Use Supabase Storage.
 
 **Buckets:**
-- Teaching Materials are stored in Google Drive, not in Supabase Storage.
+- Teaching Materials are stored in private Cloudflare R2, not in Supabase Storage.
 - `monthly-reports` for generated report images if persisted.
 
-**Access pattern:** Buckets private by default. Downloads use signed URLs or authenticated access checks. Multiple Google Drive links may be attached to one Material Request.
+**Access pattern:** Buckets private by default. Downloads use signed URLs or authenticated access checks. Multiple R2-backed files may be attached to one Material Request or Library item.
 
 ### Infrastructure & Deployment
 
@@ -361,7 +362,7 @@ The project has 10 major consistency areas where AI agents could otherwise make 
 - Join tables use both entity names in `snake_case`.
 
 **Examples:**
-- Good: `class_schedules`, `material_requests`, `teaching_materials`
+- Good: `class_schedules`, `material_requests`, `teaching_materials`, `teaching_material_library_files`
 - Good: `tutor_id`, `student_id`, `class_id`
 - Avoid: `ClassSchedules`, `materialRequestId`, `fkTutor`
 
@@ -445,7 +446,8 @@ return { error: { code: "X", message: "Y" } }
 
 **Multi-file Teaching Materials:**
 - `material_requests` stores request metadata.
-- `teaching_materials` stores one row per uploaded file.
+- `teaching_materials`
+- `teaching_material_library_files` stores one row per uploaded file.
 - Each `teaching_materials` row references `material_request_id`.
 
 **Report Images:**
@@ -466,7 +468,7 @@ return { error: { code: "X", message: "Y" } }
 - Do not rely on full page refresh unless necessary.
 
 **Signed URLs:**
-- Teaching Material links should point to Google Drive files/folders with the correct sharing permissions; report images use signed URLs only if persisted in Supabase Storage.
+- Teaching Material links should point to Cloudflare R2 files/folders with the correct sharing permissions; report images use signed URLs only if persisted in Supabase Storage.
 - Do not expose public bucket URLs for private Teaching Materials.
 
 ### State Management Patterns
@@ -718,7 +720,7 @@ TPA-Education/
 - Actions: `lib/actions/material-requests.ts`, `lib/actions/teaching-materials.ts`
 - Validation: `lib/validations/material-requests.ts`
 - DB: `material_requests`, `teaching_materials`
-- Storage: Google Drive link catalog
+- Storage: Cloudflare R2 link catalog
 
 **Monthly Reports:**
 - Routes: `app/dashboard/tutor/reports/`, `app/dashboard/admin/reports/`
@@ -803,7 +805,7 @@ TPA-Education/
 **File Access Control:**
 - Storage buckets are private.
 - Signed URLs are generated server-side.
-- No app-hosted Teaching Material files in MVP; Google Drive permissions control underlying document access.
+- No app-hosted Teaching Material files in MVP; Cloudflare R2 permissions control underlying document access.
 
 ## Architecture Update - Open Classes and Material Library
 
@@ -1036,30 +1038,30 @@ Together we defined:
 Status: complete and ready for implementation planning.
 
 
-## Architecture Update - Google Drive Teaching Material Storage
+## Architecture Update - Cloudflare R2 Teaching Material Storage
 
 ### Decision Change
 
-Teaching Materials will be stored in Google Drive, not Supabase Storage. The web app becomes the catalog, access surface, and workflow tracker for those documents.
+Teaching Materials will be stored in Cloudflare R2, not Supabase Storage. The web app becomes the catalog, access surface, and workflow tracker for those documents.
 
 ### Updated Storage Model
 
-- Google Drive is the source of truth for PDF/Word teaching documents.
+- Cloudflare R2 is the source of truth for PDF/Word teaching documents.
 - Postgres stores metadata: title, subject, grade, description, Drive URL, optional Drive file/folder id, visibility/status, request/library relationship, and timestamps.
 - Supabase Storage is not used for Teaching Materials in MVP.
 - Supabase Storage may still be used later for generated Monthly Report images if persistence is desired.
 
 ### Updated Implementation Rules
 
-- Admin publishes Teaching Material Library items by adding Google Drive file/folder links.
-- Admin fulfills Material Requests by attaching one or more Google Drive links.
+- Admin publishes Teaching Material Library items by adding Cloudflare R2 file/folder links.
+- Admin fulfills Material Requests by attaching one or more Cloudflare R2 links.
 - Tutor views/open links from the web app.
-- The app must not assume a Drive link is private just because it is hidden in the UI; Google Drive sharing permissions must be set correctly.
-- MVP does not need Google Drive API integration unless automatic file listing/permission management becomes required later.
+- The app must not assume a Drive link is private just because it is hidden in the UI; Cloudflare R2 sharing permissions must be set correctly.
+- MVP does not need Cloudflare R2 API integration unless automatic file listing/permission management becomes required later.
 
-### Deferred Google Drive Enhancements
+### Deferred Cloudflare R2 Enhancements
 
-- Google Drive OAuth integration.
+- Cloudflare R2 OAuth integration.
 - Automatic Drive folder sync.
 - Automatic permission provisioning per Tutor.
 - In-app document preview/editor.

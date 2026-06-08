@@ -68,7 +68,7 @@ development_status:
   epic-7-retrospective: optional
   epic-8: backlog
   8-1-admin-creates-library-item-with-files: backlog
-  8-2-tutor-browses-and-downloads-library-items: backlog
+  8-2-tutor-browses-and-downloads-library-items: review
   epic-8-retrospective: optional
   epic-9: backlog
   9-1-tutor-creates-material-request: backlog
@@ -80,6 +80,7 @@ development_status:
   10-2-fill-monthly-progress-and-evaluation-form: backlog
   10-3-generate-and-download-branded-report-image: backlog
   epic-10-retrospective: optional
+
 
 
 

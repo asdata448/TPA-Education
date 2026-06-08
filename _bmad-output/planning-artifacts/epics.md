@@ -32,7 +32,7 @@ FR-14: Tutor can view details of an assigned Class, including Student, Parent, s
 FR-15: Tutor can view Classes marked open and available for Tutor requests.
 FR-16: Tutor can submit a Class Request for an Open Class.
 FR-17: Admin can approve or reject a Class Request; approval assigns the Class to the Tutor.
-FR-20: Admin can publish Teaching Material Library items with title, subject, grade, description, and one or more Google Drive file/folder links.
+FR-20: Admin can publish Teaching Material Library items with title, subject, grade, description, and one or more files stored in Cloudflare R2.
 FR-21: Tutor can browse and download active Teaching Material Library items.
 FR-22: Tutor can create a Material Request linked either to a specific Class or a general topic request.
 FR-23: Admin can view, update status, and fulfill Material Requests with one or more downloadable files.
@@ -61,7 +61,7 @@ NFR-10: Deployment readiness - env vars, Supabase migrations, and RLS policies m
 - Use Supabase Auth with `@supabase/ssr` for sessions.
 - Use Supabase Postgres with SQL migrations in `supabase/migrations/`.
 - Use Supabase RLS for Admin/Tutor row-level authorization.
-- Use Google Drive for Teaching Materials; store Drive metadata/links in Postgres. Supabase Storage is optional only for report images.
+- Use private Cloudflare R2 for Teaching Materials; store R2 object metadata/keys in Postgres. Supabase Storage remains optional only for report images.
 - Use Next.js Server Actions for mutations, not a separate REST backend.
 - Keep service-role client in `lib/supabase/admin.ts` server-only.
 - Use browser client in `lib/supabase/client.ts` and server client in `lib/supabase/server.ts`.
@@ -431,8 +431,8 @@ So that Tutors can reuse center-approved materials.
 **Given** Admin is authenticated
 **When** Admin creates a library item with title, subject, grade, description, and files
 **Then** `teaching_material_library_items` and file rows are created
-**And** multiple Google Drive file/folder links are supported
-**And** Google Drive links and metadata are stored in Postgres.
+**And** multiple R2-backed files are supported
+**And** R2 object keys and metadata are stored in Postgres.
 
 ### Story 8.2: Tutor Browses and Downloads Library Items
 
@@ -446,7 +446,7 @@ So that I can prepare lessons efficiently.
 **When** Tutor opens the Material Library
 **Then** active items are listed
 **And** inactive items are hidden
-**And** Tutor can open Google Drive links from the authorized web catalog
+**And** Tutor can access authorized R2-backed files from the web catalog
 **And** Tutor cannot edit library items.
 
 ## Epic 9: Material Request Workflow
@@ -476,9 +476,9 @@ So that Tutors can download prepared materials.
 **Acceptance Criteria:**
 
 **Given** a Material Request exists
-**When** Admin uploads one or more Google Drive file/folder links and updates status
+**When** Admin uploads one or more files to Cloudflare R2 and updates status
 **Then** one `teaching_materials` row is created per file
-**And** documents are stored in Google Drive and linked from Postgres metadata
+**And** documents are stored in Cloudflare R2 and linked from Postgres metadata
 **And** request status can be set to in progress, fulfilled, or rejected.
 
 ### Story 9.3: Tutor Downloads Fulfilled Request Materials
@@ -492,7 +492,7 @@ So that I can use center-prepared content in lessons.
 **Given** Tutor owns a fulfilled Material Request
 **When** Tutor opens the request detail
 **Then** attached files are shown
-**And** downloads/opening uses Google Drive links shown only to authorized users
+**And** downloads/opening uses authorized R2-backed downloads shown only to authorized users
 **And** Tutor cannot access another Tutor's request materials.
 
 ## Epic 10: Monthly Report Generation

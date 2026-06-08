@@ -14,7 +14,7 @@
 - Chatbot lesson-prep assistant deferred.
 
 ## Storage Decision Update - 2026-06-08
-- Teaching Materials live in Google Drive.
-- Web app stores and displays Drive metadata/links for Material Library and Material Request fulfillment.
-- Google Drive permissions remain important; app UI visibility is not equivalent to Drive-level access control.
-- Drive API/OAuth/sync are deferred unless later required.
+- Teaching Materials live in private Cloudflare R2.
+- Web app stores and displays R2 object metadata/keys for Material Library and Material Request fulfillment.
+- R2 bucket remains private; app authorization and controlled download access remain required.
+- Direct browser uploads/downloads via presigned URLs are optional later optimization; MVP may use server-mediated upload/download.
