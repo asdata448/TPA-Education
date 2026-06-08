@@ -118,3 +118,7 @@ CODE_REVIEW_SUMMARY.md
 
 # Supabase local link/cache
 supabase/.temp/
+
+# Local reference docs
+cloudflare_r2 docs/
+
