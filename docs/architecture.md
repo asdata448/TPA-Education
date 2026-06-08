@@ -2,108 +2,131 @@
 
 ## Executive Summary
 
-The application is a monolithic Next.js 16 App Router site with one primary route (`app/page.tsx`). It behaves as a marketing frontend rather than a transactional product. Most business content is represented as local arrays and rendered through presentation-first React components.
+The application is a monolithic Next.js 16 App Router app deployed on Vercel. Epic 1 authentication and authorization is now implemented and deployed on production using Supabase Auth, SSR session refresh, and profile-based role checks for Admin and Tutor dashboards.
 
 ## Architecture Pattern
 
-- Pattern: component-based frontend monolith
-- Composition: route shell + section components + local UI kit
-- Data source: static in-repo content (`lib/data.ts` + inline arrays)
-- State model: local component state only
-- Network model: no active API integration detected in current page flow
+- Pattern: frontend-first Next.js monolith with server-side auth boundary
+- Composition: App Router pages + server actions + SSR middleware + local UI kit
+- Auth/data backend: Supabase Auth + Postgres
+- Authorization model: profile role lookup from `public.profiles`
+- Hosting: Vercel
 
 ## Runtime Flow
 
-1. `app/layout.tsx` sets metadata, fonts, skip link, analytics gate, global styles
-2. `app/page.tsx` composes the landing page sections in fixed order
-3. Section components render content from either:
-   - `lib/data.ts`
-   - component-local constant arrays
-   - hard-coded image/CTA links
-4. Interactive widgets use client-side state (`useState`, `useEffect`, `useRef`, `useCallback`)
-5. Contact form validates locally and simulates success without external submission
+1. `app/layout.tsx` sets global shell, metadata, analytics gate, and styles
+2. marketing page renders from `app/page.tsx`
+3. login page at `app/(auth)/login/page.tsx` submits credentials
+4. `app/(auth)/login/actions.ts` authenticates with Supabase and resolves role from `profiles`
+5. client navigates to role target dashboard
+6. `proxy.ts` refreshes session for `/dashboard/:path*` and enforces server-side route protection
+7. dashboard pages render placeholder content for authorized users
 
 ## Source-Level Layers
 
 ### App Layer
 
-- `app/layout.tsx` - root HTML shell, metadata, analytics, accessibility link
-- `app/page.tsx` - top-level page composition
-- `app/globals.css` - brand tokens, motion, utilities, accessibility styles
+- `app/layout.tsx` - root shell
+- `app/page.tsx` - landing page
+- `app/globals.css` - global tokens and styles
+- `app/(auth)/login/page.tsx` - login form UI
+- `app/(auth)/login/actions.ts` - login server action
+- `app/dashboard/admin/page.tsx` - admin dashboard placeholder
+- `app/dashboard/tutor/page.tsx` - tutor dashboard placeholder
+- `proxy.ts` - SSR session refresh + dashboard authorization
 
-### Feature Sections
+### Auth / Supabase Layer
 
-- `components/site-header.tsx`
-- `components/hero-section.tsx`
-- `components/trust-section.tsx`
-- `components/tutors-section.tsx`
-- `components/process-section.tsx`
-- `components/about-section.tsx`
-- `components/commitments-section.tsx`
-- `components/parent-report-section.tsx`
-- `components/faq-section.tsx`
-- `components/contact-section.tsx`
-- `components/floating-cta.tsx`
-- `components/site-footer.tsx`
+- `lib/env.ts` - env access helpers
+- `lib/auth/role.ts` - role constants + type guards
+- `lib/supabase/client.ts` - browser Supabase client
+- `lib/supabase/server.ts` - server Supabase client with cookies
+- `lib/supabase/admin.ts` - service-role Supabase client
 
-### Shared Data / Utilities
+### Database Layer
 
-- `lib/data.ts` - tutor, subject, FAQ, process, commitment datasets
-- `lib/utils.ts` - `cn()` class merge helper
+- `supabase/migrations/20260608000001_create_profiles.sql` - `profiles` schema + RLS
+- active Supabase project ref: `zxvddwycpfudbauaxqit`
 
 ### UI Foundation
 
-- `components/ui/` - local shadcn/Radix-derived primitives plus animated utility components
-- `components.json` - shadcn alias + styling config
+- `components/ui/` - shadcn/Radix primitives
+- auth screens currently reuse shared `Card`, `Form`, `Input`, `Button`
 
-## State Management
+## Auth Architecture
 
-- No global state store
-- No Context provider usage in app-level feature flow
-- Local state used for:
-  - sticky/mobile header behavior
-  - floating CTA visibility
-  - contact form selections and submission states
-  - visual micro-interactions in UI primitives
+### Identity
 
-## API / Integration Architecture
+- primary identity source: Supabase Auth `auth.users`
+- login method: email/password
+- no self-service signup in current product scope
 
-Current implementation has no first-party API routes under `app/api` and no server actions. External integrations are limited to:
+### Authorization
 
-- Vercel Analytics in production
-- External asset hosting via Vercel Blob URLs / remote images
-- CTA links to phone, email, Facebook, and Zalo
-- v0 project linkage referenced in `README.md`
+- app roles: `admin`, `tutor`
+- role source: `public.profiles.role`
+- role checks are server-side
+- middleware protects dashboard routes before page render
+
+### Session Handling
+
+- `@supabase/ssr` used for cookie-aware session refresh
+- `proxy.ts` runs on `/dashboard/:path*`
+- unauthenticated requests redirect to `/login`
+- tutor requests to `/dashboard/admin/*` redirect to `/dashboard/tutor`
+- admin requests to dashboard routes are allowed
 
 ## Data Architecture
 
-- Primary content is static TypeScript objects/arrays
-- No ORM, schema, migrations, or database access found in active source paths
-- Environment files mention Supabase/Auth0, but no corresponding runtime usage detected in scanned app code
+Current persistence split:
 
-## Security / Auth
+- marketing content: static TypeScript arrays and local component constants
+- auth identity: Supabase Auth
+- role/profile data: Supabase Postgres `public.profiles`
 
-- No active user auth flows found in app source
-- Environment contains Auth0 and Supabase credentials; current site does not expose auth UI
-- Contact form does not transmit PII to a backend yet, reducing runtime attack surface but also leaving business workflow incomplete
+`public.profiles` currently stores:
 
-## Build / Deployment Architecture
+- `id`
+- `role`
+- `full_name`
+- `active`
+- `created_at`
+- `updated_at`
 
-- Next.js build via `npm run build`
-- Config in `next.config.mjs`
-- Vercel project metadata in `.vercel/project.json`
-- Images set `unoptimized: true`, implying no Next image optimization pipeline
-- TypeScript build errors explicitly ignored in Next config
+## Deployment Architecture
+
+- frontend hosting: Vercel
+- backend/auth: Supabase
+- repo linked Vercel project: `tpa-education`
+- production URL: `https://tpa-education-mauve.vercel.app`
+- active production Supabase project ref: `zxvddwycpfudbauaxqit`
 
 ## Testing Strategy
 
-- No test suite detected
-- `lint` script exists, but no ESLint config file was found in the scanned set
-- Best current validation mode is manual UI verification + build/lint checks
+### Current Validation
 
-## Architectural Risks
+- local build verification passes
+- lint runs with warnings only, no errors
+- production deployment updated to the new Supabase project
+- production test accounts created for Admin and Tutor
+- manual auth verification ready
 
-- Static-content-heavy structure slows non-technical content updates
-- Form lacks backend delivery / CRM persistence
-- Hidden env secrets can drift from actual deployed architecture
-- Ignoring TypeScript build errors can ship regressions
+### Missing Coverage
+
+- no automated unit tests for auth helpers
+- no automated integration tests for login action
+- no E2E coverage for dashboard authorization flows
+
+## Current Risks
+
+- app still relies on manual acceptance testing for auth flows
+- TypeScript build errors are ignored by Next.js config
+- service role key handling must remain server-only
+- repo still contains some older documentation references that may need cleanup in future audits
+
+## Near-Term Recommendations
+
+1. run full manual acceptance test pass using the provided Admin and Tutor accounts
+2. add automated E2E tests for login and role redirects
+3. remove stale Auth0 references if no longer needed
+4. proceed to Epic 2 only after Epic 1 is accepted and sprint status is updated

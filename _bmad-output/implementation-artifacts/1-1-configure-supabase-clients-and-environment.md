@@ -1,6 +1,6 @@
-# Story 1.1: Configure Supabase Clients and Environment
+﻿# Story 1.1: Configure Supabase Clients and Environment
 
-Status: review
+Status: done
 
 ## Story
 
@@ -194,3 +194,5 @@ Prefer the package manager already used by the active workflow. The repo contain
 ### Change Log
 
 - 2026-06-08: Implemented Supabase client/environment foundation for Story 1.1.
+
+

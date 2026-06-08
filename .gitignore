@@ -115,3 +115,6 @@ CODE_REVIEW_SUMMARY.md
 # Turbopack
 # ============================================
 *.turbo
+
+# Supabase local link/cache
+supabase/.temp/

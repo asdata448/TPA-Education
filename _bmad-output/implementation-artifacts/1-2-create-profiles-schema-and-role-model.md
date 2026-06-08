@@ -1,10 +1,10 @@
----
+﻿---
 baseline_commit: 424c4fbf5735dd8c3fbf2ef3bab25e96e593e238
 ---
 
 # Story 1.2: Create Profiles Schema and Role Model
 
-Status: review
+Status: done
 
 ## Story
 
@@ -149,3 +149,5 @@ Codex GPT-5
 ### Change Log
 
 - 2026-06-08: Implemented profiles schema, RLS policies, and role helper for Story 1.2.
+
+

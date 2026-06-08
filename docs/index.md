@@ -5,15 +5,16 @@
 - **Type:** monolith
 - **Project type:** web
 - **Primary language:** TypeScript
-- **Architecture:** component-based Next.js frontend monolith
+- **Architecture:** Next.js frontend monolith with Supabase-backed auth boundary
 
 ## Quick Reference
 
 - **Framework:** Next.js 16 App Router
 - **UI:** React 19 + Tailwind CSS 4 + shadcn/ui + Radix UI
-- **Entry point:** `app/page.tsx`
-- **Primary content model:** static arrays in `lib/data.ts`
-- **Deployment target:** Vercel
+- **Auth:** Supabase Auth + `@supabase/ssr`
+- **Database:** Supabase Postgres (`profiles` role model)
+- **Production URL:** `https://tpa-education-mauve.vercel.app`
+- **Supabase project ref:** `zxvddwycpfudbauaxqit`
 
 ## Generated Documentation
 
@@ -29,8 +30,8 @@
 
 ## Existing Documentation
 
-- [README](../README.md) - Basic setup, local commands, v0 project linkage
-- [CODE_REVIEW_SUMMARY](../CODE_REVIEW_SUMMARY.md) - Prior review artifact
+- [README](../README.md) - setup, environment, deployment, and Epic 1 auth summary
+- [CODE_REVIEW_SUMMARY](../CODE_REVIEW_SUMMARY.md) - prior review artifact
 
 ## Getting Started
 
@@ -39,3 +40,4 @@
 3. Use [Source Tree Analysis](./source-tree-analysis.md) to navigate code
 4. Use [Component Inventory](./component-inventory.md) before editing shared UI or page sections
 5. Check [Development Guide](./development-guide.md) before local changes or deployment work
+6. Check [Deployment Guide](./deployment-guide.md) before touching Supabase or Vercel configuration

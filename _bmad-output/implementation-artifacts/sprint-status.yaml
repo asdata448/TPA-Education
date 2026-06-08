@@ -1,4 +1,4 @@
-# generated: 2026-06-08T01:22:25
+﻿# generated: 2026-06-08T01:22:25
 # last_updated: 2026-06-08T01:32:36
 # project: TPA-Education
 # project_key: NOKEY
@@ -24,18 +24,18 @@
 #   - done: Retrospective has been completed
 
 generated: 2026-06-08T01:22:25
-last_updated: 2026-06-08T01:22:25
+last_updated: 2026-06-08T23:59:00
 project: TPA-Education
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 
 development_status:
-  epic-1: in-progress
-  1-1-configure-supabase-clients-and-environment: review
-  1-2-create-profiles-schema-and-role-model: review
-  1-3-implement-login-and-session-middleware: backlog
-  1-4-protect-dashboard-routes-by-role: backlog
+  epic-1: done
+  1-1-configure-supabase-clients-and-environment: done
+  1-2-create-profiles-schema-and-role-model: done
+  1-3-implement-login-and-session-middleware: done
+  1-4-protect-dashboard-routes-by-role: done
   epic-1-retrospective: optional
   epic-2: backlog
   2-1-create-tutor-database-model: backlog
@@ -80,3 +80,5 @@ development_status:
   10-2-fill-monthly-progress-and-evaluation-form: backlog
   10-3-generate-and-download-branded-report-image: backlog
   epic-10-retrospective: optional
+
+

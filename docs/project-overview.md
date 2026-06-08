@@ -2,20 +2,21 @@
 
 ## Executive Summary
 
-TPA-Education is a single-repository Next.js marketing website for a tutoring center brand named TPA+. The current app is a static, client-heavy landing page focused on lead generation, tutor credibility, subject positioning, and contact capture.
+TPA-Education is a single-repository Next.js application for a tutoring center brand named TPA+. The project now includes both a marketing landing page and an Epic 1 authentication layer with Supabase-backed Admin/Tutor login and protected dashboards.
 
 ## Project Purpose
 
 - Present the TPA+ tutoring brand for THCS/THPT students
 - Showcase tutors, subjects, process, commitments, and FAQs
 - Convert visitors into consultation requests via the contact form and call-to-action links
-- Support deployment to Vercel and iterative visual editing from v0
+- Support Admin and Tutor authentication as the foundation for later internal workflows
+- Support deployment to Vercel with Supabase as the auth/data backend
 
 ## Repository Classification
 
 - Type: monolith
 - Project type: web
-- Runtime model: Next.js App Router frontend
+- Runtime model: Next.js App Router frontend with server-side auth integration
 - Deployment target: Vercel
 
 ## Primary Technology Stack
@@ -27,25 +28,34 @@ TPA-Education is a single-repository Next.js marketing website for a tutoring ce
 | Language | TypeScript | 5.7.3 | Strict mode enabled |
 | Styling | Tailwind CSS | 4.2.0 | CSS variables in `app/globals.css` |
 | Component base | shadcn/ui + Radix UI | mixed | Large local `components/ui/` inventory |
-| Forms | react-hook-form, zod | installed | Not yet used in contact flow |
-| Charts/UX | recharts, embla, vaul, sonner | installed | Mostly design-system capacity |
+| Forms | react-hook-form, zod | installed | Used in login flow |
+| Auth | Supabase Auth + `@supabase/ssr` | active | Email/password auth for Admin/Tutor |
+| Database | Supabase Postgres | active | `profiles` schema with role model |
 | Analytics | Vercel Analytics | 1.6.1 | Enabled only in production |
 | Theme | next-themes | 0.4.6 | Present but dark mode not wired into main page |
 
 ## Functional Scope
 
-- Single-page landing experience assembled in `app/page.tsx`
+- Marketing landing experience assembled in `app/page.tsx`
 - Static tutor/subject/FAQ/process/commitment content from `lib/data.ts`
+- Login page at `/login`
+- Role-based redirects to `/dashboard/admin` and `/dashboard/tutor`
+- Middleware-protected dashboard routes
 - Contact form UI with local validation and simulated async submission
-- No live backend submission, no persisted leads, no API route implementation found
+
+## Active Production Services
+
+- Vercel production URL: `https://tpa-education-mauve.vercel.app`
+- Supabase project ref: `zxvddwycpfudbauaxqit`
+- Test accounts provisioned for Admin and Tutor
 
 ## Key Risks / Gaps
 
 - `next.config.mjs` ignores TypeScript build errors
-- Contact form simulates submit only; no real lead pipeline
-- `.env.local` contains secrets for systems not represented in current app surface
-- No automated tests found
-- `styles/globals.css` appears to be legacy/unused alongside `app/globals.css`
+- Contact form still simulates submit only; no real lead pipeline
+- No automated E2E or integration tests yet for auth flows
+- Legacy Auth0-related environment entries still exist and may need cleanup
+- Some generated docs still require periodic refresh as implementation evolves
 
 ## Documentation Map
 

@@ -3,19 +3,20 @@
 ## Prerequisites
 
 - Node.js 20+ recommended
-- npm available (lockfile also suggests pnpm has been used)
+- `pnpm` available
 - Access to Vercel project if deploying previews/production
+- Access to the linked Supabase project if managing auth users or schema
 
 ## Install
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Local Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open `http://localhost:3000`.
@@ -23,8 +24,8 @@ Open `http://localhost:3000`.
 ## Build
 
 ```bash
-npm run build
-npm run start
+pnpm run build
+pnpm run start
 ```
 
 ## Lint
@@ -33,37 +34,45 @@ npm run start
 npm run lint
 ```
 
-Note: `package.json` defines a lint script, but dedicated ESLint config was not identified during this scan.
+Current lint status:
+- no errors
+- warnings still exist in older UI files outside Epic 1 auth scope
 
 ## Important Source Files
 
-- `app/page.tsx` - page assembly
+- `app/page.tsx` - landing page assembly
 - `app/layout.tsx` - metadata and shell
 - `app/globals.css` - theme tokens and utilities
-- `lib/data.ts` - editable business content
-- `components/contact-section.tsx` - lead capture UX
+- `app/(auth)/login/page.tsx` - login form UI
+- `app/(auth)/login/actions.ts` - login server action
+- `app/dashboard/admin/page.tsx` - admin dashboard placeholder
+- `app/dashboard/tutor/page.tsx` - tutor dashboard placeholder
+- `proxy.ts` - session refresh + route protection
+- `lib/supabase/*` - Supabase client helpers
+- `lib/auth/role.ts` - role helpers
 
-## Environment Variables Observed
+## Active Environment Variables
 
-Environment files exist and include values for:
+Required Supabase variables:
 
-- `DATABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_APP_URL`
-- `AUTH0_SECRET`
-- `AUTH0_BASE_URL`
-- `APP_BASE_URL`
-- `AUTH0_CLIENT_ID`
-- `AUTH0_DOMAIN`
-- `AUTH0_CLIENT_SECRET`
-- `AUTH0_CALLBACK_URL`
-- `TPA_ADMIN_EMAIL`
-- `TPA_ADMIN_USERNAME`
-- `TPA_ADMIN_PASSWORD`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `BOOTSTRAP_ADMIN_EMAIL`
 
-These secrets were not copied into documentation. Current scanned app code does not show active runtime consumption of most of them.
+Legacy Auth0 variables may still exist in env files, but the current Epic 1 auth flow uses Supabase.
+
+## Current Production-Linked Supabase Project
+
+- project ref: `zxvddwycpfudbauaxqit`
+- URL: `https://zxvddwycpfudbauaxqit.supabase.co`
+
+## Test Accounts
+
+Use these for manual login validation:
+
+- Admin: `admin.test@tpa-education.com` / `Test@Admin123`
+- Tutor: `tutor.test@tpa-education.com` / `Test@Tutor123`
 
 ## Content Editing Workflow
 
@@ -72,9 +81,16 @@ These secrets were not copied into documentation. Current scanned app code does 
 - Brand styling is centralized in `app/globals.css`
 - Remote images are embedded in component props rather than a media registry
 
+## Auth Development Notes
+
+- keep `SUPABASE_SERVICE_ROLE_KEY` server-only
+- never import `lib/supabase/admin.ts` from client code
+- route authorization should stay centralized in `proxy.ts`
+- role values must remain aligned with the database check constraint: `admin`, `tutor`
+
 ## Recommended Developer Tasks
 
-- Re-enable strict build failure on TypeScript errors
-- Implement real contact submission endpoint/server action
-- Remove unused env vars or align them with actual app architecture
-- Add test coverage for the contact form and smoke checks for the landing page
+- add automated auth E2E coverage
+- remove stale Auth0 references if they are no longer required
+- implement real contact submission endpoint/server action
+- re-enable strict TypeScript build failure when the codebase is clean enough
