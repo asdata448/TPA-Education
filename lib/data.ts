@@ -213,3 +213,40 @@ export const commitments = [
     icon: "RefreshCw",
   },
 ]
+
+
+export const learningPaths = [
+  {
+    name: 'Foundation Track',
+    duration: '8 weeks',
+    target: 'Rebuild fundamentals with confidence',
+    milestones: [
+      { week: 1, content: 'Assess current level and close core knowledge gaps.' },
+      { week: 3, content: 'Practice guided problem-solving with tutor feedback.' },
+      { week: 6, content: 'Build independent habits through weekly review sets.' },
+    ],
+    outcome: 'Strong core understanding and improved study rhythm.',
+  },
+  {
+    name: 'Acceleration Track',
+    duration: '12 weeks',
+    target: 'Improve school performance and exam readiness',
+    milestones: [
+      { week: 1, content: 'Set goals and map the highest-impact topics first.' },
+      { week: 4, content: 'Strengthen speed and accuracy across common test formats.' },
+      { week: 8, content: 'Apply mixed-topic drills with mistake analysis.' },
+    ],
+    outcome: 'Faster progress, higher confidence, and measurable score gains.',
+  },
+  {
+    name: 'Advanced Track',
+    duration: '16 weeks',
+    target: 'Go deeper for competitions or advanced study',
+    milestones: [
+      { week: 2, content: 'Master advanced concepts beyond standard classroom scope.' },
+      { week: 7, content: 'Practice complex problems with strategic solution patterns.' },
+      { week: 12, content: 'Refine performance through mock challenges and review.' },
+    ],
+    outcome: 'Deeper mastery and stronger performance on advanced assessments.',
+  },
+]

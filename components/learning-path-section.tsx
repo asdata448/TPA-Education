@@ -1,7 +1,10 @@
-import { learningPaths } from "@/lib/data"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Check, Clock, Target, Trophy } from "lucide-react"
+import { learningPaths } from '@/lib/data'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Clock, Target, Trophy } from 'lucide-react'
+
+type LearningPath = (typeof learningPaths)[number]
+type LearningMilestone = LearningPath['milestones'][number]
 
 export function LearningPathSection() {
   return (
@@ -22,7 +25,7 @@ export function LearningPathSection() {
 
         {/* Learning Path Cards */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {learningPaths.map((path, index) => (
+          {learningPaths.map((path: LearningPath, index: number) => (
             <Card
               key={index}
               className={`relative overflow-hidden border-2 transition-all duration-300 hover:shadow-xl ${
@@ -58,7 +61,7 @@ export function LearningPathSection() {
               <CardContent>
                 {/* Milestones */}
                 <div className="space-y-4 mb-6">
-                  {path.milestones.map((milestone, idx) => (
+                  {path.milestones.map((milestone: LearningMilestone, idx: number) => (
                     <div
                       key={idx}
                       className="flex items-start gap-3 p-3 bg-[#F8F5EC]/50 rounded-lg"

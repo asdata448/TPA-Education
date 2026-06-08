@@ -2,29 +2,29 @@
 
 ## Active Application Data Models
 
-The application now includes active Supabase-backed data models for Epic 1 authentication and authorization.
+The application currently uses active Supabase-backed data models for:
+- authentication / authorization
+- Tutor operational management
 
 ## Supabase Auth Model
 
 Primary identity is managed by Supabase Auth in `auth.users`.
 
 Relevant fields used by the app:
-
-- `id` - UUID primary key
-- `email` - login identifier
-- `encrypted_password` - managed by Supabase
-- auth session metadata - managed by Supabase
+- `id`
+- `email`
+- `encrypted_password`
+- session metadata managed by Supabase
 
 ## Profiles Table
 
-The application uses a `public.profiles` table created by:
+Created by:
 
 ```text
 supabase/migrations/20260608000001_create_profiles.sql
 ```
 
 ### Columns
-
 - `id uuid primary key references auth.users(id) on delete cascade`
 - `role text not null check (role in ('admin', 'tutor'))`
 - `full_name text not null`
@@ -33,36 +33,69 @@ supabase/migrations/20260608000001_create_profiles.sql
 - `updated_at timestamptz not null default now()`
 
 ### Purpose
-
 - link each authenticated user to an application role
 - support server-side authorization in login action and middleware
-- support future Admin/Tutor workflows in later epics
+- support Admin/Tutor workflows
+
+## Tutors Table
+
+Created by:
+
+```text
+supabase/migrations/20260609000001_create_tutors.sql
+supabase/migrations/20260609000002_add_tutor_subjects.sql
+```
+
+### Columns
+- `id uuid primary key default gen_random_uuid()`
+- `profile_id uuid not null unique references public.profiles(id) on delete cascade`
+- `phone text`
+- `subjects text`
+- `specialties text`
+- `notes text`
+- `active boolean not null default true`
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+
+### Purpose
+- store Tutor operational profile data separately from auth identity
+- support Admin Tutor creation/editing
+- support future Tutor assignment workflows
 
 ## Authorization Model
 
 Supported roles:
-
 - `admin`
 - `tutor`
 
 Behavior:
-
 - Admin users land on `/dashboard/admin`
 - Tutor users land on `/dashboard/tutor`
 - Tutor access to `/dashboard/admin/*` is blocked and redirected
+- inactive Tutor users are blocked from Tutor dashboard access
+
+## Removed Models
+
+Removed by:
+
+```text
+supabase/migrations/20260609000006_remove_students_parents.sql
+```
+
+Removed tables:
+- `students`
+- `parents`
+- `student_parents`
+
+Reason:
+- Student/Parent data is no longer treated as independent Admin CRUD in the current product slice
+- that information will instead be entered later as part of class/schedule management
 
 ## Static Content Structures
 
 The landing page still uses `lib/data.ts` for static marketing content such as:
-
 - tutor records
 - subject definitions
 - FAQ entries
 - consultation process steps
 - commitment cards
-
-## Current Gaps
-
-- no domain models yet for students, classes, schedules, payments, or reports
-- no server-side persistence yet for contact form submissions
-- no automated schema drift checks or migration tests in CI

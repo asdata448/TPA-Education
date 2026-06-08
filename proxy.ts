@@ -46,7 +46,7 @@ export async function proxy(request: NextRequest) {
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, active')
     .eq('id', user.id)
     .single()
 
@@ -58,6 +58,14 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
   const isAdminRoute = pathname.startsWith('/dashboard/admin')
+  const isTutorRoute = pathname.startsWith('/dashboard/tutor')
+
+  if (isTutor(profile.role) && !profile.active && isTutorRoute) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
+    loginUrl.searchParams.set('reason', 'inactive')
+    return NextResponse.redirect(loginUrl)
+  }
 
   if (isAdminRoute && isTutor(profile.role)) {
     const tutorUrl = request.nextUrl.clone()

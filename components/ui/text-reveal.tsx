@@ -1,6 +1,7 @@
 ﻿"use client"
 
 import { motion } from "framer-motion"
+import type { Variants } from "framer-motion"
 
 interface TextRevealProps {
   text: string
@@ -19,20 +20,20 @@ export function TextReveal({
 }: TextRevealProps) {
   const words = text.split(" ")
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
-    visible: (i = 1) => ({
+    visible: {
       opacity: 1,
-      transition: { staggerChildren: stagger, delayChildren: delay + 0.2 * i },
-    }),
+      transition: { staggerChildren: stagger, delayChildren: delay },
+    },
   }
 
-  const child = {
+  const child: Variants = {
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         damping: 12,
         stiffness: 200,
       },
@@ -41,7 +42,7 @@ export function TextReveal({
       opacity: 0,
       y: 20,
       transition: {
-        type: "spring",
+        type: 'spring',
         damping: 12,
         stiffness: 200,
       },

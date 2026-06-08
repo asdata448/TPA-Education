@@ -54,7 +54,7 @@ export function AnimatedBadge({
     }
   }
 
-  const IconComponent = icon ? icons[icon] : null
+  const IconComponent = icon && icon !== 'custom' ? icons[icon] : null
 
   return (
     <motion.div

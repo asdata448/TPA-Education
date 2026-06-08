@@ -1,4 +1,4 @@
-﻿# generated: 2026-06-08T01:22:25
+# generated: 2026-06-08T01:22:25
 # last_updated: 2026-06-08T01:32:36
 # project: TPA-Education
 # project_key: NOKEY
@@ -24,7 +24,7 @@
 #   - done: Retrospective has been completed
 
 generated: 2026-06-08T01:22:25
-last_updated: 2026-06-08T23:59:00
+last_updated: 2026-06-09T02:15:00
 project: TPA-Education
 project_key: NOKEY
 tracking_system: file-system
@@ -37,15 +37,15 @@ development_status:
   1-3-implement-login-and-session-middleware: done
   1-4-protect-dashboard-routes-by-role: done
   epic-1-retrospective: optional
-  epic-2: backlog
-  2-1-create-tutor-database-model: backlog
-  2-2-admin-creates-tutor-account-with-generated-password: backlog
-  2-3-admin-views-and-edits-tutor-profiles: backlog
+  epic-2: done
+  2-1-create-tutor-database-model: done
+  2-2-admin-creates-tutor-account-with-generated-password: done
+  2-3-admin-views-and-edits-tutor-profiles: done
   epic-2-retrospective: optional
-  epic-3: backlog
-  3-1-create-student-records: backlog
-  3-2-create-parent-records: backlog
-  3-3-link-students-and-parents: backlog
+  epic-3: done
+  3-1-create-student-records: done
+  3-2-create-parent-records: done
+  3-3-link-students-and-parents: done
   epic-3-retrospective: optional
   epic-4: backlog
   4-1-create-class-and-subject-schema: backlog
@@ -80,5 +80,8 @@ development_status:
   10-2-fill-monthly-progress-and-evaluation-form: backlog
   10-3-generate-and-download-branded-report-image: backlog
   epic-10-retrospective: optional
+
+
+
 
 
