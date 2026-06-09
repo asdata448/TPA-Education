@@ -34,9 +34,9 @@ FR-16: Tutor can submit a Class Request for an Open Class.
 FR-17: Admin can approve or reject a Class Request; approval assigns the Class to the Tutor.
 FR-20: Admin can publish Teaching Material Library items with title, subject, grade, description, and one or more files stored in Cloudflare R2.
 FR-21: Tutor can browse and download active Teaching Material Library items.
-FR-22: Tutor can create a Material Request linked either to a specific Class or a general topic request.
-FR-23: Admin can view, update status, and fulfill Material Requests with one or more downloadable files.
-FR-24: Tutor can view request history and download fulfilled Teaching Materials attached to own requests.
+FR-22: Tutor can submit a document feedback item to request materials or report incorrect/missing/broken materials, optionally linked to a specific library item or Class.
+FR-23: Admin can review document feedback items and resolve each item by marking it done or rejected.
+FR-24: Tutor can receive notifications when their document feedback item is completed or rejected, and view the rejection reason when applicable.
 FR-25: Tutor can create a Monthly Report draft for an assigned Class and reporting month.
 FR-26: Tutor can enter required monthly progress and student evaluation information into a structured report form.
 FR-27: System can generate a branded Monthly Report image from report data and template.
@@ -68,7 +68,7 @@ NFR-10: Deployment readiness - env vars, Supabase migrations, and RLS policies m
 - Use `ActionResult<T> = { ok: true; data: T } | { ok: false; error: string }` for Server Actions.
 - Use Zod schemas in `lib/validations/`.
 - Use `snake_case` DB naming and `camelCase` TypeScript variables.
-- Add tables: `profiles`, `tutors`, `students`, `parents`, `student_parents`, `subjects`, `classes`, `class_schedules`, `class_requests`, `schedule_proposals`, `material_requests`, `teaching_material_library_items`, `teaching_material_library_files`, `teaching_materials`, `monthly_reports`.
+- Add tables: `profiles`, `tutors`, `students`, `parents`, `student_parents`, `subjects`, `classes`, `class_schedules`, `class_requests`, `schedule_proposals`, `document_feedback`, `notifications`, `teaching_material_library_items`, `teaching_material_library_files`, `monthly_reports`.
 - Add protected routes under `app/dashboard/admin/` and `app/dashboard/tutor/`.
 - Admin remains official source of truth for Class assignment and official Schedule.
 - Tutor-initiated changes use request/proposal workflows, not direct mutation of official Class/Schedule data.
@@ -79,10 +79,10 @@ NFR-10: Deployment readiness - env vars, Supabase migrations, and RLS policies m
 
 No UX Design document found. UX requirements inferred from PRD/architecture only:
 UX-DR1: Provide role-specific Admin and Tutor dashboard navigation.
-UX-DR2: Provide clear form flows for Tutor, Student, Parent, Class, Schedule, Open Class Request, Material Request, Library item, and Monthly Report creation.
+UX-DR2: Provide clear form flows for Tutor, Student, Parent, Class, Schedule, Open Class Request, Document Feedback submission, Library item, and Monthly Report creation.
 UX-DR3: Tutor-facing Open Class list must clearly show available safe fields while hiding sensitive Parent contact data.
 UX-DR4: Monthly Report flow must provide preview and image download.
-UX-DR5: File upload/download UI must support multiple files for Teaching Material Requests and Library items.
+UX-DR5: File upload/download UI must support multiple files for Teaching Material Library items, while document feedback remains a lightweight text-first workflow.
 UX-DR6: Forms must show user-facing errors from typed Server Action results.
 
 ### FR Coverage Map
@@ -95,7 +95,7 @@ Epic 5: Tutor Class Workspace ? FR-12, FR-13, FR-14
 Epic 6: Open Class Request Workflow ? FR-15, FR-16, FR-17
 Epic 7: Removed - Tutor self-schedules with parent outside app
 Epic 8: Teaching Material Library ? FR-20, FR-21
-Epic 9: Material Request Workflow ? FR-22, FR-23, FR-24
+Epic 9: Document Feedback and Resolution Workflow ? FR-22, FR-23, FR-24
 Epic 10: Monthly Report Generation ? FR-25, FR-26, FR-27, FR-28
 
 ## Epic List
@@ -108,7 +108,7 @@ Epic 10: Monthly Report Generation ? FR-25, FR-26, FR-27, FR-28
 6. **Open Class Request Workflow** ? Enable Tutors to browse and request Open Classes, with Admin approval assigning Classes.
 7. **Removed: Schedule Proposal Workflow** ? Tutor self-schedules with parent outside the app; no Admin approval workflow needed.
 8. **Teaching Material Library** ? Enable Admin to publish teaching materials and Tutors to browse and download active items.
-9. **Material Request Workflow** ? Enable Tutors to request teaching materials and Admin to fulfill requests with downloadable files.
+9. **Document Feedback and Resolution Workflow** ? Enable Tutors to request materials or report material issues, and let Admin resolve each item with tutor notifications.
 10. **Monthly Report Generation** ? Enable Tutors to create structured monthly reports and generate branded downloadable images.
 
 
@@ -449,51 +449,56 @@ So that I can prepare lessons efficiently.
 **And** Tutor can access authorized R2-backed files from the web catalog
 **And** Tutor cannot edit library items.
 
-## Epic 9: Material Request Workflow
+## Epic 9: Document Feedback and Resolution Workflow
 
-Enable Tutors to request teaching materials and Admin to fulfill requests with downloadable files.
+Enable Tutors to send lightweight document-related requests or issue reports, and let Admin resolve them with explicit outcomes and tutor notifications.
 
-### Story 9.1: Tutor Creates Material Request
+### Story 9.1: Tutor Submits Document Feedback
 
 As a Tutor,
-I want to request custom teaching materials,
-So that the center can prepare support content for my class or topic.
+I want to submit a document feedback item,
+So that Admin knows when I need materials or when a document has a problem.
 
 **Acceptance Criteria:**
 
 **Given** Tutor is authenticated
-**When** Tutor submits a Material Request with title/topic, description, type, and optional Class link
-**Then** a `material_requests` row is created with pending/submitted status
-**And** Tutor can see it in request history
-**And** Tutor cannot create requests for another Tutor identity.
+**When** Tutor submits a document feedback form with type, message, and optional related Class or library item
+**Then** a `document_feedback` row is created with `pending` status
+**And** the feedback is linked to the submitting Tutor only
+**And** the feedback can represent a material request, wrong material report, missing material report, broken file report, or other document issue.
 
-### Story 9.2: Admin Fulfills Material Request with Files
+### Story 9.2: Admin Resolves Document Feedback
 
 As an Admin,
-I want to upload files to fulfill Material Requests,
-So that Tutors can download prepared materials.
+I want to review and resolve document feedback items,
+So that Tutor requests and document issues are handled with a clear final decision.
 
 **Acceptance Criteria:**
 
-**Given** a Material Request exists
-**When** Admin uploads one or more files to Cloudflare R2 and updates status
-**Then** one `teaching_materials` row is created per file
-**And** documents are stored in Cloudflare R2 and linked from Postgres metadata
-**And** request status can be set to in progress, fulfilled, or rejected.
+**Given** a pending document feedback item exists
+**When** Admin opens the item
+**Then** Admin can mark it `done` when the issue has been handled
+**And** Admin can mark it `rejected` only after entering a rejection reason
+**And** the system stores `handled_by`, `handled_at`, final status, and any admin note or rejection reason.
 
-### Story 9.3: Tutor Downloads Fulfilled Request Materials
+### Story 9.3: Tutor Receives Resolution Notifications
 
 As a Tutor,
-I want to download fulfilled Teaching Materials,
-So that I can use center-prepared content in lessons.
+I want to receive a notification when Admin finishes reviewing my document feedback,
+So that I know whether the issue was completed or rejected.
 
 **Acceptance Criteria:**
 
-**Given** Tutor owns a fulfilled Material Request
-**When** Tutor opens the request detail
-**Then** attached files are shown
-**And** downloads/opening uses authorized R2-backed downloads shown only to authorized users
-**And** Tutor cannot access another Tutor's request materials.
+**Given** Tutor owns a document feedback item
+**When** Admin marks the item `done`
+**Then** the Tutor receives a notification that the feedback has been handled
+**And** the notification references the related feedback item.
+
+**Given** Tutor owns a document feedback item
+**When** Admin marks the item `rejected`
+**Then** the Tutor receives a notification that the feedback was rejected
+**And** the rejection reason is included in the notification
+**And** Tutor cannot view notifications for another Tutor's feedback.
 
 ## Epic 10: Monthly Report Generation
 
@@ -573,7 +578,7 @@ All 28 Functional Requirements are covered by at least one epic/story.
 
 - Epic 1 provides shared auth/session foundation.
 - Later epics build naturally on prior data models.
-- Open Class, Material Library, Material Request, and Monthly Report epics can be implemented independently after the required auth/data foundations exist. Schedule Proposal workflow is removed.
+- Open Class, Material Library, Document Feedback, and Monthly Report epics can be implemented independently after the required auth/data foundations exist. Schedule Proposal workflow is removed.
 
 ### Final Status
 

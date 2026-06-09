@@ -91,8 +91,9 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - **Open Class** - A Class that is not yet assigned to a Tutor and is visible for Tutors to request.
 - **Class Request** - A Tutor request to take an Open Class, reviewed and approved or rejected by Admin.
 - **Schedule** - One or more weekly recurring time slots attached to a Class.
-- **Material Request** - A Tutor-created request asking the center for teaching materials, either tied to a Class or submitted as a general topic need.
-- **Teaching Material** - A file provided by the Admin for a Material Request or Library item. MVP stores files in private Cloudflare R2 and surfaces them through authorized app access.
+- **Document Feedback** - A Tutor-submitted notice used to request materials or report wrong, missing, or broken materials, optionally tied to a Class or library item.
+- **Teaching Material** - A file published in the Teaching Material Library. MVP stores files in private Cloudflare R2 and surfaces them through authorized app access.
+- **Resolution Notification** - A Tutor notification sent when Admin marks a Document Feedback item done or rejected, including the rejection reason when applicable.
 - **Teaching Material Library** - A central collection of Admin-published Teaching Materials that Tutors can browse and download.
 - **Monthly Report** - A Tutor-generated parent-facing progress summary for a single Class, produced as an image.
 - **Tuition Fee** - The amount charged for a Class and shown on the Monthly Report.
@@ -101,7 +102,7 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 ## 4. Features
 
 ### 4.1 Authentication and Access Control
-**Description:** The system supports internal authentication for one Admin and multiple Tutors. The Admin account model is single-user in MVP. Tutors log in with email and password created by the Admin. Tutor access must be restricted to their own Classes, schedules, Material Requests, Teaching Materials, and Monthly Reports. Realizes UJ-1, UJ-3, UJ-4, UJ-5.
+**Description:** The system supports internal authentication for one Admin and multiple Tutors. The Admin account model is single-user in MVP. Tutors log in with email and password created by the Admin. Tutor access must be restricted to their own Classes, schedules, Document Feedback items, notifications, Teaching Material Library access, and Monthly Reports. Realizes UJ-1, UJ-3, UJ-4, UJ-5.
 
 **Functional Requirements:**
 
@@ -222,7 +223,7 @@ A Tutor can view weekly Schedule information for assigned Classes only. Realizes
 - Tutor cannot edit the Schedule.
 
 ### 4.6 Tutor Workspace
-**Description:** Tutors need a simplified, role-limited workspace focused on execution rather than management. They can view Class details and use the Class context to create Material Requests and Monthly Reports. Realizes UJ-3, UJ-6, UJ-7.
+**Description:** Tutors need a simplified, role-limited workspace focused on execution rather than management. They can view Class details and use the Class context to submit Document Feedback and create Monthly Reports. Realizes UJ-3, UJ-6, UJ-7.
 
 **Functional Requirements:**
 
@@ -296,34 +297,36 @@ Tutor can browse and download active Teaching Material Library items. Realizes U
 - Tutor can access authorized R2-backed files from the web catalog through app-controlled download/open flows.
 - Tutor cannot edit library items.
 
-### 4.10 Teaching Material Requests
-**Description:** Tutors can ask the center for Teaching Materials either for a specific Class or as a general subject/topic need. The Admin manages request fulfillment and uploads files. Tutors can download fulfilled files and review request history. Realizes UJ-6.
+### 4.10 Document Feedback and Resolution
+**Description:** Tutors need one lightweight workflow to notify Admin about document-related needs or problems. The same flow covers requesting materials, reporting wrong materials, reporting missing materials, and reporting broken files. Admin resolves each item by marking it done or rejected, and Tutors receive the final outcome as a notification. Realizes UJ-6.
 
 **Functional Requirements:**
 
-#### FR-22: Create Material Request
-A Tutor can create a Material Request linked either to a specific Class or to a general topic request. Realizes UJ-6.
+#### FR-22: Tutor submits Document Feedback
+A Tutor can submit a Document Feedback item linked either to a specific Class, a specific Teaching Material Library item, or neither when making a general request. Realizes UJ-6.
 
 **Consequences (testable):**
-- Request captures request type, title/topic, description, and optional Class link.
-- Request is visible to the Admin after submission.
-- Request is stored in Tutor request history.
+- Feedback captures a type, free-text message, and optional related Class or library item.
+- Feedback types cover at least requesting materials, reporting wrong materials, reporting missing materials, reporting broken files, and other issues.
+- Feedback is visible to the Admin after submission.
+- Feedback is stored under the submitting Tutor only with initial status `pending`.
 
-#### FR-23: Admin manages Material Requests
-The Admin can view, update status, and fulfill Material Requests. Realizes UJ-6.
-
-**Consequences (testable):**
-- Admin can see all Material Requests.
-- Admin can mark request status values. [ASSUMPTION: status set will include submitted, in_progress, fulfilled, rejected.]
-- Admin can attach one or more Cloudflare R2 file/folder links as Teaching Materials.
-
-#### FR-24: Tutor opens fulfilled Cloudflare R2 Teaching Material links
-A Tutor can view request history and download Teaching Materials attached to fulfilled requests. Realizes UJ-6.
+#### FR-23: Admin resolves Document Feedback
+The Admin can review each Document Feedback item and finish it with a final decision. Realizes UJ-6.
 
 **Consequences (testable):**
-- Tutor can see status history for own requests.
-- Tutor can open/download linked Cloudflare R2 PDF or Word files according to Cloudflare R2 permissions.
-- Tutor cannot access another Tutor's Material Requests.
+- Admin can see all Document Feedback items.
+- Admin can mark an item `done` when the issue has been handled.
+- Admin can mark an item `rejected` only after entering a rejection reason.
+- The system stores final status, handler identity, handling time, and any optional admin note.
+
+#### FR-24: Tutor receives resolution notifications
+A Tutor can receive the result of Admin handling on their own Document Feedback items. Realizes UJ-6.
+
+**Consequences (testable):**
+- Tutor receives a notification when an item is marked `done`.
+- Tutor receives a notification with the rejection reason when an item is marked `rejected`.
+- Tutor can access only notifications and feedback records tied to their own identity.
 
 ### 4.11 Monthly Progress Reports
 **Description:** Tutors generate a center-branded Monthly Report per Class by filling in structured information at month end. The system outputs an image containing report content, placeholder bank QR, and the Tuition Fee associated with that Class. Tutors download the image and send it manually to Parents. Realizes UJ-7.
@@ -391,8 +394,8 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - Removed: Tutor Schedule Proposal submission
 - Removed: Admin approval/rejection of Schedule Proposals
 - Teaching Material Library browsing and Cloudflare R2 link access
-- Tutor Material Request creation and history
-- Admin Teaching Material link/catalog management and request fulfillment
+- Tutor Document Feedback submission
+- Admin Document Feedback resolution and tutor notifications
 - Monthly Report form and branded image generation
 - Tuition Fee display on generated Monthly Reports
 - Placeholder bank QR shown on generated Monthly Reports
@@ -414,7 +417,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - **SM-3**: A Tutor can independently retrieve assigned Class information and generate a monthly parent-facing report image without Admin intervention. Validates FR-13, FR-14, FR-18, FR-19, FR-20, FR-21.
 
 **Secondary**
-- **SM-4**: 90%+ of Teaching Material requests can be tracked from submission to fulfilled/rejected status inside the system. Validates FR-15, FR-16, FR-17.
+- **SM-4**: 90%+ of Document Feedback items can be tracked from submission to done/rejected status inside the system. Validates FR-22, FR-23, FR-24.
 - **SM-5**: Monthly Report generation produces a usable output on first attempt for most Tutor use cases. Validates FR-19, FR-20, FR-21.
 
 **Counter-metrics (do not optimize)**
@@ -424,7 +427,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 ## 8. Open Questions
 1. What exact visual layout and field order should the Monthly Report template use?
 2. What Cloudflare R2 sharing permission convention should be used for Teaching Material links?
-3. What exact status vocabulary should Material Requests use?
+3. Should Admin be allowed to add an optional completion note when marking Document Feedback done?
 4. What exact status vocabulary should Classes use?
 5. Should Tuition Fee be displayed as a single monthly number, per-session number, or flexible text value in the Monthly Report template?
 6. Does the Admin need a simple dashboard summary in MVP, or are CRUD lists sufficient initially?
@@ -435,6 +438,6 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 
 ## 9. Assumptions Index
 - Section 4.4 / FR-10 - Class statuses will include at least pending, active, paused, completed, cancelled.
-- Section 4.7 / FR-16 - Material Request statuses will include submitted, in_progress, fulfilled, rejected.
+- Section 4.10 / FR-23 - Document Feedback statuses will include pending, done, rejected.
 - Section 4.8 / FR-18 - Duplicate drafts may be allowed before final Monthly Report generation.
 - Section 4.8 / FR-19 - Draft save before final generation is desirable for usability.

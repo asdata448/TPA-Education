@@ -24,7 +24,7 @@
 #   - done: Retrospective has been completed
 
 generated: 2026-06-08T01:22:25
-last_updated: 2026-06-09T03:00:00
+last_updated: 2026-06-10T00:00:00
 project: TPA-Education
 project_key: NOKEY
 tracking_system: file-system
@@ -66,14 +66,14 @@ development_status:
   7-1-tutor-creates-schedule-proposal: done
   7-2-admin-reviews-schedule-proposal: done
   epic-7-retrospective: optional
-  epic-8: backlog
-  8-1-admin-creates-library-item-with-files: backlog
+  epic-8: review
+  8-1-admin-creates-library-item-with-files: review
   8-2-tutor-browses-and-downloads-library-items: review
   epic-8-retrospective: optional
-  epic-9: backlog
-  9-1-tutor-creates-material-request: backlog
-  9-2-admin-fulfills-material-request-with-files: backlog
-  9-3-tutor-downloads-fulfilled-request-materials: backlog
+  epic-9: review
+  9-1-tutor-submits-document-feedback: review
+  9-2-admin-resolves-document-feedback: review
+  9-3-tutor-receives-resolution-notifications: review
   epic-9-retrospective: optional
   epic-10: backlog
   10-1-create-monthly-report-draft: backlog

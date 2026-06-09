@@ -231,3 +231,15 @@ Acceptance:
 6. Add Tutor library browse page.
 7. Add authenticated download route.
 8. Deploy and test with one PDF/doc file.
+
+## Implemented Epic 8 Library Management
+
+As of 2026-06-09, the app supports:
+
+- Admin upload of private R2-backed material files.
+- Admin edit/delete for material items.
+- Admin delete for individual material files.
+- Admin active/inactive toggle; inactive items are hidden from Tutors.
+- Admin and Tutor search/filter UI.
+- Server-side file validation for allowed document/image/text MIME types and 25MB per-file maximum.
+- Best-effort R2 object cleanup when uploaded file metadata insert fails, when deleting a file, and when deleting a material item.

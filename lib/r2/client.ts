@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { requiredServerEnv } from '@/lib/env'
 
@@ -53,4 +53,9 @@ export async function createTeachingMaterialDownloadUrl(key: string, expiresInSe
     new GetObjectCommand({ Bucket: bucketName(), Key: key }),
     { expiresIn: expiresInSeconds }
   )
+}
+
+export async function deleteTeachingMaterialFile(key: string) {
+  const client = createR2Client()
+  await client.send(new DeleteObjectCommand({ Bucket: bucketName(), Key: key }))
 }

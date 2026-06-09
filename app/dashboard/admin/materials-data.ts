@@ -15,6 +15,34 @@ export type AdminLibraryItem = {
   files: Array<{ id: string; fileName: string; mimeType: string | null; sizeBytes: number | null }>
 }
 
+type MaterialFileRow = { id: string; file_name: string; mime_type: string | null; size_bytes: number | null }
+type MaterialItemRow = {
+  id: string
+  title: string
+  subject_name: string | null
+  grade_level: string | null
+  description: string | null
+  active: boolean
+  teaching_material_library_files?: MaterialFileRow[] | null
+}
+
+function mapMaterialItem(item: MaterialItemRow): AdminLibraryItem {
+  return {
+    id: item.id,
+    title: item.title,
+    subjectName: item.subject_name,
+    gradeLevel: item.grade_level,
+    description: item.description,
+    active: item.active,
+    files: (item.teaching_material_library_files ?? []).map((file) => ({
+      id: file.id,
+      fileName: file.file_name,
+      mimeType: file.mime_type,
+      sizeBytes: file.size_bytes,
+    })),
+  }
+}
+
 export async function getAdminMaterialData() {
   await requireActiveAdmin()
   const admin = createAdminClient()
@@ -32,20 +60,7 @@ export async function getAdminMaterialData() {
 
   return {
     subjects: (subjects ?? []) as MaterialSubject[],
-    items: (items ?? []).map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      subjectName: item.subject_name,
-      gradeLevel: item.grade_level,
-      description: item.description,
-      active: item.active,
-      files: (item.teaching_material_library_files ?? []).map((file: any) => ({
-        id: file.id,
-        fileName: file.file_name,
-        mimeType: file.mime_type,
-        sizeBytes: file.size_bytes,
-      })),
-    })) as AdminLibraryItem[],
+    items: ((items ?? []) as MaterialItemRow[]).map(mapMaterialItem),
   }
 }
 
@@ -67,18 +82,5 @@ export async function getTutorMaterialLibrary() {
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []).map((item: any) => ({
-    id: item.id,
-    title: item.title,
-    subjectName: item.subject_name,
-    gradeLevel: item.grade_level,
-    description: item.description,
-    active: item.active,
-    files: (item.teaching_material_library_files ?? []).map((file: any) => ({
-      id: file.id,
-      fileName: file.file_name,
-      mimeType: file.mime_type,
-      sizeBytes: file.size_bytes,
-    })),
-  })) as AdminLibraryItem[]
+  return ((data ?? []) as MaterialItemRow[]).map(mapMaterialItem)
 }

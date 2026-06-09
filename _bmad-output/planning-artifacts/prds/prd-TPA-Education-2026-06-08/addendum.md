@@ -15,6 +15,6 @@
 
 ## Storage Decision Update - 2026-06-08
 - Teaching Materials live in private Cloudflare R2.
-- Web app stores and displays R2 object metadata/keys for Material Library and Material Request fulfillment.
+- Web app stores and displays R2 object metadata/keys for Material Library only; Document Feedback stays in app DB as a lightweight workflow.
 - R2 bucket remains private; app authorization and controlled download access remain required.
 - Direct browser uploads/downloads via presigned URLs are optional later optimization; MVP may use server-mediated upload/download.

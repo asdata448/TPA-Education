@@ -47,6 +47,7 @@ Fix applied:
 - `20260609000001_create_tutors.sql`
 - `20260609000002_add_tutor_subjects.sql`
 - `20260609000006_remove_students_parents.sql`
+- `20260610000001_create_document_feedback_notifications.sql`
 
 ### Vercel Deployment
 - Project: `tpa-education`
@@ -99,7 +100,9 @@ Notes:
 - `/login` - email/password login for Admin and Tutor
 - `/dashboard/admin` - Admin Tutor management dashboard
 - `/dashboard/admin/tutors/[tutorId]` - Tutor detail/edit page
-- `/dashboard/tutor` - Tutor dashboard placeholder
+- `/dashboard/admin/document-feedback` - Admin document feedback queue
+- `/dashboard/tutor` - Tutor dashboard
+- `/dashboard/tutor/document-feedback` - Tutor document feedback + notifications
 
 ## Route Protection
 
@@ -172,6 +175,8 @@ Set environment variables in Vercel project settings before deploying.
 - [ ] Epic 4: Class + subject + schedule workflow (in progress)
 - [ ] Epic 5: Tutor class workspace / open class flow
 - [ ] Epic 6+: Remaining business workflows
+- [x] Epic 8: Material library management
+- [x] Epic 9: Document feedback and resolution notifications
 
 
 ## Schedule Proposal Scope
@@ -182,3 +187,38 @@ Schedule proposal workflow is removed from current scope. Tutors self-coordinate
 ## Cloudflare R2 Material Library Scope
 
 Epic 8 is replanned away from Cloudflare R2. Teaching materials will be stored in a private Cloudflare R2 bucket, while Postgres stores item/file metadata and the app enforces authorized access for Admin/Tutor roles. Presigned URLs or Worker/server-mediated access are both valid implementation paths; MVP should prefer simpler app-controlled access first.
+
+## Epic 8 Material Library Management
+
+Implemented as of 2026-06-09:
+
+- Admin can upload, edit, deactivate/reactivate, and delete teaching material library items.
+- Admin can delete individual files from a material item; deletes clean database rows and best-effort clean R2 objects.
+- Admin and Tutor library screens support search/filter.
+- Upload/edit server actions enforce allowed file types and a 25MB per-file maximum.
+- Tutors only see active library items and download through the authenticated app route.
+
+## Epic 9 Document Feedback Workflow
+
+Implemented as of 2026-06-10:
+
+- Tutor can submit document feedback to request materials or report wrong/missing/broken files.
+- Tutor can optionally link feedback to an assigned class or a material library item.
+- Admin can review all feedback and resolve each item as `done` or `rejected`.
+- Reject requires a reason; done can include an optional admin note.
+- Tutor receives in-app notifications when Admin resolves feedback.
+- RLS keeps Tutor access scoped to their own feedback and notifications.
+
+### Epic 9 Manual Test Flow
+1. Login as Tutor
+2. Open `/dashboard/tutor/document-feedback`
+3. Submit one request-material item and one broken-file item
+4. Confirm both appear in Tutor feedback history with `pending`
+5. Login as Admin
+6. Open `/dashboard/admin/document-feedback`
+7. Mark one item `Done` with optional note
+8. Try rejecting one item without reason -> should fail
+9. Reject the item with a reason -> should succeed
+10. Login back as Tutor
+11. Confirm notification list shows one handled and one rejected result
+12. Confirm rejected item shows the reject reason

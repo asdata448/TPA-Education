@@ -23,7 +23,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 - **Date:** 2026-06-08
 - **Architect:** Admin
 - **Primary Input:** PRD - TPA-Education Internal Tutor and Class Management MVP
-- **Purpose:** Define solution architecture for internal tutor/class management system supporting Admin + multi-Tutor roles with Class, Open Class Request, Teaching Material Library, Material Request, and Monthly Report management.
+- **Purpose:** Define solution architecture for internal tutor/class management system supporting Admin + multi-Tutor roles with Class, Open Class Request, Teaching Material Library, Document Feedback, and Monthly Report management.
 
 ## Input Documents Discovered
 
@@ -42,7 +42,7 @@ _Workflow initialized. Ready for Step 2: Input Document Review._
 **Functional Requirements:**
 The product introduces an internal management system layered onto the existing TPA-Education project. Architecturally, the requirements break into six main capability areas: authentication and role-restricted access, Tutor management, Student/Parent/Class management, Open Class discovery/request workflows, Teaching Material Library, Teaching Material request workflows, and Monthly Report generation. This implies a shift from a static content-driven site to a transactional application with protected data, CRUD workflows, per-role dashboards, and generated artifacts.
 
-The Admin is the operational source of truth in MVP. The Tutor experience is intentionally narrower: view assigned Classes and Schedules, browse Open Classes, request Open Classes, propose Schedules, browse/download Teaching Material Library items, create Material Requests, download fulfilled Teaching Materials, and generate Monthly Reports. This role asymmetry is important architecturally because it favors strong server-side authorization boundaries and a data model centered on Class ownership.
+The Admin is the operational source of truth in MVP. The Tutor experience is intentionally narrower: view assigned Classes and Schedules, browse Open Classes, request Open Classes, propose Schedules, browse/download Teaching Material Library items, submit Document Feedback, receive resolution notifications, and generate Monthly Reports. This role asymmetry is important architecturally because it favors strong server-side authorization boundaries and a data model centered on Class ownership.
 
 **Non-Functional Requirements:**
 The main non-functional requirements implied by the PRD are security, role isolation, operational simplicity, and fast MVP delivery. The system must protect Parent contact information, Student data, Tuition Fee data, and Tutor Pay data. It must also ensure that Tutors can access only their own Classes, requests, files, and reports. The architecture should optimize for low operational overhead and fast iteration rather than high-scale distributed complexity.
@@ -54,7 +54,7 @@ This is a medium-complexity internal web application.
 
 - Primary domain: full-stack web application
 - Complexity level: medium
-- Estimated architectural components: 7-10 major components (auth, role access, Tutor management, Class/Schedule management, Material Requests, file storage, report generation, admin/tutor dashboards)
+- Estimated architectural components: 7-10 major components (auth, role access, Tutor management, Class/Schedule management, Document Feedback, file storage, report generation, admin/tutor dashboards)
 
 ### Technical Constraints & Dependencies
 
@@ -171,7 +171,7 @@ Project initialization is not needed. The first implementation story should inst
 2. Client access pattern: browser Supabase client only for user-scoped reads where RLS protects data.
 3. Report image generation: browser-side export/screenshot from a React template for MVP.
 4. Tutor password setup: system generates a random initial password for Admin to copy and provide manually.
-5. Teaching Material fulfillment: multiple files may be attached to each Material Request.
+5. Document Feedback resolution: Tutor submits one lightweight feedback item; Admin resolves it as done or rejected and Tutor receives the result.
 6. Admin account model: single bootstrap Admin in Supabase Auth plus role table, not `.env` password auth long-term.
 7. Form validation: shared schema validation with Zod.
 8. UI architecture: shadcn/ui primitives plus feature-specific components.
@@ -189,7 +189,7 @@ Project initialization is not needed. The first implementation story should inst
 
 **Decision:** Use Supabase Postgres as the relational database.
 
-**Rationale:** The MVP data is strongly relational: Tutors, Students, Parents, Classes, Schedules, Material Requests, Teaching Materials, and Monthly Reports. Supabase provides Postgres, Auth, Storage, and RLS in one platform, matching the MVP need for fast delivery and low operations overhead.
+**Rationale:** The MVP data is strongly relational: Tutors, Students, Parents, Classes, Schedules, Document Feedback items, notifications, Teaching Material Library metadata, and Monthly Reports. Supabase provides Postgres, Auth, Storage, and RLS in one platform, matching the MVP need for fast delivery and low operations overhead.
 
 **Core tables:**
 - `profiles`
@@ -202,9 +202,9 @@ Project initialization is not needed. The first implementation story should inst
 - `class_schedules`
 - `class_requests`
 - `schedule_proposals`
-- `material_requests`
+- `document_feedback`
 - `teaching_material_library_items`
-- `teaching_materials`
+- `notifications`
 - `teaching_material_library_files`
 - `monthly_reports`
 
@@ -229,7 +229,7 @@ Project initialization is not needed. The first implementation story should inst
 **RLS direction:**
 - Admin can access and manage all MVP data.
 - Tutor can access only assigned Classes and related Schedules.
-- Tutor can access only their own Material Requests, Teaching Materials, and Monthly Reports.
+- Tutor can access only their own Document Feedback items, notifications, and Monthly Reports.
 
 ### API & Communication Patterns
 
@@ -240,8 +240,8 @@ Project initialization is not needed. The first implementation story should inst
 **Server-side operations:**
 - Create Tutor Auth user and profile.
 - Create/update Classes and Schedules.
-- Upload Teaching Materials.
-- Create/update Material Requests.
+- Resolve Document Feedback items and create tutor notifications.
+- Create Document Feedback items.
 - Create/update Monthly Report records.
 - Produce signed download URLs where needed.
 
@@ -270,12 +270,12 @@ app/
       students/
       parents/
       classes/
-      material-requests/
+      document-feedback/
       reports/
     tutor/
       page.tsx
       classes/
-      material-requests/
+      document-feedback/
       reports/
 ```
 
@@ -310,7 +310,7 @@ lib/
 - Teaching Materials are stored in private Cloudflare R2, not in Supabase Storage.
 - `monthly-reports` for generated report images if persisted.
 
-**Access pattern:** Buckets private by default. Downloads use signed URLs or authenticated access checks. Multiple R2-backed files may be attached to one Material Request or Library item.
+**Access pattern:** Buckets private by default. Downloads use signed URLs or authenticated access checks. Multiple R2-backed files remain supported for each Library item, while Document Feedback stays metadata-only in Postgres.
 
 ### Infrastructure & Deployment
 
@@ -336,13 +336,13 @@ lib/
 7. Removed: Schedule Proposal flow; Tutors self-coordinate with parents outside the app.
 8. Add Tutor dashboard and assigned Class views.
 9. Add Teaching Material Library.
-10. Add Material Request workflow and file uploads.
+10. Add Document Feedback workflow and resolution notifications.
 11. Add Monthly Report template and browser-side image export.
 
 **Cross-Component Dependencies:**
 - Tutor dashboard depends on Auth, profile roles, Tutor profile mapping, and RLS.
 - Class management depends on Student, Parent, Tutor, Subject, and Schedule tables.
-- Material Requests depend on Tutor identity and optional Class linkage.
+- Document Feedback depends on Tutor identity and optional Class or library-item linkage.
 - Monthly Reports depend on assigned Class access, Tuition Fee, report template, and optional Storage persistence.
 - File download security depends on Storage bucket privacy and signed URL policy.
 
@@ -362,7 +362,7 @@ The project has 10 major consistency areas where AI agents could otherwise make 
 - Join tables use both entity names in `snake_case`.
 
 **Examples:**
-- Good: `class_schedules`, `material_requests`, `teaching_materials`, `teaching_material_library_files`
+- Good: `class_schedules`, `document_feedback`, `notifications`, `teaching_material_library_files`
 - Good: `tutor_id`, `student_id`, `class_id`
 - Avoid: `ClassSchedules`, `materialRequestId`, `fkTutor`
 
@@ -373,8 +373,8 @@ The project has 10 major consistency areas where AI agents could otherwise make 
 **Examples:**
 - `createTutorAccount`
 - `updateClass`
-- `createMaterialRequest`
-- `uploadTeachingMaterial`
+- `createDocumentFeedback`
+- `resolveDocumentFeedback`
 - `generateMonthlyReportRecord`
 
 **Code Naming Conventions:**
@@ -444,11 +444,11 @@ return { error: { code: "X", message: "Y" } }
 
 ### Data Modeling Patterns
 
-**Multi-file Teaching Materials:**
-- `material_requests` stores request metadata.
-- `teaching_materials`
-- `teaching_material_library_files` stores one row per uploaded file.
-- Each `teaching_materials` row references `material_request_id`.
+**Document Feedback and Material Library:**
+- `document_feedback` stores Tutor-submitted request/report metadata.
+- `notifications` stores Tutor-facing done/rejected resolution notices.
+- `teaching_material_library_files` stores one row per uploaded library file.
+- Document Feedback does not own uploaded files in MVP; Admin resolves it separately as `done` or `rejected`.
 
 **Report Images:**
 - MVP browser-generates report image from React template.
@@ -509,7 +509,7 @@ return { error: { code: "X", message: "Y" } }
 - Implement RLS policies in migrations.
 - Treat Admin as source of truth for Class data in MVP.
 - Prevent Tutors from editing core Class data.
-- Use one `teaching_materials` row per uploaded file.
+- Use one `teaching_material_library_files` row per uploaded library file.
 
 **Pattern Enforcement:**
 - Review imports for `lib/supabase/admin.ts` to ensure server-only usage.
@@ -543,7 +543,7 @@ create table class_schedules (
 - Creating Tutor Auth users from a Client Component.
 - Using service-role key in browser code.
 - Letting Tutor update `classes` directly.
-- Storing multiple teaching material files as a JSON blob inside `material_requests`.
+- Storing multiple teaching material files as a JSON blob inside `teaching_material_library_items`.
 - Making Storage buckets public for private teaching files.
 - Returning inconsistent action shapes across domains.
 
@@ -583,12 +583,12 @@ TPA-Education/
 ?       ?   ??? students/
 ?       ?   ??? parents/
 ?       ?   ??? classes/
-?       ?   ??? material-requests/
+?       ?   ??? document-feedback/
 ?       ?   ??? reports/
 ?       ??? tutor/
 ?           ??? page.tsx
 ?           ??? classes/
-?           ??? material-requests/
+?           ??? document-feedback/
 ?           ??? reports/
 ??? components/
 ?   ??? ui/
@@ -607,8 +607,8 @@ TPA-Education/
 ?   ?   ??? parents.ts
 ?   ?   ??? classes.ts
 ?   ?   ??? schedules.ts
-?   ?   ??? material-requests.ts
-?   ?   ??? teaching-materials.ts
+?   ?   ??? document-feedback.ts
+?   ?   ??? notifications.ts
 ?   ?   ??? reports.ts
 ?   ??? validations/
 ?   ?   ??? tutors.ts
@@ -616,7 +616,7 @@ TPA-Education/
 ?   ?   ??? parents.ts
 ?   ?   ??? classes.ts
 ?   ?   ??? schedules.ts
-?   ?   ??? material-requests.ts
+?   ?   ??? document-feedback.ts
 ?   ?   ??? reports.ts
 ?   ??? db/
 ?   ?   ??? types.ts
@@ -640,8 +640,8 @@ TPA-Education/
 ?       ??? 20250101000006_create_subjects.sql
 ?       ??? 20250101000007_create_classes.sql
 ?       ??? 20250101000008_create_class_schedules.sql
-?       ??? 20250101000009_create_material_requests.sql
-?       ??? 20250101000010_create_teaching_materials.sql
+?       ??? 20250101000009_create_document_feedback.sql
+?       ??? 20250101000010_create_notifications.sql
 ?       ??? 20250101000011_create_monthly_reports.sql
 ?       ??? 20250101000012_rls_policies.sql
 ??? types/
@@ -714,13 +714,13 @@ TPA-Education/
 - Validation: `lib/validations/classes.ts`, `lib/validations/schedules.ts`
 - DB: `classes`, `class_schedules`, `subjects`
 
-**Material Requests and Teaching Materials:**
-- Routes: `app/dashboard/tutor/material-requests/`, `app/dashboard/admin/material-requests/`
-- Components: `components/tutor/MaterialRequestForm.tsx`, `components/admin/MaterialUploadForm.tsx`
-- Actions: `lib/actions/material-requests.ts`, `lib/actions/teaching-materials.ts`
-- Validation: `lib/validations/material-requests.ts`
-- DB: `material_requests`, `teaching_materials`
-- Storage: Cloudflare R2 link catalog
+**Document Feedback and Resolution Notifications:**
+- Routes: `app/dashboard/tutor/document-feedback/`, `app/dashboard/admin/document-feedback/`
+- Components: `components/tutor/DocumentFeedbackForm.tsx`, `components/admin/DocumentFeedbackQueue.tsx`
+- Actions: `lib/actions/document-feedback.ts`, `lib/actions/notifications.ts`
+- Validation: `lib/validations/document-feedback.ts`
+- DB: `document_feedback`, `notifications`
+- Storage: none for Document Feedback MVP; library files stay in Cloudflare R2
 
 **Monthly Reports:**
 - Routes: `app/dashboard/tutor/reports/`, `app/dashboard/admin/reports/`
@@ -876,7 +876,7 @@ lib/validations/material-library.ts
 ### Coherence Validation
 
 **Decision Compatibility:**
-All core decisions remain coherent after the scope update. Next.js App Router on Vercel is compatible with Supabase Auth, Postgres, Storage, RLS, and `@supabase/ssr`. Open Class Requests fit the request/approval pattern already used for Teaching Material Requests. The 5% monthly center-fee policy is explicitly excluded from app scope, avoiding unnecessary finance-module complexity. The chatbot/AI lesson-prep assistant is deferred and does not affect MVP architecture.
+All core decisions remain coherent after the scope update. Next.js App Router on Vercel is compatible with Supabase Auth, Postgres, Storage, RLS, and `@supabase/ssr`. Open Class Requests and Document Feedback both use simple Admin-reviewed workflows without broadening Tutor write permissions. The 5% monthly center-fee policy is explicitly excluded from app scope, avoiding unnecessary finance-module complexity. The chatbot/AI lesson-prep assistant is deferred and does not affect MVP architecture.
 
 **Pattern Consistency:**
 The existing implementation patterns support the new scope. `class_requests`, `schedule_proposals`, `teaching_material_library_items`, and `teaching_material_library_files` follow the same `snake_case` table naming, Server Action, Zod validation, and RLS policy conventions. Tutors create requests/proposals; Admin approves official mutations.
@@ -893,7 +893,7 @@ The structure supports all updated capabilities through additional route/action/
 - Open Classes and Class Requests: covered by `class_requests`, open-state Classes, Tutor request routes, and Admin approval routes.
 - Schedule Proposals: removed from MVP; no `schedule_proposals` table or approval workflow should be built.
 - Teaching Material Library: covered by library item/file tables, Admin publish routes, Tutor browse/download routes, and private Storage.
-- Teaching Material Requests: covered.
+- Document Feedback: covered by `document_feedback`, Admin resolution actions, and Tutor `notifications`.
 - Monthly Reports: covered.
 - Chatbot/AI assistant: explicitly deferred.
 - 5% monthly fee: explicitly excluded from app scope.
@@ -921,7 +921,7 @@ Naming, action return shape, validation, RLS, file storage, report generation, a
 None.
 
 **Important Gaps:**
-- Exact status vocabulary needs finalization for Classes/Open Classes, Class Requests, and Material Requests.
+- Exact status vocabulary needs finalization for Classes/Open Classes and Class Requests. Document Feedback uses `pending`, `done`, `rejected`.
 - Exact Open Class fields visible before approval need finalization.
 - Monthly Report template field order/layout remains flexible pending implementation.
 
