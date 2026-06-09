@@ -11,23 +11,17 @@ import type { TutorFeedbackContext } from '../document-feedback-data'
 
 export function TutorDocumentFeedback({ context }: { context: TutorFeedbackContext }) {
   const [state, action, pending] = useActionState(createDocumentFeedback, {} as FeedbackActionState)
-  return (
-    <div className="space-y-6">
-      <Card><CardHeader><CardTitle>Send document feedback</CardTitle><CardDescription>Request materials or report wrong, missing, or broken documents.</CardDescription></CardHeader><CardContent><form action={action} className="space-y-4">
-        {state.error && <Alert variant="destructive"><AlertTitle>Send failed</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
-        {state.success && <Alert><AlertTitle>Sent</AlertTitle><AlertDescription>{state.success}</AlertDescription></Alert>}
-        <div className="grid gap-4 md:grid-cols-3"><FieldSelect name="type" label="Type" options={FEEDBACK_TYPES} /><FieldSelect name="classId" label="Class (optional)" options={[['','None'], ...context.classes.map((item) => [item.id, item.label] as [string,string])]} /><FieldSelect name="libraryItemId" label="Library item (optional)" options={[['','None'], ...context.libraryItems.map((item) => [item.id, item.title] as [string,string])]} /></div>
-        <div className="space-y-2"><Label htmlFor="message">Message</Label><Textarea id="message" name="message" rows={5} placeholder="Describe what you need or what is wrong." /></div>
-        <Button disabled={pending}>{pending ? 'Sending...' : 'Send to Admin'}</Button>
-      </form></CardContent></Card>
+  return <div className="space-y-6">
+    <Card><CardHeader><CardTitle>Request material</CardTitle><CardDescription>Tell Admin what material you need. No class or subject selection required.</CardDescription></CardHeader><CardContent><form action={action} className="space-y-4">
+      <input type="hidden" name="kind" value="material_request" />
+      {state.error && <Alert variant="destructive"><AlertTitle>Send failed</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
+      {state.success && <Alert><AlertTitle>Sent</AlertTitle><AlertDescription>{state.success}</AlertDescription></Alert>}
+      <div className="space-y-2"><Label htmlFor="message">What material do you need?</Label><Textarea id="message" name="message" rows={4} placeholder="Example: I need extra Grade 8 algebra worksheets for factoring." /></div>
+      <Button disabled={pending}>{pending ? 'Sending...' : 'Send request'}</Button>
+    </form></CardContent></Card>
 
-      <Card><CardHeader><CardTitle>My feedback history</CardTitle><CardDescription>Track pending, done, and rejected items.</CardDescription></CardHeader><CardContent className="space-y-3">{context.feedback.length===0?<p className="text-sm text-muted-foreground">No feedback yet.</p>:context.feedback.map((item)=><div key={item.id} className="rounded-lg border p-4 text-sm"><div className="flex flex-wrap items-center justify-between gap-2"><strong>{labelForType(item.type)}</strong><span className="rounded-full bg-secondary px-2 py-1 text-xs">{item.status}</span></div><p className="mt-2 whitespace-pre-wrap">{item.message}</p><p className="mt-2 text-muted-foreground">{item.classLabel||item.libraryTitle||'No link'}{item.rejectReason?` · Reject: ${item.rejectReason}`:''}{item.adminNote?` · Admin: ${item.adminNote}`:''}</p></div>)}</CardContent></Card>
-
-      <Card><CardHeader><CardTitle>Notifications</CardTitle><CardDescription>Done/rejected results from Admin.</CardDescription></CardHeader><CardContent className="space-y-3">{context.notifications.length===0?<p className="text-sm text-muted-foreground">No notifications yet.</p>:context.notifications.map((item)=><div key={item.id} className="rounded-lg border p-4 text-sm"><div className="flex items-center justify-between gap-2"><strong>{item.title}</strong><span className="rounded-full bg-secondary px-2 py-1 text-xs">{item.type.replace('document_feedback_','')}</span></div><p className="mt-2">{item.message}</p></div>)}</CardContent></Card>
-    </div>
-  )
+    <Card><CardHeader><CardTitle>Feedback history</CardTitle><CardDescription>Admin results appear here after Done or Reject.</CardDescription></CardHeader><CardContent className="space-y-3">{context.feedback.length===0?<p className="text-sm text-muted-foreground">No feedback yet.</p>:context.feedback.map((item)=><div key={item.id} className="rounded-lg border p-4 text-sm"><div className="flex flex-wrap items-center justify-between gap-2"><strong>{labelForKind(item.kind)}</strong><span className="rounded-full bg-secondary px-2 py-1 text-xs">{item.status}</span></div>{item.libraryTitle&&<p className="mt-1 text-muted-foreground">Material: {item.libraryTitle}</p>}<p className="mt-2 whitespace-pre-wrap">{item.message}</p>{item.status==='done'&&item.adminNote&&<p className="mt-2 text-muted-foreground">Admin: {item.adminNote}</p>}{item.status==='rejected'&&item.rejectReason&&<p className="mt-2 text-destructive">Reject reason: {item.rejectReason}</p>}</div>)}</CardContent></Card>
+  </div>
 }
 
-const FEEDBACK_TYPES: [string,string][] = [['request_material','Request material'],['wrong_material','Wrong material'],['missing_material','Missing material'],['broken_file','Broken file'],['other','Other']]
-function labelForType(type: string) { return FEEDBACK_TYPES.find(([value]) => value === type)?.[1] ?? type }
-function FieldSelect({ label, name, options }: { label: string; name: string; options: [string, string][] }) { return <div className="space-y-2"><Label htmlFor={name}>{label}</Label><select id={name} name={name} className="h-10 w-full rounded-md border bg-background px-3 text-sm">{options.map(([value, display]) => <option key={value || display} value={value}>{display}</option>)}</select></div> }
+function labelForKind(kind: string) { return kind === 'material_report' ? 'Material issue report' : 'Material request' }

@@ -73,7 +73,7 @@ development_status:
   epic-9: review
   9-1-tutor-submits-document-feedback: review
   9-2-admin-resolves-document-feedback: review
-  9-3-tutor-receives-resolution-notifications: review
+  9-3-tutor-views-feedback-resolution-history: review
   epic-9-retrospective: optional
   epic-10: backlog
   10-1-create-monthly-report-draft: backlog

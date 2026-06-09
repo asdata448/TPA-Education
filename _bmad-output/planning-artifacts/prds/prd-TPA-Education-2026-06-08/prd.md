@@ -93,7 +93,6 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 - **Schedule** - One or more weekly recurring time slots attached to a Class.
 - **Document Feedback** - A Tutor-submitted notice used to request materials or report wrong, missing, or broken materials, optionally tied to a Class or library item.
 - **Teaching Material** - A file published in the Teaching Material Library. MVP stores files in private Cloudflare R2 and surfaces them through authorized app access.
-- **Resolution Notification** - A Tutor notification sent when Admin marks a Document Feedback item done or rejected, including the rejection reason when applicable.
 - **Teaching Material Library** - A central collection of Admin-published Teaching Materials that Tutors can browse and download.
 - **Monthly Report** - A Tutor-generated parent-facing progress summary for a single Class, produced as an image.
 - **Tuition Fee** - The amount charged for a Class and shown on the Monthly Report.
@@ -102,7 +101,7 @@ The same system should give each Tutor a practical workspace: view assigned Clas
 ## 4. Features
 
 ### 4.1 Authentication and Access Control
-**Description:** The system supports internal authentication for one Admin and multiple Tutors. The Admin account model is single-user in MVP. Tutors log in with email and password created by the Admin. Tutor access must be restricted to their own Classes, schedules, Document Feedback items, notifications, Teaching Material Library access, and Monthly Reports. Realizes UJ-1, UJ-3, UJ-4, UJ-5.
+**Description:** The system supports internal authentication for one Admin and multiple Tutors. The Admin account model is single-user in MVP. Tutors log in with email and password created by the Admin. Tutor access must be restricted to their own Classes, schedules, Document Feedback items, Teaching Material Library access, and Monthly Reports. Realizes UJ-1, UJ-3, UJ-4, UJ-5.
 
 **Functional Requirements:**
 
@@ -298,7 +297,7 @@ Tutor can browse and download active Teaching Material Library items. Realizes U
 - Tutor cannot edit library items.
 
 ### 4.10 Document Feedback and Resolution
-**Description:** Tutors need one lightweight workflow to notify Admin about document-related needs or problems. The same flow covers requesting materials, reporting wrong materials, reporting missing materials, and reporting broken files. Admin resolves each item by marking it done or rejected, and Tutors receive the final outcome as a notification. Realizes UJ-6.
+**Description:** Tutors need one lightweight workflow to notify Admin about document-related needs or problems. The same flow covers requesting materials, reporting wrong materials, reporting missing materials, and reporting broken files. Admin resolves each item by marking it done or rejected, and Tutors see the final outcome in feedback history. Realizes UJ-6.
 
 **Functional Requirements:**
 
@@ -306,8 +305,8 @@ Tutor can browse and download active Teaching Material Library items. Realizes U
 A Tutor can submit a Document Feedback item linked either to a specific Class, a specific Teaching Material Library item, or neither when making a general request. Realizes UJ-6.
 
 **Consequences (testable):**
-- Feedback captures a type, free-text message, and optional related Class or library item.
-- Feedback types cover at least requesting materials, reporting wrong materials, reporting missing materials, reporting broken files, and other issues.
+- Material requests capture only free-text message content from the Tutor request page.
+- Library issue reports capture free-text message content and automatically link the related library item.
 - Feedback is visible to the Admin after submission.
 - Feedback is stored under the submitting Tutor only with initial status `pending`.
 
@@ -320,13 +319,13 @@ The Admin can review each Document Feedback item and finish it with a final deci
 - Admin can mark an item `rejected` only after entering a rejection reason.
 - The system stores final status, handler identity, handling time, and any optional admin note.
 
-#### FR-24: Tutor receives resolution notifications
-A Tutor can receive the result of Admin handling on their own Document Feedback items. Realizes UJ-6.
+#### FR-24: Tutor views feedback resolution history
+A Tutor can view the result of Admin handling directly on their own Document Feedback history items. Realizes UJ-6.
 
 **Consequences (testable):**
-- Tutor receives a notification when an item is marked `done`.
-- Tutor receives a notification with the rejection reason when an item is marked `rejected`.
-- Tutor can access only notifications and feedback records tied to their own identity.
+- Tutor feedback history shows `done` when an item is completed.
+- Tutor feedback history shows the rejection reason when an item is marked `rejected`.
+- Tutor can access only feedback records tied to their own identity.
 
 ### 4.11 Monthly Progress Reports
 **Description:** Tutors generate a center-branded Monthly Report per Class by filling in structured information at month end. The system outputs an image containing report content, placeholder bank QR, and the Tuition Fee associated with that Class. Tutors download the image and send it manually to Parents. Realizes UJ-7.
@@ -395,7 +394,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - Removed: Admin approval/rejection of Schedule Proposals
 - Teaching Material Library browsing and Cloudflare R2 link access
 - Tutor Document Feedback submission
-- Admin Document Feedback resolution and tutor notifications
+- Admin Document Feedback resolution and Tutor feedback history results
 - Monthly Report form and branded image generation
 - Tuition Fee display on generated Monthly Reports
 - Placeholder bank QR shown on generated Monthly Reports
@@ -417,7 +416,7 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 - **SM-3**: A Tutor can independently retrieve assigned Class information and generate a monthly parent-facing report image without Admin intervention. Validates FR-13, FR-14, FR-18, FR-19, FR-20, FR-21.
 
 **Secondary**
-- **SM-4**: 90%+ of Document Feedback items can be tracked from submission to done/rejected status inside the system. Validates FR-22, FR-23, FR-24.
+- **SM-4**: 90%+ of Document Feedback items can be tracked from submission to done/rejected status in feedback history. Validates FR-22, FR-23, FR-24.
 - **SM-5**: Monthly Report generation produces a usable output on first attempt for most Tutor use cases. Validates FR-19, FR-20, FR-21.
 
 **Counter-metrics (do not optimize)**
@@ -438,6 +437,6 @@ A Tutor can download the generated Monthly Report image for manual sharing. Real
 
 ## 9. Assumptions Index
 - Section 4.4 / FR-10 - Class statuses will include at least pending, active, paused, completed, cancelled.
-- Section 4.10 / FR-23 - Document Feedback statuses will include pending, done, rejected.
+- Section 4.10 / FR-23 - Document Feedback statuses will include pending, done, rejected; feedback kind will be material_request or material_report.
 - Section 4.8 / FR-18 - Duplicate drafts may be allowed before final Monthly Report generation.
 - Section 4.8 / FR-19 - Draft save before final generation is desirable for usability.

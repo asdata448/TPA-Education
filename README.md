@@ -48,6 +48,7 @@ Fix applied:
 - `20260609000002_add_tutor_subjects.sql`
 - `20260609000006_remove_students_parents.sql`
 - `20260610000001_create_document_feedback_notifications.sql`
+- `20260610000002_simplify_document_feedback.sql`
 
 ### Vercel Deployment
 - Project: `tpa-education`
@@ -102,7 +103,7 @@ Notes:
 - `/dashboard/admin/tutors/[tutorId]` - Tutor detail/edit page
 - `/dashboard/admin/document-feedback` - Admin document feedback queue
 - `/dashboard/tutor` - Tutor dashboard
-- `/dashboard/tutor/document-feedback` - Tutor document feedback + notifications
+- `/dashboard/tutor/document-feedback` - Tutor material request page + feedback history
 
 ## Route Protection
 
@@ -176,7 +177,7 @@ Set environment variables in Vercel project settings before deploying.
 - [ ] Epic 5: Tutor class workspace / open class flow
 - [ ] Epic 6+: Remaining business workflows
 - [x] Epic 8: Material library management
-- [x] Epic 9: Document feedback and resolution notifications
+- [x] Epic 9: Document feedback and resolution history
 
 
 ## Schedule Proposal Scope
@@ -202,23 +203,24 @@ Implemented as of 2026-06-09:
 
 Implemented as of 2026-06-10:
 
-- Tutor can submit document feedback to request materials or report wrong/missing/broken files.
-- Tutor can optionally link feedback to an assigned class or a material library item.
-- Admin can review all feedback and resolve each item as `done` or `rejected`.
+- Tutor has a dedicated `/dashboard/tutor/document-feedback` page with one textarea to request materials.
+- Each material card in `/dashboard/tutor/library` has a tiny report action with an icon for reporting issues.
+- Admin reviews all feedback and resolves each item as `done` or `rejected`.
 - Reject requires a reason; done can include an optional admin note.
-- Tutor receives in-app notifications when Admin resolves feedback.
-- RLS keeps Tutor access scoped to their own feedback and notifications.
+- Tutor reads Admin responses directly inside feedback history.
+- RLS keeps Tutor access scoped to their own feedback history.
 
 ### Epic 9 Manual Test Flow
 1. Login as Tutor
 2. Open `/dashboard/tutor/document-feedback`
-3. Submit one request-material item and one broken-file item
-4. Confirm both appear in Tutor feedback history with `pending`
-5. Login as Admin
-6. Open `/dashboard/admin/document-feedback`
-7. Mark one item `Done` with optional note
-8. Try rejecting one item without reason -> should fail
-9. Reject the item with a reason -> should succeed
-10. Login back as Tutor
-11. Confirm notification list shows one handled and one rejected result
-12. Confirm rejected item shows the reject reason
+3. Submit one material request
+4. Open `/dashboard/tutor/library` and use the tiny report action on one material card
+5. Confirm both appear in Tutor feedback history with `pending`
+6. Login as Admin
+7. Open `/dashboard/admin/document-feedback`
+8. Mark one item `Done` with optional note
+9. Try rejecting one item without reason -> should fail
+10. Reject the item with a reason -> should succeed
+11. Login back as Tutor
+12. Confirm feedback history shows one done item and one rejected item
+13. Confirm rejected item shows the reject reason and done item shows Admin note if provided

@@ -36,7 +36,7 @@ FR-20: Admin can publish Teaching Material Library items with title, subject, gr
 FR-21: Tutor can browse and download active Teaching Material Library items.
 FR-22: Tutor can submit a document feedback item to request materials or report incorrect/missing/broken materials, optionally linked to a specific library item or Class.
 FR-23: Admin can review document feedback items and resolve each item by marking it done or rejected.
-FR-24: Tutor can receive notifications when their document feedback item is completed or rejected, and view the rejection reason when applicable.
+FR-24: Tutor can view Admin resolution results directly in their feedback history, including admin notes or rejection reasons.
 FR-25: Tutor can create a Monthly Report draft for an assigned Class and reporting month.
 FR-26: Tutor can enter required monthly progress and student evaluation information into a structured report form.
 FR-27: System can generate a branded Monthly Report image from report data and template.
@@ -68,7 +68,7 @@ NFR-10: Deployment readiness - env vars, Supabase migrations, and RLS policies m
 - Use `ActionResult<T> = { ok: true; data: T } | { ok: false; error: string }` for Server Actions.
 - Use Zod schemas in `lib/validations/`.
 - Use `snake_case` DB naming and `camelCase` TypeScript variables.
-- Add tables: `profiles`, `tutors`, `students`, `parents`, `student_parents`, `subjects`, `classes`, `class_schedules`, `class_requests`, `schedule_proposals`, `document_feedback`, `notifications`, `teaching_material_library_items`, `teaching_material_library_files`, `monthly_reports`.
+- Add tables: `profiles`, `tutors`, `students`, `parents`, `student_parents`, `subjects`, `classes`, `class_schedules`, `class_requests`, `schedule_proposals`, `document_feedback`, `teaching_material_library_items`, `teaching_material_library_files`, `monthly_reports`.
 - Add protected routes under `app/dashboard/admin/` and `app/dashboard/tutor/`.
 - Admin remains official source of truth for Class assignment and official Schedule.
 - Tutor-initiated changes use request/proposal workflows, not direct mutation of official Class/Schedule data.
@@ -108,7 +108,7 @@ Epic 10: Monthly Report Generation ? FR-25, FR-26, FR-27, FR-28
 6. **Open Class Request Workflow** ? Enable Tutors to browse and request Open Classes, with Admin approval assigning Classes.
 7. **Removed: Schedule Proposal Workflow** ? Tutor self-schedules with parent outside the app; no Admin approval workflow needed.
 8. **Teaching Material Library** ? Enable Admin to publish teaching materials and Tutors to browse and download active items.
-9. **Document Feedback and Resolution Workflow** ? Enable Tutors to request materials or report material issues, and let Admin resolve each item with tutor notifications.
+9. **Document Feedback and Resolution Workflow** ? Enable Tutors to request materials or report material issues, and let Admin resolve each item with Tutor feedback history results.
 10. **Monthly Report Generation** ? Enable Tutors to create structured monthly reports and generate branded downloadable images.
 
 
@@ -451,7 +451,7 @@ So that I can prepare lessons efficiently.
 
 ## Epic 9: Document Feedback and Resolution Workflow
 
-Enable Tutors to send lightweight document-related requests or issue reports, and let Admin resolve them with explicit outcomes and tutor notifications.
+Enable Tutors to send lightweight document-related requests or issue reports, and let Admin resolve them with explicit outcomes and Tutor feedback history results.
 
 ### Story 9.1: Tutor Submits Document Feedback
 
@@ -462,10 +462,10 @@ So that Admin knows when I need materials or when a document has a problem.
 **Acceptance Criteria:**
 
 **Given** Tutor is authenticated
-**When** Tutor submits a document feedback form with type, message, and optional related Class or library item
+**When** Tutor submits a material request message from `/dashboard/tutor/document-feedback` or a library issue report from a material card
 **Then** a `document_feedback` row is created with `pending` status
 **And** the feedback is linked to the submitting Tutor only
-**And** the feedback can represent a material request, wrong material report, missing material report, broken file report, or other document issue.
+**And** the feedback is stored as either `material_request` or `material_report` based on the entry point.
 
 ### Story 9.2: Admin Resolves Document Feedback
 
@@ -481,24 +481,24 @@ So that Tutor requests and document issues are handled with a clear final decisi
 **And** Admin can mark it `rejected` only after entering a rejection reason
 **And** the system stores `handled_by`, `handled_at`, final status, and any admin note or rejection reason.
 
-### Story 9.3: Tutor Receives Resolution Notifications
+### Story 9.3: Tutor Views Feedback Resolution History
 
 As a Tutor,
-I want to receive a notification when Admin finishes reviewing my document feedback,
-So that I know whether the issue was completed or rejected.
+I want to see Admin resolution results in my feedback history,
+So that I know whether my request/report was completed or rejected.
 
 **Acceptance Criteria:**
 
 **Given** Tutor owns a document feedback item
 **When** Admin marks the item `done`
-**Then** the Tutor receives a notification that the feedback has been handled
-**And** the notification references the related feedback item.
+**Then** the Tutor feedback history shows that the feedback has been handled
+**And** any admin note is visible on the related feedback item.
 
 **Given** Tutor owns a document feedback item
 **When** Admin marks the item `rejected`
-**Then** the Tutor receives a notification that the feedback was rejected
-**And** the rejection reason is included in the notification
-**And** Tutor cannot view notifications for another Tutor's feedback.
+**Then** the Tutor feedback history shows that the feedback was rejected
+**And** the rejection reason is visible on the related feedback item
+**And** Tutor cannot view another Tutor's feedback history.
 
 ## Epic 10: Monthly Report Generation
 

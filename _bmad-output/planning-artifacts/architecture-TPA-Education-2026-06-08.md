@@ -42,7 +42,7 @@ _Workflow initialized. Ready for Step 2: Input Document Review._
 **Functional Requirements:**
 The product introduces an internal management system layered onto the existing TPA-Education project. Architecturally, the requirements break into six main capability areas: authentication and role-restricted access, Tutor management, Student/Parent/Class management, Open Class discovery/request workflows, Teaching Material Library, Teaching Material request workflows, and Monthly Report generation. This implies a shift from a static content-driven site to a transactional application with protected data, CRUD workflows, per-role dashboards, and generated artifacts.
 
-The Admin is the operational source of truth in MVP. The Tutor experience is intentionally narrower: view assigned Classes and Schedules, browse Open Classes, request Open Classes, propose Schedules, browse/download Teaching Material Library items, submit Document Feedback, receive resolution notifications, and generate Monthly Reports. This role asymmetry is important architecturally because it favors strong server-side authorization boundaries and a data model centered on Class ownership.
+The Admin is the operational source of truth in MVP. The Tutor experience is intentionally narrower: view assigned Classes and Schedules, browse Open Classes, request Open Classes, propose Schedules, browse/download Teaching Material Library items, submit Document Feedback, view resolution history, and generate Monthly Reports. This role asymmetry is important architecturally because it favors strong server-side authorization boundaries and a data model centered on Class ownership.
 
 **Non-Functional Requirements:**
 The main non-functional requirements implied by the PRD are security, role isolation, operational simplicity, and fast MVP delivery. The system must protect Parent contact information, Student data, Tuition Fee data, and Tutor Pay data. It must also ensure that Tutors can access only their own Classes, requests, files, and reports. The architecture should optimize for low operational overhead and fast iteration rather than high-scale distributed complexity.
@@ -171,7 +171,7 @@ Project initialization is not needed. The first implementation story should inst
 2. Client access pattern: browser Supabase client only for user-scoped reads where RLS protects data.
 3. Report image generation: browser-side export/screenshot from a React template for MVP.
 4. Tutor password setup: system generates a random initial password for Admin to copy and provide manually.
-5. Document Feedback resolution: Tutor submits one lightweight feedback item; Admin resolves it as done or rejected and Tutor receives the result.
+5. Document Feedback resolution: Tutor submits one lightweight feedback item; Admin resolves it as done or rejected and Tutor sees the result in feedback history.
 6. Admin account model: single bootstrap Admin in Supabase Auth plus role table, not `.env` password auth long-term.
 7. Form validation: shared schema validation with Zod.
 8. UI architecture: shadcn/ui primitives plus feature-specific components.
@@ -189,7 +189,7 @@ Project initialization is not needed. The first implementation story should inst
 
 **Decision:** Use Supabase Postgres as the relational database.
 
-**Rationale:** The MVP data is strongly relational: Tutors, Students, Parents, Classes, Schedules, Document Feedback items, notifications, Teaching Material Library metadata, and Monthly Reports. Supabase provides Postgres, Auth, Storage, and RLS in one platform, matching the MVP need for fast delivery and low operations overhead.
+**Rationale:** The MVP data is strongly relational: Tutors, Students, Parents, Classes, Schedules, Document Feedback items, Teaching Material Library metadata, and Monthly Reports. Supabase provides Postgres, Auth, Storage, and RLS in one platform, matching the MVP need for fast delivery and low operations overhead.
 
 **Core tables:**
 - `profiles`
@@ -204,7 +204,6 @@ Project initialization is not needed. The first implementation story should inst
 - `schedule_proposals`
 - `document_feedback`
 - `teaching_material_library_items`
-- `notifications`
 - `teaching_material_library_files`
 - `monthly_reports`
 
@@ -229,7 +228,7 @@ Project initialization is not needed. The first implementation story should inst
 **RLS direction:**
 - Admin can access and manage all MVP data.
 - Tutor can access only assigned Classes and related Schedules.
-- Tutor can access only their own Document Feedback items, notifications, and Monthly Reports.
+- Tutor can access only their own Document Feedback items and Monthly Reports.
 
 ### API & Communication Patterns
 
@@ -240,7 +239,7 @@ Project initialization is not needed. The first implementation story should inst
 **Server-side operations:**
 - Create Tutor Auth user and profile.
 - Create/update Classes and Schedules.
-- Resolve Document Feedback items and create tutor notifications.
+- Resolve Document Feedback items with done/rejected outcomes stored on the same feedback row.
 - Create Document Feedback items.
 - Create/update Monthly Report records.
 - Produce signed download URLs where needed.
@@ -336,7 +335,7 @@ lib/
 7. Removed: Schedule Proposal flow; Tutors self-coordinate with parents outside the app.
 8. Add Tutor dashboard and assigned Class views.
 9. Add Teaching Material Library.
-10. Add Document Feedback workflow and resolution notifications.
+10. Add Document Feedback workflow and feedback history resolution results.
 11. Add Monthly Report template and browser-side image export.
 
 **Cross-Component Dependencies:**
@@ -362,7 +361,7 @@ The project has 10 major consistency areas where AI agents could otherwise make 
 - Join tables use both entity names in `snake_case`.
 
 **Examples:**
-- Good: `class_schedules`, `document_feedback`, `notifications`, `teaching_material_library_files`
+- Good: `class_schedules`, `document_feedback`, `teaching_material_library_files`
 - Good: `tutor_id`, `student_id`, `class_id`
 - Avoid: `ClassSchedules`, `materialRequestId`, `fkTutor`
 
@@ -446,8 +445,7 @@ return { error: { code: "X", message: "Y" } }
 
 **Document Feedback and Material Library:**
 - `document_feedback` stores Tutor-submitted request/report metadata.
-- `notifications` stores Tutor-facing done/rejected resolution notices.
-- `teaching_material_library_files` stores one row per uploaded library file.
+- - `teaching_material_library_files` stores one row per uploaded library file.
 - Document Feedback does not own uploaded files in MVP; Admin resolves it separately as `done` or `rejected`.
 
 **Report Images:**
@@ -608,8 +606,7 @@ TPA-Education/
 ?   ?   ??? classes.ts
 ?   ?   ??? schedules.ts
 ?   ?   ??? document-feedback.ts
-?   ?   ??? notifications.ts
-?   ?   ??? reports.ts
+?   ?   ?   ?   ??? reports.ts
 ?   ??? validations/
 ?   ?   ??? tutors.ts
 ?   ?   ??? students.ts
@@ -641,8 +638,7 @@ TPA-Education/
 ?       ??? 20250101000007_create_classes.sql
 ?       ??? 20250101000008_create_class_schedules.sql
 ?       ??? 20250101000009_create_document_feedback.sql
-?       ??? 20250101000010_create_notifications.sql
-?       ??? 20250101000011_create_monthly_reports.sql
+?       ?       ??? 20250101000011_create_monthly_reports.sql
 ?       ??? 20250101000012_rls_policies.sql
 ??? types/
 ?   ??? index.ts
@@ -714,12 +710,12 @@ TPA-Education/
 - Validation: `lib/validations/classes.ts`, `lib/validations/schedules.ts`
 - DB: `classes`, `class_schedules`, `subjects`
 
-**Document Feedback and Resolution Notifications:**
-- Routes: `app/dashboard/tutor/document-feedback/`, `app/dashboard/admin/document-feedback/`
-- Components: `components/tutor/DocumentFeedbackForm.tsx`, `components/admin/DocumentFeedbackQueue.tsx`
-- Actions: `lib/actions/document-feedback.ts`, `lib/actions/notifications.ts`
+**Document Feedback and Resolution History:**
+- Routes: `app/dashboard/tutor/document-feedback/`, `app/dashboard/admin/document-feedback/` plus report action inside Tutor material library
+- Components: Tutor material request form, Tutor library report action, Admin feedback queue
+- Actions: `lib/actions/document-feedback.ts`
 - Validation: `lib/validations/document-feedback.ts`
-- DB: `document_feedback`, `notifications`
+- DB: `document_feedback`
 - Storage: none for Document Feedback MVP; library files stay in Cloudflare R2
 
 **Monthly Reports:**
@@ -893,7 +889,7 @@ The structure supports all updated capabilities through additional route/action/
 - Open Classes and Class Requests: covered by `class_requests`, open-state Classes, Tutor request routes, and Admin approval routes.
 - Schedule Proposals: removed from MVP; no `schedule_proposals` table or approval workflow should be built.
 - Teaching Material Library: covered by library item/file tables, Admin publish routes, Tutor browse/download routes, and private Storage.
-- Document Feedback: covered by `document_feedback`, Admin resolution actions, and Tutor `notifications`.
+- Document Feedback: covered by `document_feedback`, Admin resolution actions, and Tutor feedback history.
 - Monthly Reports: covered.
 - Chatbot/AI assistant: explicitly deferred.
 - 5% monthly fee: explicitly excluded from app scope.

@@ -13,15 +13,15 @@ context:
 
 ## Intent
 
-**Problem:** Epic 9 was simplified from a material fulfillment workflow into a lightweight Tutor-to-Admin document feedback flow. Tutors need to request documents or report wrong/missing/broken documents; Admin needs to resolve each item as done or rejected; Tutors need a notification when it is resolved.
+**Problem:** Epic 9 should stay extremely lightweight. Tutors need one simple page to request materials, and one tiny report action inside the material library to report document issues. Admin resolves each item as done or rejected, and Tutors read the result directly in feedback history.
 
-**Approach:** Add DB tables, server actions, data loaders, and dashboard UI for document feedback and resolution notifications, following existing app/dashboard server-action patterns and no separate REST API.
+**Approach:** Refactor document feedback into two entry flows: a material-request textarea page and a per-library-item report action. Keep outcomes inside feedback history rather than a separate notification surface.
 
 ## Boundaries & Constraints
 
-**Always:** Use `document_feedback` statuses `pending`, `done`, `rejected`; require a rejection reason for reject; create Tutor notification on done/rejected; scope Tutor reads/writes to their own tutor identity; keep Admin as only resolver.
+**Always:** Use `document_feedback` statuses `pending`, `done`, `rejected`; require a rejection reason for reject; store only `kind = material_request | material_report`; keep Tutor submission forms minimal; scope Tutor reads/writes to their own tutor identity; keep Admin as only resolver.
 
-**Ask First:** Adding email/realtime notifications, uploads on feedback, comment threads, priorities/SLA, or assignment workflow.
+**Ask First:** Adding email/realtime  uploads on feedback, comment threads, priorities/SLA, or assignment workflow.
 
 **Never:** Do not reintroduce material request file fulfillment, do not let Tutors resolve feedback, do not make library files public, do not revert existing uncommitted Epic 8/admin changes.
 
@@ -29,10 +29,10 @@ context:
 
 | Scenario | Input / State | Expected Output / Behavior | Error Handling |
 |----------|--------------|---------------------------|----------------|
-| Tutor submits feedback | Authenticated active Tutor selects type and message, optional class/library item | `document_feedback` row is created with `pending`; admin dashboard can see it | Missing type/message returns form error |
-| Admin marks done | Pending feedback exists | status becomes `done`, handled metadata stored, notification created for owning Tutor | Missing feedback returns action error |
-| Admin rejects | Pending feedback exists, reason supplied | status becomes `rejected`, reason stored, notification created including reason | Empty reason returns form error |
-| Tutor views notifications | Tutor has done/rejected outcomes | Tutor sees own notifications and related feedback history | Unauthorized user cannot load page |
+| Tutor requests material | Authenticated active Tutor enters textarea content on `/dashboard/tutor/document-feedback` | `document_feedback` row is created with `kind = material_request` and `pending` | Missing message returns form error |
+| Tutor reports library item | Authenticated active Tutor clicks tiny report action on a library item and submits text | `document_feedback` row is created with `kind = material_report` and linked `library_item_id` | Missing message returns form error |
+| Admin rejects | Pending feedback exists, reason supplied | status becomes `rejected`, reason stored on the same feedback item | Empty reason returns form error |
+| Tutor views history | Tutor has done/rejected outcomes | Tutor sees admin note or reject reason directly in feedback history | Unauthorized user cannot load page |
 
 </frozen-after-approval>
 
@@ -49,21 +49,21 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [x] `supabase/migrations/20260610000001_create_document_feedback_notifications.sql` -- add `document_feedback`, `notifications`, indexes, updated_at trigger, and RLS -- persist Epic 9 state safely.
+- [x] `supabase/migrations/20260610000001_create_document_feedback_notifications.sql` and `20260610000002_simplify_document_feedback.sql` -- persist simplified `document_feedback` state with `kind`, no notification UI dependency.
 - [x] `app/dashboard/tutor/document-feedback-actions.ts` -- add submit action -- Tutor creates pending feedback.
-- [x] `app/dashboard/admin/document-feedback-actions.ts` -- add resolve action -- Admin marks done/rejected and creates notification.
-- [x] `app/dashboard/tutor/document-feedback-data.ts` -- add Tutor loaders for classes, library items, feedback, notifications -- render Tutor page.
+- [x] `app/dashboard/admin/document-feedback-actions.ts` -- add resolve action -- Admin marks done/rejected and stores result on feedback row.
+- [x] `app/dashboard/tutor/document-feedback-data.ts` -- add Tutor feedback history loader -- render Tutor page.
 - [x] `app/dashboard/admin/document-feedback-data.ts` -- add Admin loader -- render Admin queue.
-- [x] `app/dashboard/tutor/document-feedback/page.tsx` and UI component -- form + feedback/notification history.
+- [x] `app/dashboard/tutor/document-feedback/page.tsx` and UI component -- request form + feedback history.
 - [x] `app/dashboard/admin/document-feedback-manager.tsx` -- admin resolve UI with done/reject forms.
 - [x] `app/dashboard/admin/page.tsx` and `app/dashboard/tutor/page.tsx` -- add links/sections for Epic 9.
 - [x] `_bmad-output/implementation-artifacts/sprint-status.yaml` -- mark Epic 9 stories in review after implementation.
 
 **Acceptance Criteria:**
-- Given an active Tutor, when they submit type/message, then Admin sees a pending feedback item.
+- Given an active Tutor, when they submit a material request or library issue report, then Admin sees a pending feedback item.
 - Given Admin rejects feedback, when no reason is supplied, then the action refuses the reject.
-- Given Admin resolves done/rejected, when Tutor opens feedback page, then Tutor sees a notification outcome.
-- Given Tutor A exists, when Tutor B opens their page, then Tutor B cannot see Tutor A feedback or notifications.
+- Given Admin resolves done/rejected, when Tutor opens feedback history, then Tutor sees the admin note or reject reason on that item.
+- Given Tutor A exists, when Tutor B opens their page, then Tutor B cannot see Tutor A feedback history.
 
 ## Spec Change Log
 
