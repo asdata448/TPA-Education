@@ -46,10 +46,6 @@ export function HeroSection() {
                   Tự tin thi cử
                 </GradientText>
               </h1>
-              <div className="text-lg lg:text-xl text-[#6B7280] max-w-xl text-pretty leading-relaxed space-y-2">
-                <p className="font-semibold text-[#0F2A44]">Giáo trình riêng | Đánh giá định kỳ | Cam kết tiến bộ</p>
-                <p>Học phí rõ ràng, lộ trình cá nhân hóa, đồng hành cùng học sinh mỗi ngày</p>
-              </div>
             </div>
 
             {/* Highlight Badges */}
@@ -81,6 +77,41 @@ export function HeroSection() {
               >
                 <GraduationCap className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
                 TH - THCS - THPT
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm bg-[#F8F5EC] text-[#0F2A44] border border-[#E5E7EB] hover:shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
+                Giáo trình riêng
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm bg-[#F8F5EC] text-[#0F2A44] border border-[#E5E7EB] hover:shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Target className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
+                Đánh giá định kỳ
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm bg-[#F8F5EC] text-[#0F2A44] border border-[#E5E7EB] hover:shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
+                Cam kết tiến bộ
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm bg-[#F8F5EC] text-[#0F2A44] border border-[#E5E7EB] hover:shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
+                Học phí rõ ràng
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm bg-[#F8F5EC] text-[#0F2A44] border border-[#E5E7EB] hover:shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Users className="w-4 h-4 mr-2 text-[#D8B76A]" aria-hidden="true" />
+                Đồng hành mỗi ngày
               </Badge>
             </div>
 
