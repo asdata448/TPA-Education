@@ -122,6 +122,14 @@ export function SiteHeader() {
             >
               <Link href="#contact">Đặt gia sư ngay</Link>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#0F2A44] border border-[#0F2A44]/20 hover:bg-[#0F2A44] hover:text-white transition-all duration-200 font-semibold"
+              asChild
+            >
+              <Link href="/login">Đăng nhập</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -174,6 +182,15 @@ export function SiteHeader() {
                 >
                   <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
                     Đặt gia sư ngay
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full text-[#0F2A44] border border-[#0F2A44]/20 hover:bg-[#0F2A44] hover:text-white font-semibold transition-all duration-200"
+                  asChild
+                >
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    Đăng nhập
                   </Link>
                 </Button>
               </div>
