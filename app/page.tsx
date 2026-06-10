@@ -9,6 +9,7 @@ import { ParentReportSection } from "@/components/parent-report-section"
 import { FaqSection } from "@/components/faq-section"
 import { ContactSection } from "@/components/contact-section"
 import { FloatingCta } from "@/components/floating-cta"
+import { PromoPopup } from "@/components/promo-popup"
 import { SiteFooter } from "@/components/site-footer"
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
       <FaqSection />
       <ContactSection />
       <FloatingCta />
+      <PromoPopup />
       <SiteFooter />
     </main>
   )
