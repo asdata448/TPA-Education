@@ -30,6 +30,7 @@
 20260610000002_simplify_document_feedback.sql
 20260610000003_add_payment_system.sql
 20260610000004_create_progress_reports.sql
+20260610000006_create_class_sessions.sql
 ```
 
 ## Required Environment Variables

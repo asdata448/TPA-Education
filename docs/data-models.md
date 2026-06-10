@@ -121,6 +121,54 @@ supabase/migrations/20260610000004_create_progress_reports.sql
 - hiển thị thông tin học phí kèm ảnh mã QR thanh toán của Trung tâm (qrtrungtam.png)
 
 
+## Class Sessions Table
+
+Created by:
+
+```text
+supabase/migrations/20260610000006_create_class_sessions.sql
+```
+
+### Columns
+- `id uuid primary key default gen_random_uuid()`
+- `class_id uuid not null references public.classes(id) on delete cascade`
+- `session_date date not null` -- Ngày diễn ra buổi học
+- `start_time time not null` -- Giờ bắt đầu
+- `end_time time not null` -- Giờ kết thúc
+- `status text not null default 'scheduled' check (status in ('scheduled', 'attended', 'absent', 'cancelled'))` -- Trạng thái (chờ học, đã học, báo nghỉ, hủy buổi)
+- `tutor_comments text` -- Nhận xét nhanh về học sinh của Gia sư
+- `attendance_checked_at timestamptz` -- Thời điểm điểm danh
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+
+### Purpose
+- Lưu chi tiết từng buổi học cụ thể được sinh ra tự động từ thời khóa biểu cố định
+- Hỗ trợ điểm danh và lưu nhận xét nhanh của Gia sư trực tiếp
+- Hỗ trợ tính năng dời lịch học riêng lẻ (chỉ dời một buổi duy nhất mà không ảnh hưởng lịch lặp lại)
+
+
+## Class Schedules Table
+
+Created by:
+
+```text
+supabase/migrations/20260609000007_create_classes_schedules_requests.sql
+```
+
+### Columns
+- `id uuid primary key default gen_random_uuid()`
+- `class_id uuid not null references public.classes(id) on delete cascade`
+- `weekday smallint not null check (weekday between 0 and 6)` -- Thứ trong tuần (0: Chủ Nhật, 1: Thứ Hai, ..., 6: Thứ Bảy)
+- `start_time time not null`
+- `end_time time not null`
+- `notes text`
+- `created_at timestamptz not null default now()`
+
+### Purpose
+- Quản lý các khung giờ học cố định lặp lại hàng tuần của từng lớp học
+- Làm dữ liệu nguồn để tự động sinh ra danh sách các buổi học thực tế (`class_sessions`) trong 30 ngày tiếp theo
+
+
 ## Authorization Model
 
 Supported roles:
