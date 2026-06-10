@@ -1,8 +1,10 @@
+import { requireTutorId } from './classes-data'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-export default function TutorDashboardPage() {
+export default async function TutorDashboardPage() {
+  await requireTutorId()
   return (
     <main className="container mx-auto min-h-screen space-y-6 p-6">
       <Card>
