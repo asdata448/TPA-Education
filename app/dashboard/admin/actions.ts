@@ -133,3 +133,32 @@ export async function updateTutor(
   revalidatePath(`/dashboard/admin/tutors/${tutorId}`)
   return { success: 'Tutor profile updated.' }
 }
+
+export type ResetTutorPasswordState = {
+  error?: string
+  password?: string
+  success?: string
+}
+
+export async function resetTutorPassword(
+  profileId: string
+): Promise<ResetTutorPasswordState> {
+  try {
+    await requireActiveAdmin()
+    const admin = createAdminClient()
+    const newPassword = generatedPassword()
+
+    const { error } = await admin.auth.admin.updateUserById(profileId, {
+      password: newPassword,
+    })
+
+    if (error) throw new Error(error.message)
+
+    return {
+      success: 'Mật khẩu mới đã được khởi tạo thành công!',
+      password: newPassword,
+    }
+  } catch (error: any) {
+    return { error: error.message || 'Không thể đặt lại mật khẩu.' }
+  }
+}

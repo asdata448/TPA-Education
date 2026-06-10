@@ -40,6 +40,7 @@ export async function getAllProgressReports() {
         studentName: c?.student_name || 'Học sinh',
         subjectName,
         tutorName,
+        class_id: r.class_id,
       }
     })
   } catch (error) {
