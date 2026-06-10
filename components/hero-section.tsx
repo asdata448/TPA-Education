@@ -1,4 +1,4 @@
-﻿import Image from "next/image"
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -112,7 +112,7 @@ export function HeroSection() {
               {/* Main Banner Card */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white hover:shadow-3xl transition-shadow duration-300">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7F1LGHwUVdrkFWcqGrYs8GCRBYxQqW.png"
+                  src="/qc1.jpg"
                   alt="TPA+ Trung Tâm Gia Sư - Đội ngũ gia sư chất lượng cao đồng hành cùng học sinh"
                   width={600}
                   height={350}
