@@ -57,6 +57,22 @@ export default async function AdminDashboardPage() {
       </CardHeader>
     </Card>
 
+    <Card className="border-teal-500/20 bg-teal-50/10 dark:bg-teal-950/5">
+      <CardHeader>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <CardTitle className="text-teal-600 dark:text-teal-400">Lịch học & Xếp lớp (Google Calendar style)</CardTitle>
+            <CardDescription>
+              Xem và xếp lịch học lặp lại hàng tuần cho lớp, dời buổi học đơn lẻ hoặc xem tổng quan thời khóa biểu các gia sư.
+            </CardDescription>
+          </div>
+          <Link className="text-sm font-medium text-teal-600 dark:text-teal-400 underline-offset-4 hover:underline" href="/dashboard/admin/calendar">
+            Mở Lịch học & Xếp lớp →
+          </Link>
+        </div>
+      </CardHeader>
+    </Card>
+
     <Card className="border-amber-500/20 bg-amber-50/10 dark:bg-amber-950/5">
       <CardHeader>
         <div className="flex items-center justify-between gap-3">

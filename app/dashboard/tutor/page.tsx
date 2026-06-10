@@ -25,6 +25,9 @@ export default async function TutorDashboardPage() {
           <Button asChild variant="outline">
             <Link href="/dashboard/tutor/document-feedback">Document feedback</Link>
           </Button>
+          <Button asChild variant="outline" className="border-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/20 dark:hover:text-emerald-400">
+            <Link href="/dashboard/tutor/calendar">Thời khóa biểu & Điểm danh</Link>
+          </Button>
           <Button asChild variant="outline" className="border-teal-500 hover:bg-teal-50 hover:text-teal-700 dark:hover:bg-teal-950/20 dark:hover:text-teal-400">
             <Link href="/dashboard/tutor/bank-settings">Thông tin thanh toán & QR</Link>
           </Button>
