@@ -54,13 +54,44 @@ supabase/migrations/20260609000002_add_tutor_subjects.sql
 - `specialties text`
 - `notes text`
 - `active boolean not null default true`
+- `bank_name text` -- Tên ngân hàng nhận thanh toán (ví dụ: Vietcombank)
+- `bank_account_no text` -- Số tài khoản ngân hàng
+- `bank_account_name text` -- Tên chủ tài khoản ngân hàng
+- `bank_qr_key text` -- Key lưu ảnh mã QR tĩnh của gia sư trên Cloudflare R2
 - `created_at timestamptz not null default now()`
 - `updated_at timestamptz not null default now()`
 
 ### Purpose
 - store Tutor operational profile data separately from auth identity
 - support Admin Tutor creation/editing
+- store Tutor payment details (bank account details and static QR code key)
 - support future Tutor assignment workflows
+
+## Class Payments Table
+
+Created by:
+
+```text
+supabase/migrations/20260610000003_add_payment_system.sql
+```
+
+### Columns
+- `id uuid primary key default gen_random_uuid()`
+- `class_id uuid not null references public.classes(id) on delete cascade`
+- `billing_month varchar(7) not null` -- Chu kỳ thanh toán định dạng YYYY-MM
+- `tuition_fee numeric(12,2) not null` -- Học phí thực thu
+- `tuition_status text not null default 'unpaid' check (tuition_status in ('unpaid', 'paid'))` -- Trạng thái đóng học phí
+- `tuition_paid_at timestamptz` -- Thời gian thu học phí
+- `tutor_payment_status text not null default 'unpaid' check (tutor_payment_status in ('unpaid', 'paid'))` -- Trạng thái thanh toán lương gia sư (95% học phí)
+- `tutor_paid_at timestamptz` -- Thời gian thanh toán lương gia sư
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+
+### Purpose
+- theo dõi chu kỳ học phí của học sinh/phụ huynh theo tháng
+- tính toán tự động và chuyển lương cho Gia sư dựa trên học phí thực thu
+- hạn chế việc chuyển lương trước khi phụ huynh hoàn tất đóng tiền
+
 
 ## Authorization Model
 

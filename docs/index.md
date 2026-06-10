@@ -23,9 +23,13 @@
 - protected dashboards
 - Admin Tutor creation
 - Admin Tutor profile management
+- Tutor Bank Account & static QR code configuration (R2-backed)
+- Admin Tuition Fee collecting dashboard
+- Admin Tutor Salary payout dashboard (auto-calculated 95% of tuition fee, QR scan payment)
 
 Out of current scope:
 - standalone Student/Parent CRUD
+
 
 ## Generated Documentation
 

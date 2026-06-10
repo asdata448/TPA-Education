@@ -25,6 +25,21 @@ export default async function AdminDashboardPage() {
   return <main className="container mx-auto space-y-8 px-6 py-12">
     {loadErrors.length>0&&<Card className="border-destructive"><CardHeader><CardTitle>Some admin data could not load</CardTitle></CardHeader><CardContent className="space-y-1 text-sm text-destructive">{loadErrors.map(e=><p key={e}>{e}</p>)}</CardContent></Card>}
 
+    <Card className="border-emerald-500/20 bg-emerald-50/10 dark:bg-emerald-950/5">
+      <CardHeader>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <CardTitle className="text-emerald-600 dark:text-emerald-400">Quản lý Tài chính & Lương Gia sư</CardTitle>
+            <CardDescription>
+              Theo dõi học phí phụ huynh, tự động tính và chuyển khoản lương gia sư (95% học phí) qua ảnh QR tĩnh tiện lợi.
+            </CardDescription>
+          </div>
+          <Link className="text-sm font-medium text-emerald-600 dark:text-emerald-400 underline-offset-4 hover:underline" href="/dashboard/admin/finance">
+            Mở Quản lý Tài chính →
+          </Link>
+        </div>
+      </CardHeader>
+    </Card>
 
     <Card><CardHeader><div className="flex items-center justify-between gap-3"><div><CardTitle>Document feedback</CardTitle><CardDescription>Tutor material requests and library issue reports. Mark done or reject with a reason.</CardDescription></div><Link className="text-sm font-medium text-primary underline-offset-4 hover:underline" href="/dashboard/admin/document-feedback">Open full page</Link></div></CardHeader><CardContent><DocumentFeedbackManager items={feedbackItems.slice(0,5)} /></CardContent></Card>
     <Card><CardHeader><CardTitle>Teaching material library</CardTitle><CardDescription>Upload center-approved files to private Cloudflare R2 for Tutors.</CardDescription></CardHeader><CardContent><CreateMaterialForm /></CardContent></Card>
