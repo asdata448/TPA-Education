@@ -29,6 +29,8 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Confetti } from "@/components/ui/confetti"
 
+import { submitConsultantRequest } from "./contact-actions"
+
 const subjects = [
   { id: "toan", label: "Toán học" },
   { id: "ly", label: "Vật lý" },
@@ -81,7 +83,7 @@ export function ContactSection() {
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validate: At least one subject must be selected
@@ -93,16 +95,34 @@ export function ContactSection() {
     setIsSubmitting(true)
     setFormError("")
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSubmitted(true)
+    try {
+      const form = e.target as HTMLFormElement
+      const formData = new FormData(form)
+      
+      // Append array items
+      selectedSubjects.forEach((sub) => formData.append("subjects", sub))
+      selectedGoals.forEach((gl) => formData.append("goals", gl))
 
-      // Reset after 3 seconds with cleanup
-      submitTimeoutRef.current = setTimeout(() => {
-        setIsSubmitted(false)
-      }, 3000)
-    }, 1000)
+      const res = await submitConsultantRequest({}, formData)
+
+      if (res.error) {
+        setFormError(res.error)
+      } else {
+        setIsSubmitted(true)
+        setSelectedSubjects([])
+        setSelectedGoals([])
+        form.reset()
+
+        // Reset status after 3 seconds with cleanup
+        submitTimeoutRef.current = setTimeout(() => {
+          setIsSubmitted(false)
+        }, 5000)
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Đã xảy ra lỗi khi gửi yêu cầu tư vấn.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -153,7 +173,7 @@ export function ContactSection() {
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name" className="text-[#0F2A44] font-medium">
-                          Họ và tên <span className="text-red-500" aria-label="Bắt buộc">*</span>
+                          Họ và tên học sinh <span className="text-red-500" aria-label="Bắt buộc">*</span>
                         </Label>
                         <Input
                           id="name"
