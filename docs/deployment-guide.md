@@ -20,7 +20,16 @@
 20260608000001_create_profiles.sql
 20260609000001_create_tutors.sql
 20260609000002_add_tutor_subjects.sql
+20260609000003_create_students.sql
+20260609000004_create_parents.sql
+20260609000005_link_students_parents.sql
 20260609000006_remove_students_parents.sql
+20260609000007_create_classes_schedules_requests.sql
+20260609000008_create_r2_material_library.sql
+20260610000001_create_document_feedback_notifications.sql
+20260610000002_simplify_document_feedback.sql
+20260610000003_add_payment_system.sql
+20260610000004_create_progress_reports.sql
 ```
 
 ## Required Environment Variables

@@ -26,6 +26,9 @@ export default function TutorDashboardPage() {
           <Button asChild variant="outline" className="border-teal-500 hover:bg-teal-50 hover:text-teal-700 dark:hover:bg-teal-950/20 dark:hover:text-teal-400">
             <Link href="/dashboard/tutor/bank-settings">Thông tin thanh toán & QR</Link>
           </Button>
+          <Button asChild variant="outline" className="border-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-950/20 dark:hover:text-indigo-400">
+            <Link href="/dashboard/tutor/reports">Báo cáo học tập</Link>
+          </Button>
         </CardContent>
       </Card>
     </main>

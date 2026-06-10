@@ -87,10 +87,38 @@ supabase/migrations/20260610000003_add_payment_system.sql
 - `created_at timestamptz not null default now()`
 - `updated_at timestamptz not null default now()`
 
-### Purpose
 - theo dõi chu kỳ học phí của học sinh/phụ huynh theo tháng
 - tính toán tự động và chuyển lương cho Gia sư dựa trên học phí thực thu
 - hạn chế việc chuyển lương trước khi phụ huynh hoàn tất đóng tiền
+
+
+## Class Progress Reports Table
+
+Created by:
+
+```text
+supabase/migrations/20260610000004_create_progress_reports.sql
+```
+
+### Columns
+- `id uuid primary key default gen_random_uuid()`
+- `class_id uuid not null references public.classes(id) on delete cascade`
+- `reporting_month varchar(7) not null` -- Chu kỳ báo cáo (YYYY-MM)
+- `lessons_completed integer not null default 0` -- Số buổi học thực tế trong tháng
+- `rating_comprehension integer not null` -- Đánh giá mức độ tiếp thu (1-5 sao)
+- `rating_homework integer not null` -- Đánh giá tự giác làm bài tập (1-5 sao)
+- `rating_attendance integer not null` -- Đánh giá chuyên cần (1-5 sao)
+- `rating_attitude integer not null` -- Đánh giá thái độ học (1-5 sao)
+- `teacher_comments text not null` -- Nhận xét chi tiết của gia sư
+- `next_month_plan text` -- Định hướng/lộ trình học tiếp theo
+- `tuition_fee numeric(12,2) not null` -- Học phí ghi nhận (lấy tại thời điểm xuất báo cáo)
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+
+### Purpose
+- lưu trữ phiếu báo cáo đánh giá học tập hàng tháng của học viên do Gia sư lập
+- cung cấp giao diện/đường dẫn xem báo cáo công khai (Anonymous Read) để gửi trực tiếp cho Phụ huynh qua Zalo/Messenger
+- hiển thị thông tin học phí kèm ảnh mã QR thanh toán của Trung tâm (qrtrungtam.png)
 
 
 ## Authorization Model

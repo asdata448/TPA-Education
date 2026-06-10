@@ -26,6 +26,8 @@
 - Tutor Bank Account & static QR code configuration (R2-backed)
 - Admin Tuition Fee collecting dashboard
 - Admin Tutor Salary payout dashboard (auto-calculated 95% of tuition fee, QR scan payment)
+- Monthly Student Progress Reporting & Tuition Fee Notifications (Tutor submits, public 16:9 report card page, PNG export)
+- Admin Progress Report Verification Dashboard
 
 Out of current scope:
 - standalone Student/Parent CRUD

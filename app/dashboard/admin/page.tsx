@@ -41,6 +41,22 @@ export default async function AdminDashboardPage() {
       </CardHeader>
     </Card>
 
+    <Card className="border-indigo-500/20 bg-indigo-50/10 dark:bg-indigo-950/5">
+      <CardHeader>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <CardTitle className="text-indigo-600 dark:text-indigo-400">Quản lý Báo cáo Tiến độ Học sinh</CardTitle>
+            <CardDescription>
+              Theo dõi các phiếu đánh giá kết quả học tập định kỳ, điểm số chuyên cần, thái độ học tập và ý kiến từ Gia sư.
+            </CardDescription>
+          </div>
+          <Link className="text-sm font-medium text-indigo-600 dark:text-indigo-400 underline-offset-4 hover:underline" href="/dashboard/admin/reports">
+            Mở Quản lý Báo cáo →
+          </Link>
+        </div>
+      </CardHeader>
+    </Card>
+
     <Card><CardHeader><div className="flex items-center justify-between gap-3"><div><CardTitle>Document feedback</CardTitle><CardDescription>Tutor material requests and library issue reports. Mark done or reject with a reason.</CardDescription></div><Link className="text-sm font-medium text-primary underline-offset-4 hover:underline" href="/dashboard/admin/document-feedback">Open full page</Link></div></CardHeader><CardContent><DocumentFeedbackManager items={feedbackItems.slice(0,5)} /></CardContent></Card>
     <Card><CardHeader><CardTitle>Teaching material library</CardTitle><CardDescription>Upload center-approved files to private Cloudflare R2 for Tutors.</CardDescription></CardHeader><CardContent><CreateMaterialForm /></CardContent></Card>
     <Card><CardHeader><CardTitle>Library items</CardTitle><CardDescription>Edit, toggle inactive, delete, and filter uploaded material files.</CardDescription></CardHeader><CardContent><MaterialLibraryManager items={materialData.items} /></CardContent></Card>
