@@ -14,8 +14,6 @@ export function PromoPopup() {
         setIsOpen(true)
       }
     }
-
-    // Delay showing the popup slightly for better UX
     const timer = setTimeout(checkPopup, 1000)
     return () => clearTimeout(timer)
   }, [])
@@ -28,29 +26,30 @@ export function PromoPopup() {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all duration-300">
-      <div 
-        className="relative bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-white max-w-lg w-full max-h-[90vh] flex flex-col transform transition-all animate-in zoom-in-95 duration-200"
-        role="dialog"
-        aria-modal="true"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={handleClose}
+    >
+      <div
+        className="relative animate-in zoom-in-95 duration-200"
+        style={{ width: "min(90vw, 90vh * 1.78)" }} // 1.78 = 16/9 landscape ratio — đổi nếu ảnh dọc
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/50 text-white hover:bg-black/75 hover:scale-110 transition-all duration-200 cursor-pointer"
+          className="absolute -top-4 -right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black/90 hover:scale-110 transition-all duration-200 shadow-lg"
           aria-label="Đóng popup"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Content Image */}
-        <div className="relative w-full overflow-y-auto">
+        <div className="rounded-2xl overflow-hidden shadow-2xl">
           <Image
             src="/qc2.jpeg"
             alt="Chương trình ưu đãi TPA+"
-            width={600}
-            height={850}
-            className="w-full h-auto object-contain"
+            width={1600}
+            height={900}   // ← đổi đúng chiều cao thật của ảnh
+            className="w-full h-auto block"
             priority
           />
         </div>

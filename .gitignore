@@ -122,3 +122,6 @@ supabase/.temp/
 # Local reference docs
 cloudflare_r2 docs/
 
+scratch/test-db.js
+scratch/test-db.ts
+scratch/clear-schedules.js
