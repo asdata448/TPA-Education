@@ -46,7 +46,7 @@ export function PromoPopup() {
         {/* Content Image */}
         <div className="relative w-full overflow-y-auto">
           <Image
-            src="/qc2.jpg"
+            src="/qc2.jpeg"
             alt="Chương trình ưu đãi TPA+"
             width={600}
             height={850}
