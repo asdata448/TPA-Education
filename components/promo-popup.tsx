@@ -45,7 +45,7 @@ export function PromoPopup() {
 
         <div className="rounded-2xl overflow-hidden shadow-2xl">
           <Image
-            src="/qc2.jpeg"
+            src="/qc2_2.jpg"
             alt="Chương trình ưu đãi TPA+"
             width={1600}
             height={900}   // ← đổi đúng chiều cao thật của ảnh
