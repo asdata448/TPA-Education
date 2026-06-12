@@ -76,18 +76,28 @@ export function EditClassForm({
           <div className="space-y-2">
             <Label htmlFor="tutorId">Gia sư</Label>
             <Select name="tutorId" defaultValue={classDetail.tutorId ?? 'open'}>
-              <SelectItem value="open">Mở / Chưa phân công</SelectItem>
-              {tutors.map((t) => (
-                <SelectItem key={t.id} value={t.id}>{t.fullName}</SelectItem>
-              ))}
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn gia sư" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="open">Mở / Chưa phân công</SelectItem>
+                {tutors.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>{t.fullName}</SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="mode">Hình thức học</Label>
             <Select name="mode" defaultValue={classDetail.mode}>
-              <SelectItem value="online">Online</SelectItem>
-              <SelectItem value="offline">Offline</SelectItem>
-              <SelectItem value="hybrid">Hybrid</SelectItem>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="online">Online</SelectItem>
+                <SelectItem value="offline">Offline</SelectItem>
+                <SelectItem value="hybrid">Hybrid</SelectItem>
+              </SelectContent>
             </Select>
           </div>
           <Field label="Học phí mỗi buổi" name="tuitionFee" type="number" defaultValue={classDetail.tuitionFee?.toString() ?? ''} />
@@ -97,11 +107,16 @@ export function EditClassForm({
           <div className="space-y-2">
             <Label htmlFor="status">Trạng thái</Label>
             <Select name="status" defaultValue={classDetail.status}>
-              <SelectItem value="open">Đang mở (Open)</SelectItem>
-              <SelectItem value="assigned">Đã giao (Assigned)</SelectItem>
-              <SelectItem value="paused">Tạm dừng (Paused)</SelectItem>
-              <SelectItem value="completed">Hoàn thành (Completed)</SelectItem>
-              <SelectItem value="cancelled">Đã hủy (Cancelled)</SelectItem>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="open">Đang mở (Open)</SelectItem>
+                <SelectItem value="assigned">Đã giao (Assigned)</SelectItem>
+                <SelectItem value="paused">Tạm dừng (Paused)</SelectItem>
+                <SelectItem value="completed">Hoàn thành (Completed)</SelectItem>
+                <SelectItem value="cancelled">Đã hủy (Cancelled)</SelectItem>
+              </SelectContent>
             </Select>
           </div>
           <div className="md:col-span-2">
