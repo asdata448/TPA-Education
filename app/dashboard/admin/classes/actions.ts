@@ -27,6 +27,7 @@ export async function updateClassAction(_: UpdateClassState, formData: FormData)
   const tutorId = tutorIdRaw === 'open' || !tutorIdRaw ? null : tutorIdRaw
   const mode = String(formData.get('mode') ?? 'online')
   const location = String(formData.get('location') ?? '').trim() || null
+  const startDate = String(formData.get('startDate') ?? '').trim() || null
   const tuitionFeeRaw = String(formData.get('tuitionFee') ?? '').trim()
   const tuitionFee = tuitionFeeRaw ? Number(tuitionFeeRaw) : null
   const scheduleNotes = String(formData.get('scheduleNotes') ?? '').trim() || null
@@ -84,6 +85,7 @@ export async function updateClassAction(_: UpdateClassState, formData: FormData)
         tutor_id: tutorId,
         mode,
         location,
+        start_date: startDate,
         tuition_fee: tuitionFee,
         schedule_notes: scheduleNotes,
         requirements,

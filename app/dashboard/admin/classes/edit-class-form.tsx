@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
+import { Calendar as CalendarIcon } from 'lucide-react'
 
 type ClassDetail = {
   id: string
@@ -21,6 +24,7 @@ type ClassDetail = {
   tutorId: string | null
   mode: string
   location: string | null
+  startDate: string | null
   tuitionFee: number | null
   scheduleNotes: string | null
   requirements: string | null
@@ -39,6 +43,9 @@ export function EditClassForm({
 }) {
   const [state, action, pending] = useActionState(updateClassAction, {} as UpdateClassState)
   const [deleteState, deleteAction, deleting] = useActionState(deleteClassAction, {} as DeleteClassState)
+  const [dateVal, setDateVal] = useState<Date | undefined>(
+    classDetail.startDate ? new Date(classDetail.startDate) : undefined
+  )
 
   return (
     <div className="space-y-6">
@@ -118,6 +125,35 @@ export function EditClassForm({
                 <SelectItem value="cancelled">Đã hủy (Cancelled)</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="space-y-2 flex flex-col justify-end">
+            <Label>Ngày bắt đầu</Label>
+            <input type="hidden" name="startDate" value={dateVal ? dateVal.toISOString().split('T')[0] : ''} />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-9",
+                    !dateVal && "text-muted-foreground"
+                  )}
+                  type="button"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateVal ? dateVal.toLocaleDateString('vi-VN') : <span>Chọn ngày bắt đầu</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateVal}
+                  onSelect={setDateVal}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="md:col-span-2">
             <Field label="Địa điểm (nếu offline)" name="location" defaultValue={classDetail.location ?? ''} />

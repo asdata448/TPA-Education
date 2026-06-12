@@ -15,7 +15,7 @@ export default async function ClassDetailPage({ params }: { params: Promise<{ cl
   // Fetch target class data
   const { data: c, error } = await admin
     .from('classes')
-    .select('id, student_name, student_grade, subject_id, parent_name, parent_phone, parent_email, tutor_id, mode, location, tuition_fee, schedule_notes, requirements, notes, status')
+    .select('id, student_name, student_grade, subject_id, parent_name, parent_phone, parent_email, tutor_id, mode, location, start_date, tuition_fee, schedule_notes, requirements, notes, status')
     .eq('id', classId)
     .single()
 
@@ -35,6 +35,7 @@ export default async function ClassDetailPage({ params }: { params: Promise<{ cl
     tutorId: c.tutor_id,
     mode: c.mode,
     location: c.location,
+    startDate: c.start_date,
     tuitionFee: c.tuition_fee ? Number(c.tuition_fee) : null,
     scheduleNotes: c.schedule_notes,
     requirements: c.requirements,

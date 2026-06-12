@@ -9,20 +9,28 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { X } from 'lucide-react'
+import { X, Calendar as CalendarIcon } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
 
 export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tutors:TutorOption[]}){
   const [state,action,pending]=useActionState(createClass,{} as ClassActionState)
 
   const [values,setValues]=useState<Record<string,string>>({})
   const [scheduleRows, setScheduleRows] = useState<{ weekday: number; startTime: string; endTime: string }[]>([])
+  const [dateVal, setDateVal] = useState<Date | undefined>(undefined)
 
   useEffect(() => {
     if (state.success) {
       setValues({})
       setScheduleRows([])
+      setDateVal(undefined)
     } else if (state.values) {
       setValues(state.values)
+      if (state.values.startDate) {
+        setDateVal(new Date(state.values.startDate))
+      }
     }
   }, [state])
 
@@ -77,7 +85,35 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Ngày bắt đầu (dd/mm/yyyy)" name="startDate" placeholder="Ví dụ: 15/09/2026" value={values.startDate??''} onChange={e=>set('startDate')(e.target.value)}/>
+        <div className="space-y-2 flex flex-col">
+          <Label>Ngày bắt đầu</Label>
+          <input type="hidden" name="startDate" value={dateVal ? dateVal.toISOString().split('T')[0] : ''} />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal h-9",
+                  !dateVal && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateVal ? dateVal.toLocaleDateString('vi-VN') : <span>Chọn ngày bắt đầu</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={dateVal}
+                onSelect={(d) => {
+                  setDateVal(d)
+                  if (d) set('startDate')(d.toISOString().split('T')[0])
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
         <Field label="Địa điểm" name="location" value={values.location??''} onChange={e=>set('location')(e.target.value)}/>
       </div>
 
