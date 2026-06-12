@@ -12,40 +12,36 @@ export default async function TutorClassDetailPage({ params }: { params: Params 
   if (!c) notFound()
 
   return (
-    <main className="container mx-auto space-y-6 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {c.subjectName || 'Class'} - {c.studentName}
-          </CardTitle>
-          <CardDescription>
-            {c.status} / {c.mode}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p>
-            <b>Student:</b> {c.studentName}
-            {c.studentGrade ? ` (${c.studentGrade})` : ''}
-          </p>
-          <p>
-            <b>Parent:</b> {c.parentName || '-'} {c.parentPhone ? `/ ${c.parentPhone}` : ''}
-          </p>
-          <p>
-            <b>Fee:</b> {c.tuitionFee ?? '-'}
-          </p>
-          <p>
-            <b>Schedule:</b> {c.scheduleNotes || '-'}
-          </p>
-          <p>
-            <b>Requirements:</b> {c.requirements || '-'}
-          </p>
-          <p>
-            <b>Notes:</b> {c.notes || '-'}
-          </p>
-        </CardContent>
-      </Card>
-    </main>
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {c.subjectName || 'Lớp'} - {c.studentName}
+        </CardTitle>
+        <CardDescription>
+          {c.status} / {c.mode}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p>
+          <b>Học sinh:</b> {c.studentName}
+          {c.studentGrade ? ` (${c.studentGrade})` : ''}
+        </p>
+        <p>
+          <b>Phụ huynh:</b> {c.parentName || '-'} {c.parentPhone ? `/ ${c.parentPhone}` : ''}
+        </p>
+        <p>
+          <b>Học phí:</b> {c.tuitionFee ?? '-'}
+        </p>
+        <p>
+          <b>Lịch học:</b> {c.scheduleNotes || '-'}
+        </p>
+        <p>
+          <b>Yêu cầu:</b> {c.requirements || '-'}
+        </p>
+        <p>
+          <b>Ghi chú:</b> {c.notes || '-'}
+        </p>
+      </CardContent>
+    </Card>
   )
 }
-
-
