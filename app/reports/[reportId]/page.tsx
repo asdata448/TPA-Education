@@ -223,7 +223,7 @@ export default async function PublicReportPage({ params }: { params: Params }) {
               <div className="bg-white p-1 rounded-xl shrink-0 flex items-center justify-center shadow-md border border-[#E5E7EB] w-[140px] h-[140px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/qrtrungtam.png"
+                  src="/qrtrungtamv2.jpg"
                   alt="QR Transfer"
                   className="h-full w-full object-contain"
                 />

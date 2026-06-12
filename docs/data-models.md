@@ -136,7 +136,7 @@ supabase/migrations/20260610000004_create_progress_reports.sql
 ### Purpose
 - Monthly student progress evaluation by Tutor
 - Public anonymous-read link for sharing with parents via Zalo/Messenger
-- Display tuition info with center QR code (`qrtrungtam.png`)
+- Display tuition info with center QR code (`qrtrungtamv2.jpg`)
 
 ## Class Sessions Table
 
