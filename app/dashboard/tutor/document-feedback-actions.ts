@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireTutorId } from './classes-data'
+import { sendAdminFeedbackReceivedEmail } from '@/lib/email'
 
 export type FeedbackActionState = { error?: string; success?: string }
 
@@ -27,6 +28,15 @@ export async function createDocumentFeedback(_: FeedbackActionState, formData: F
     })
 
     if (error) return { error: error.message }
+
+    try {
+      const { data: tutor } = await admin.from('tutors').select('profiles(full_name)').eq('id', tutorId).maybeSingle()
+      const profile = Array.isArray(tutor?.profiles) ? tutor?.profiles[0] : tutor?.profiles
+      await sendAdminFeedbackReceivedEmail({ tutorName: profile?.full_name, kind, message })
+    } catch (emailError) {
+      console.error('Failed to send admin feedback email:', emailError)
+    }
+
     revalidatePath('/dashboard/tutor/document-feedback')
     revalidatePath('/dashboard/tutor/library')
     revalidatePath('/dashboard/admin')

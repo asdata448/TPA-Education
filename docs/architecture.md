@@ -11,6 +11,7 @@ The application is a monolithic Next.js 16 App Router app deployed on Vercel. Th
 - Auth/data backend: Supabase Auth + Postgres
 - Authorization model: profile role lookup from `public.profiles`
 - Hosting: Vercel
+- Transactional email: Brevo REST API rendered through React Email templates
 
 ## Runtime Flow
 
@@ -37,6 +38,7 @@ The application is a monolithic Next.js 16 App Router app deployed on Vercel. Th
 ### Auth / Supabase Layer
 - `lib/env.ts`
 - `lib/auth/role.ts`
+- `lib/email.tsx`
 - `lib/supabase/client.ts`
 - `lib/supabase/server.ts`
 - `lib/supabase/admin.ts`
@@ -44,6 +46,7 @@ The application is a monolithic Next.js 16 App Router app deployed on Vercel. Th
 ### Database Layer
 - `public.profiles`
 - `public.tutors`
+- `public.email_settings`
 
 ## Tutor Provisioning Flow
 
@@ -55,6 +58,14 @@ The application is a monolithic Next.js 16 App Router app deployed on Vercel. Th
 6. insert `tutors` row with operational fields
 7. return one-time generated password to Admin
 8. Admin can later edit Tutor detail page
+
+## Email Notification Architecture
+
+The app sends operational email through `lib/email.tsx`. Templates are React Email components rendered server-side to HTML and submitted to Brevo Transactional Email through the REST API. The sender is fixed as `TPA+ <no-reply@tpaeducation.io.vn>`.
+
+Admin notification recipients are configurable by active Admin users at `/dashboard/admin/settings`. The settings are stored in `public.email_settings.admin_notification_emails`. Notification triggers catch and log email errors without failing the primary business action.
+
+Current notification coverage includes Tutor onboarding/password events, open-class request decisions, document feedback submission/resolution, progress report submission, and Tutor payout confirmation. Parent-facing automatic report delivery is intentionally deferred.
 
 ## Important Constraint
 

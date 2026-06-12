@@ -2,8 +2,10 @@
 
 import { randomBytes } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireActiveAdmin } from './data'
+import { sendTutorPasswordResetEmail, sendTutorWelcomeEmail } from '@/lib/email'
 
 export type CreateTutorState = {
   error?: string
@@ -80,6 +82,12 @@ export async function createTutor(
       return { error: 'Unable to save Tutor profile. No account was created.' }
     }
 
+    try {
+      await sendTutorWelcomeEmail({ tutorEmail: email, tutorName: fullName, newPassword: password })
+    } catch (emailError) {
+      console.error('Failed to send tutor welcome email:', emailError)
+    }
+
     revalidatePath('/dashboard/admin')
     return { password, email }
   } catch (error) {
@@ -148,11 +156,33 @@ export async function resetTutorPassword(
     const admin = createAdminClient()
     const newPassword = generatedPassword()
 
+    const { data: authData, error: loadUserError } = await admin.auth.admin.getUserById(profileId)
+    if (loadUserError || !authData.user?.email) {
+      throw new Error(loadUserError?.message || 'Unable to load Tutor email.')
+    }
+
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('full_name')
+      .eq('id', profileId)
+      .eq('role', 'tutor')
+      .maybeSingle()
+
     const { error } = await admin.auth.admin.updateUserById(profileId, {
       password: newPassword,
     })
 
     if (error) throw new Error(error.message)
+
+    try {
+      await sendTutorPasswordResetEmail({
+        tutorEmail: authData.user.email,
+        tutorName: profile?.full_name,
+        newPassword,
+      })
+    } catch (emailError) {
+      console.error('Failed to send tutor password reset email:', emailError)
+    }
 
     return {
       success: 'Mật khẩu mới đã được khởi tạo thành công!',
@@ -161,4 +191,73 @@ export async function resetTutorPassword(
   } catch (error: any) {
     return { error: error.message || 'Không thể đặt lại mật khẩu.' }
   }
+}
+
+
+export type DeleteTutorState = {
+  error?: string
+}
+
+export async function deleteTutor(
+  _previousState: DeleteTutorState,
+  formData: FormData
+): Promise<DeleteTutorState> {
+  const tutorId = String(formData.get('tutorId') ?? '').trim()
+  const profileId = String(formData.get('profileId') ?? '').trim()
+  const confirmText = String(formData.get('confirmText') ?? '').trim()
+
+  if (!tutorId || !profileId) {
+    return { error: 'Missing Tutor identity.' }
+  }
+
+  if (confirmText !== 'DELETE') {
+    return { error: 'Type DELETE to confirm permanent deletion.' }
+  }
+
+  try {
+    await requireActiveAdmin()
+  } catch {
+    return { error: 'Only active Admin users can delete Tutor accounts.' }
+  }
+
+  const admin = createAdminClient()
+  const { data: tutor, error: tutorError } = await admin
+    .from('tutors')
+    .select('id, profile_id')
+    .eq('id', tutorId)
+    .eq('profile_id', profileId)
+    .maybeSingle()
+
+  if (tutorError || !tutor) {
+    return { error: 'Tutor account not found.' }
+  }
+
+  const { data: profile, error: profileError } = await admin
+    .from('profiles')
+    .select('role')
+    .eq('id', profileId)
+    .maybeSingle()
+
+  if (profileError || profile?.role !== 'tutor') {
+    return { error: 'Only Tutor accounts can be deleted from this screen.' }
+  }
+
+  const { error: unassignError } = await admin
+    .from('classes')
+    .update({ tutor_id: null, status: 'open' })
+    .eq('tutor_id', tutorId)
+
+  if (unassignError) {
+    return { error: `Unable to unassign Tutor classes before deletion: ${unassignError.message}` }
+  }
+
+  const { error: deleteError } = await admin.auth.admin.deleteUser(profileId)
+  if (deleteError) {
+    console.error('Failed to delete Tutor auth user:', deleteError)
+    return { error: deleteError.message || 'Unable to delete Tutor account.' }
+  }
+
+  revalidatePath('/dashboard/admin')
+  revalidatePath('/dashboard/admin/tutors')
+  redirect('/dashboard/admin/tutors')
 }

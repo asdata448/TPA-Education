@@ -169,6 +169,30 @@ supabase/migrations/20260609000007_create_classes_schedules_requests.sql
 - Làm dữ liệu nguồn để tự động sinh ra danh sách các buổi học thực tế (`class_sessions`) trong 30 ngày tiếp theo
 
 
+
+## Email Settings Table
+
+Created by:
+
+```text
+supabase/migrations/20260612000001_create_email_settings.sql
+```
+
+### Columns
+- `id boolean primary key default true` -- singleton row; constrained to `true`
+- `admin_notification_emails text[] not null default '{}'` -- Admin recipient inboxes for operational notifications
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+
+### Purpose
+- stores Admin-managed email recipients without code changes or redeploys
+- powers `sendAdminNotificationEmail()` in `lib/email.tsx`
+- can be edited by active Admin users at `/dashboard/admin/settings`
+
+### Authorization
+- active Admin users can select/update through RLS
+- server-side email delivery reads the row using service-role because some triggers originate from Tutor server actions
+
 ## Authorization Model
 
 Supported roles:

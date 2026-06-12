@@ -7,19 +7,20 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { updateTutor, resetTutorPassword, type UpdateTutorState } from '../../actions'
+import { updateTutor, resetTutorPassword, deleteTutor, type UpdateTutorState, type DeleteTutorState } from '../../actions'
 import type { AdminTutorDetail } from '../../data'
 import { KeyRound, Check, Copy } from 'lucide-react'
 
 export function EditTutorForm({ tutor }: { tutor: AdminTutorDetail }) {
   const [state, action, pending] = useActionState(updateTutor, {} as UpdateTutorState)
+  const [deleteState, deleteAction, deleting] = useActionState(deleteTutor, {} as DeleteTutorState)
   const [resetting, setResetting] = useState(false)
   const [newPassword, setNewPassword] = useState<string | null>(null)
   const [resetError, setResetError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
   const handleResetPassword = async () => {
-    if (!confirm('Bạn có chắc chắn muốn cấp lại mật khẩu cho gia sư này? Mật khẩu hiện tại sẽ bị ghi đè.')) {
+    if (!confirm('Reset this Tutor password? The current password will stop working.')) {
       return
     }
     setResetting(true)
@@ -34,7 +35,7 @@ export function EditTutorForm({ tutor }: { tutor: AdminTutorDetail }) {
         setNewPassword(res.password)
       }
     } catch (e: any) {
-      setResetError(e.message || 'Đã xảy ra lỗi.')
+      setResetError(e.message || 'Something went wrong.')
     } finally {
       setResetting(false)
     }
@@ -83,39 +84,36 @@ export function EditTutorForm({ tutor }: { tutor: AdminTutorDetail }) {
         </div>
       </form>
 
-      {/* Reset Password Card Section */}
-      <div className="border border-amber-200 bg-amber-50/30 rounded-lg p-5 space-y-4">
+      <div className="rounded-lg border border-amber-200 bg-amber-50/40 p-5 space-y-4">
         <div className="flex items-start gap-3">
-          <KeyRound className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <KeyRound className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
           <div className="space-y-1">
-            <h4 className="font-semibold text-amber-900 text-sm">Cấp lại Mật khẩu (Reset Password)</h4>
-            <p className="text-xs text-amber-700 leading-relaxed">
-              Nếu gia sư quên mật khẩu đăng nhập, bạn có thể tạo một mật khẩu ngẫu nhiên mới tại đây. Mật khẩu mới sẽ hiển thị duy nhất một lần sau khi nhấn nút.
+            <h4 className="text-sm font-semibold text-amber-900">Reset password</h4>
+            <p className="text-xs leading-relaxed text-amber-700">
+              Generate a new random password for this Tutor. The new password is shown once here and emailed to the Tutor.
             </p>
           </div>
         </div>
 
         {resetError && (
           <Alert variant="destructive">
-            <AlertTitle>Lỗi đặt lại mật khẩu</AlertTitle>
+            <AlertTitle>Password reset failed</AlertTitle>
             <AlertDescription>{resetError}</AlertDescription>
           </Alert>
         )}
 
         {newPassword && (
-          <div className="bg-white border border-green-200 rounded-lg p-4 space-y-3 shadow-sm">
-            <p className="text-xs font-semibold text-green-800">Khởi tạo mật khẩu mới thành công!</p>
+          <div className="space-y-3 rounded-lg border border-green-200 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold text-green-800">New password generated.</p>
             <div className="flex items-center gap-2">
-              <code className="bg-neutral-100 px-3 py-1.5 rounded text-sm font-mono tracking-wider flex-1 border select-all">
+              <code className="flex-1 select-all rounded border bg-neutral-100 px-3 py-1.5 font-mono text-sm tracking-wider">
                 {newPassword}
               </code>
-              <Button size="icon" variant="outline" className="h-9 w-9" onClick={handleCopy} type="button">
+              <Button size="icon" variant="outline" className="h-9 w-9" onClick={handleCopy} type="button" aria-label="Copy new password">
                 {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <p className="text-[10px] text-muted-foreground">
-              * Vui lòng copy và gửi mật khẩu này cho gia sư. Mật khẩu này sẽ không hiển thị lại sau khi bạn tải lại trang.
-            </p>
+            <p className="text-xs text-muted-foreground">The Tutor also receives this password by email.</p>
           </div>
         )}
 
@@ -126,9 +124,25 @@ export function EditTutorForm({ tutor }: { tutor: AdminTutorDetail }) {
           disabled={resetting}
           className="border-amber-300 text-amber-800 hover:bg-amber-100"
         >
-          {resetting ? 'Đang cấp lại...' : 'Cấp mật khẩu ngẫu nhiên mới'}
+          {resetting ? 'Resetting...' : 'Generate new password'}
         </Button>
       </div>
+
+      <form action={deleteAction} className="space-y-4 rounded-lg border border-destructive/30 bg-destructive/5 p-5">
+        <input type="hidden" name="tutorId" value={tutor.tutorId} />
+        <input type="hidden" name="profileId" value={tutor.profileId} />
+        <div className="space-y-1">
+          <h4 className="text-sm font-semibold text-destructive">Delete Tutor account</h4>
+          <p className="text-sm text-muted-foreground">
+            Permanently deletes this Tutor auth user and profile. Assigned classes will become unassigned where the database allows it.
+          </p>
+        </div>
+        {deleteState.error && <Alert variant="destructive"><AlertTitle>Delete failed</AlertTitle><AlertDescription>{deleteState.error}</AlertDescription></Alert>}
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+          <Input name="confirmText" placeholder="Type DELETE to confirm" autoComplete="off" />
+          <Button type="submit" variant="destructive" disabled={deleting}>{deleting ? 'Deleting...' : 'Delete Tutor'}</Button>
+        </div>
+      </form>
     </div>
   )
 }

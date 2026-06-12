@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireTutorId } from '../../classes-data'
+import { sendAdminReportSubmittedEmail } from '@/lib/email'
 
 export type ReportActionState = { error?: string; success?: string; reportId?: string }
 
@@ -61,7 +62,7 @@ export async function saveProgressReport(
     // 1. Verify class assignment
     const { data: classData, error: classError } = await admin
       .from('classes')
-      .select('id, tuition_fee')
+      .select('id, tuition_fee, student_name, subjects(name)')
       .eq('id', classId)
       .eq('tutor_id', tutorId)
       .single()
@@ -95,6 +96,20 @@ export async function saveProgressReport(
 
     if (upsertError || !savedReport) {
       return { error: upsertError?.message || 'Không thể lưu phiếu báo cáo.' }
+    }
+
+    try {
+      const { data: tutor } = await admin.from('tutors').select('profiles(full_name)').eq('id', tutorId).maybeSingle()
+      const tutorProfile = Array.isArray(tutor?.profiles) ? tutor?.profiles[0] : tutor?.profiles
+      const subject = Array.isArray(classData?.subjects) ? classData?.subjects[0]?.name : classData?.subjects?.name
+      await sendAdminReportSubmittedEmail({
+        tutorName: tutorProfile?.full_name,
+        className: [subject, classData?.student_name].filter(Boolean).join(' - '),
+        reportingMonth,
+        reportId: savedReport.id,
+      })
+    } catch (emailError) {
+      console.error('Failed to send admin report submitted email:', emailError)
     }
 
     revalidatePath(`/dashboard/tutor/classes/${classId}`)

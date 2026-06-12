@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireActiveAdmin } from '../data'
 import { createTeachingMaterialDownloadUrl } from '@/lib/r2/client'
+import { sendTutorPaymentNotificationEmail } from '@/lib/email'
 
 export type FinanceActionState = { error?: string; success?: string }
 

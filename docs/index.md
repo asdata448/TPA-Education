@@ -12,7 +12,8 @@
 - **Framework:** Next.js 16 App Router
 - **UI:** React 19 + Tailwind CSS 4 + shadcn/ui + Radix UI
 - **Auth:** Supabase Auth + `@supabase/ssr`
-- **Database:** Supabase Postgres (`profiles`, `tutors`)
+- **Email:** Brevo Transactional Email + React Email templates
+- **Database:** Supabase Postgres (`profiles`, `tutors`, `email_settings`)
 - **Production URL:** `https://tpa-education-mauve.vercel.app`
 - **Supabase project ref:** `zxvddwycpfudbauaxqit`
 
@@ -28,6 +29,7 @@
 - Admin Tutor Salary payout dashboard (auto-calculated 95% of tuition fee, QR scan payment)
 - Monthly Student Progress Reporting & Tuition Fee Notifications (Tutor submits, public 16:9 report card page, PNG export)
 - Admin Progress Report Verification Dashboard
+- Brevo transactional email notifications for Tutor/Admin operational workflows
 
 Out of current scope:
 - standalone Student/Parent CRUD
@@ -40,7 +42,9 @@ Out of current scope:
 - [Development Guide](./development-guide.md)
 - [Deployment Guide](./deployment-guide.md)
 - [API Contracts](./api-contracts.md)
-- [Data Models](./data-models.md)`n- [Cloudflare R2 Material Library Plan](./r2-material-library-plan.md)
+- [Data Models](./data-models.md)
+- [Email Notifications](./email-notifications.md)
+- [Cloudflare R2 Material Library Plan](./r2-material-library-plan.md)
 
 
 ## Schedule Proposal Scope

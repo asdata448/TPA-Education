@@ -14,6 +14,7 @@ TPA-Education is a single-repository Next.js application for a tutoring center b
 - one-time generated Tutor password display
 - Admin Tutor list and Tutor detail editing
 - Tutor active/inactive access control
+- Brevo transactional email notifications for Admin/Tutor workflows
 
 ### Explicitly Removed From Current Scope
 - standalone Student CRUD
@@ -38,7 +39,8 @@ Reason: that information will be recorded later inside the class/schedule workfl
 | Language | TypeScript | 5.7.3 | typecheck clean |
 | Styling | Tailwind CSS | 4.2.0 | CSS variables in `app/globals.css` |
 | Auth | Supabase Auth + `@supabase/ssr` | active | Email/password auth for Admin/Tutor |
-| Database | Supabase Postgres | active | `profiles` + `tutors` |
+| Database | Supabase Postgres | active | `profiles`, `tutors`, `email_settings` |
+| Email | Brevo Transactional Email + React Email | active | Operational notifications using `lib/email.tsx` templates |
 | Hosting | Vercel | active | production deployed |
 
 ## Active Production Services
@@ -46,6 +48,13 @@ Reason: that information will be recorded later inside the class/schedule workfl
 - Vercel production URL: `https://tpa-education-mauve.vercel.app`
 - Supabase project ref: `zxvddwycpfudbauaxqit`
 - Test accounts provisioned for Admin and Tutor
+
+
+## Email Notification Scope
+
+The project now includes server-side transactional email for operational Admin/Tutor events. Email templates live in `lib/email.tsx`, use React Email components, and send through Brevo from `TPA+ <no-reply@tpaeducation.io.vn>`. Admin recipients are configured in `/dashboard/admin/settings` and stored in `public.email_settings`.
+
+Covered events include Tutor onboarding/password changes, open-class request submission and decisions, document feedback submission and resolution, Tutor progress report submission, and Tutor payout confirmation. Automatic Parent report delivery remains deferred.
 
 ## Important Recent Bug Fix
 

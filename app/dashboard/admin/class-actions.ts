@@ -2,6 +2,7 @@
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireActiveAdmin } from './data'
+import { sendTutorClassAssignedEmail, sendTutorClassRequestApprovedEmail, sendTutorClassRequestRejectedEmail } from '@/lib/email'
 
 import { generateUpcomingSessions, checkTutorScheduleOverlap } from '@/lib/services/schedule-service'
 
@@ -90,7 +91,7 @@ export async function reviewClassRequest(_:ClassActionState, fd:FormData):Promis
   try {
     await requireActiveAdmin();
     const admin=createAdminClient();
-    const {data:req,error:loadErr}=await admin.from('class_requests').select('id,class_id,tutor_id').eq('id',requestId).single();
+    const {data:req,error:loadErr}=await admin.from('class_requests').select('id,class_id,tutor_id,classes(student_name,subjects(name)),tutors(profile_id,profiles(full_name))').eq('id',requestId).single();
     if(loadErr||!req) return {error:'Request not found.'};
 
     if(decision==='approve'){
@@ -123,6 +124,33 @@ export async function reviewClassRequest(_:ClassActionState, fd:FormData):Promis
     } else {
       const {error}=await admin.from('class_requests').update({status:'rejected'}).eq('id',req.id);
       if(error)return{error:error.message}
+    }
+
+    try {
+      const tutor = Array.isArray((req as any).tutors) ? (req as any).tutors[0] : (req as any).tutors
+      const tutorProfile = Array.isArray(tutor?.profiles) ? tutor?.profiles[0] : tutor?.profiles
+      const classData = Array.isArray((req as any).classes) ? (req as any).classes[0] : (req as any).classes
+      const subject = Array.isArray(classData?.subjects) ? classData?.subjects[0]?.name : classData?.subjects?.name
+      const className = [subject, classData?.student_name].filter(Boolean).join(' - ')
+      const { data: authData } = tutor?.profile_id ? await admin.auth.admin.getUserById(tutor.profile_id) : { data: null as any }
+      if (authData?.user?.email) {
+        if (decision === 'approve') {
+          await sendTutorClassRequestApprovedEmail({
+            tutorEmail: authData.user.email,
+            tutorName: tutorProfile?.full_name,
+            className,
+            classId: req.class_id,
+          })
+        } else {
+          await sendTutorClassRequestRejectedEmail({
+            tutorEmail: authData.user.email,
+            tutorName: tutorProfile?.full_name,
+            className,
+          })
+        }
+      }
+    } catch (emailError) {
+      console.error('Failed to send class request decision email:', emailError)
     }
 
     revalidatePath('/dashboard/admin');

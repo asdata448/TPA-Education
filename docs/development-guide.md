@@ -44,6 +44,8 @@ Current status:
 - `proxy.ts` - session refresh + route protection
 - `lib/supabase/*` - Supabase client helpers
 - `lib/auth/role.ts` - role helpers
+- `lib/email.tsx` - Brevo + React Email notification templates
+- `app/dashboard/admin/settings/*` - Admin notification recipient settings
 
 ## Critical Next.js Rule Learned Here
 
@@ -75,6 +77,29 @@ Required Supabase variables:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `BOOTSTRAP_ADMIN_EMAIL`
+- `BREVO_API_KEY`
+- `NEXT_PUBLIC_APP_URL`
+
+## Email Notification Development
+
+- Templates live in `lib/email.tsx`.
+- Use React Email components and inline style objects only; email clients do not support the full web CSS model.
+- Use `try/catch` around every email trigger so core actions still succeed when Brevo fails.
+- Admin-recipient email goes through `sendAdminNotificationEmail()`, which reads `/dashboard/admin/settings` configuration from `public.email_settings`.
+- Tutor-recipient email should use the Tutor auth email from Supabase Admin API.
+- Logo is loaded from `${NEXT_PUBLIC_APP_URL}/logoTPA.png`; use the production URL when verifying final email visuals.
+
+Manual local test:
+
+```bash
+# .env.local
+BREVO_API_KEY=<key>
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+pnpm dev
+```
+
+Then trigger a flow such as Tutor password reset or Tutor document feedback and check Brevo Transactional logs.
 
 ## Manual Test Flow
 

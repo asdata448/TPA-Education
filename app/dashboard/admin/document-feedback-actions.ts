@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireActiveAdmin } from './data'
+import { sendTutorFeedbackResolvedEmail } from '@/lib/email'
 
 export type ResolveFeedbackState = { error?: string; success?: string }
 
@@ -19,7 +20,7 @@ export async function resolveDocumentFeedback(_: ResolveFeedbackState, formData:
   try {
     const adminProfile = await requireActiveAdmin()
     const admin = createAdminClient()
-    const { data: feedback, error: loadError } = await admin.from('document_feedback').select('id').eq('id', feedbackId).single()
+    const { data: feedback, error: loadError } = await admin.from('document_feedback').select('id,tutor_id,tutors(profile_id,profiles(full_name))').eq('id', feedbackId).single()
     if (loadError || !feedback) return { error: loadError?.message || 'Feedback item not found.' }
 
     const { error: updateError } = await admin.from('document_feedback').update({
@@ -30,6 +31,23 @@ export async function resolveDocumentFeedback(_: ResolveFeedbackState, formData:
       handled_at: new Date().toISOString(),
     }).eq('id', feedbackId)
     if (updateError) return { error: updateError.message }
+
+    try {
+      const tutor = Array.isArray((feedback as any).tutors) ? (feedback as any).tutors[0] : (feedback as any).tutors
+      const profile = Array.isArray(tutor?.profiles) ? tutor?.profiles[0] : tutor?.profiles
+      const { data: authData } = tutor?.profile_id ? await admin.auth.admin.getUserById(tutor.profile_id) : { data: null as any }
+      if (authData?.user?.email) {
+        await sendTutorFeedbackResolvedEmail({
+          tutorEmail: authData.user.email,
+          tutorName: profile?.full_name,
+          status: decision as 'done' | 'rejected',
+          adminNote,
+          rejectReason: decision === 'rejected' ? rejectReason : null,
+        })
+      }
+    } catch (emailError) {
+      console.error('Failed to send tutor feedback resolved email:', emailError)
+    }
 
     revalidatePath('/dashboard/admin')
     revalidatePath('/dashboard/admin/document-feedback')
