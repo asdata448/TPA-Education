@@ -26,6 +26,7 @@ import {
   FolderArchive,
   Wallet,
   KeyRound,
+  MessageSquare,
 } from 'lucide-react'
 
 const menuGroups = [
@@ -47,7 +48,8 @@ const menuGroups = [
   {
     label: 'Tài nguyên',
     items: [
-      { label: 'Tài liệu & Phản hồi', href: '/dashboard/tutor/library', icon: FolderArchive, color: 'text-orange-600 dark:text-orange-400' },
+      { label: 'Thư viện tài liệu', href: '/dashboard/tutor/library', icon: FolderArchive, color: 'text-orange-600 dark:text-orange-400' },
+      { label: 'Yêu cầu & Phản hồi', href: '/dashboard/tutor/document-feedback', icon: MessageSquare, color: 'text-pink-600 dark:text-pink-400' },
     ],
   },
   {
