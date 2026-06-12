@@ -41,6 +41,7 @@ export async function createClass(_:ClassActionState, fd:FormData):Promise<Class
   if(!studentName) fieldErrors.studentName='Vui lòng nhập tên học sinh'
   if(!subjectId) fieldErrors.subjectId='Vui lòng chọn môn học'
   if(values.parentEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.parentEmail)) fieldErrors.parentEmail='Email không hợp lệ'
+  if(values.parentPhone && !/^(0|\+84)[35789]\d{8}$/.test(values.parentPhone)) fieldErrors.parentPhone='Số điện thoại không hợp lệ (ví dụ: 0912345678)'
   if(values.tuitionFee){const fee=Number(values.tuitionFee); if(isNaN(fee)||fee<0) fieldErrors.tuitionFee='Học phí phải là số không âm'}
 
   // Parse recurring schedules

@@ -37,6 +37,12 @@ export async function updateClassAction(_: UpdateClassState, formData: FormData)
   if (!classId) return { error: 'Không tìm thấy ID lớp học.' }
   if (!studentName) return { error: 'Tên học sinh không được để trống.' }
   if (!subjectId) return { error: 'Môn học không được để trống.' }
+  if (parentPhone && !/^(0|\+84)[35789]\d{8}$/.test(parentPhone)) {
+    return { error: 'Số điện thoại phụ huynh không hợp lệ (ví dụ: 0912345678).' }
+  }
+  if (parentEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail)) {
+    return { error: 'Email phụ huynh không hợp lệ.' }
+  }
   if (tuitionFee !== null && (isNaN(tuitionFee) || tuitionFee < 0)) {
     return { error: 'Học phí phải là số không âm.' }
   }

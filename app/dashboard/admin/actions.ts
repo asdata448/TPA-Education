@@ -35,7 +35,11 @@ export async function createTutor(
   const notes = String(formData.get('notes') ?? '').trim() || null
 
   if (!fullName || !email || !/^\S+@\S+\.\S+$/.test(email)) {
-    return { error: 'Enter a valid name and email address.' }
+    return { error: 'Vui lòng nhập tên và địa chỉ email hợp lệ.' }
+  }
+
+  if (phone && !/^(0|\+84)[35789]\d{8}$/.test(phone)) {
+    return { error: 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam (ví dụ: 0912345678).' }
   }
 
   try {
@@ -109,7 +113,11 @@ export async function updateTutor(
   const active = formData.get('active') === 'on'
 
   if (!tutorId || !profileId || !fullName) {
-    return { error: 'Full name is required.' }
+    return { error: 'Vui lòng nhập đầy đủ họ tên.' }
+  }
+
+  if (phone && !/^(0|\+84)[35789]\d{8}$/.test(phone)) {
+    return { error: 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam (ví dụ: 0912345678).' }
   }
 
   try {
