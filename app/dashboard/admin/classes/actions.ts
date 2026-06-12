@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireActiveAdmin } from '../data'
 import { checkTutorScheduleOverlap } from '@/lib/services/schedule-service'
@@ -124,8 +125,8 @@ export async function deleteClassAction(_: DeleteClassState, formData: FormData)
     revalidatePath('/dashboard/admin')
     revalidatePath('/dashboard/admin/classes')
     revalidatePath('/dashboard/admin/calendar')
-    return { success: 'Đã xóa lớp học thành công!' }
   } catch (err: any) {
     return { error: err.message || 'Lỗi hệ thống.' }
   }
+  redirect('/dashboard/admin')
 }
