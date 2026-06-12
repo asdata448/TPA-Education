@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { TutorSidebar } from './_components/tutor-sidebar'
 import { getTutorProfile } from './classes-data'
+import { TutorNavHeader } from './_components/tutor-nav-header'
 
 export default async function TutorLayout({ children }: { children: React.ReactNode }) {
   const profile = await getTutorProfile()
@@ -14,6 +15,7 @@ export default async function TutorLayout({ children }: { children: React.ReactN
           <span className="text-sm font-semibold text-[#0F2A44] dark:text-[#F8F5EC]">TPA+ Gia sư</span>
         </header>
         <div className="flex-1 p-3 md:p-6">
+          <TutorNavHeader />
           {children}
         </div>
       </SidebarInset>
