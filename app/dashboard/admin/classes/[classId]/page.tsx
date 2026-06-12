@@ -48,14 +48,14 @@ export default async function ClassDetailPage({ params }: { params: Promise<{ cl
         <div>
           <p className="text-sm text-muted-foreground">
             <Link href="/dashboard/admin" className="underline-offset-4 hover:underline">
-              Back to Dashboard
+              ← Quay lại Trang quản trị
             </Link>
           </p>
           <h1 className="text-3xl font-semibold tracking-tight">Chi tiết lớp học</h1>
           <p className="text-muted-foreground">Học sinh: {c.student_name}</p>
         </div>
         <Badge variant={c.status === 'assigned' ? 'default' : c.status === 'open' ? 'secondary' : 'outline'}>
-          {c.status}
+          {c.status === 'open' ? 'Đang mở' : c.status === 'assigned' ? 'Đã giao' : c.status === 'paused' ? 'Tạm dừng' : c.status === 'completed' ? 'Hoàn thành' : 'Đã hủy'}
         </Badge>
       </div>
 

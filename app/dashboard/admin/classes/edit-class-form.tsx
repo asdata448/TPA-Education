@@ -97,11 +97,11 @@ export function EditClassForm({
           <div className="space-y-2">
             <Label htmlFor="status">Trạng thái</Label>
             <Select name="status" defaultValue={classDetail.status}>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="assigned">Assigned</SelectItem>
-              <SelectItem value="paused">Paused</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="open">Đang mở (Open)</SelectItem>
+              <SelectItem value="assigned">Đã giao (Assigned)</SelectItem>
+              <SelectItem value="paused">Tạm dừng (Paused)</SelectItem>
+              <SelectItem value="completed">Hoàn thành (Completed)</SelectItem>
+              <SelectItem value="cancelled">Đã hủy (Cancelled)</SelectItem>
             </Select>
           </div>
           <div className="md:col-span-2">

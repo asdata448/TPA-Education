@@ -77,7 +77,7 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Ngày bắt đầu (tuỳ chọn)" name="startDate" type="date" value={values.startDate??''} onChange={e=>set('startDate')(e.target.value)}/>
+        <Field label="Ngày bắt đầu (dd/mm/yyyy)" name="startDate" placeholder="Ví dụ: 15/09/2026" value={values.startDate??''} onChange={e=>set('startDate')(e.target.value)}/>
         <Field label="Địa điểm" name="location" value={values.location??''} onChange={e=>set('location')(e.target.value)}/>
       </div>
 
