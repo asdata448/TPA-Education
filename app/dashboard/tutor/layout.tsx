@@ -13,7 +13,7 @@ export default async function TutorLayout({ children }: { children: React.ReactN
           <SidebarTrigger className="-ml-1" />
           <span className="text-sm font-semibold text-[#0F2A44] dark:text-[#F8F5EC]">TPA+ Gia sư</span>
         </header>
-        <div className="flex-1 p-4 md:p-6">
+        <div className="flex-1 p-3 md:p-6">
           {children}
         </div>
       </SidebarInset>
