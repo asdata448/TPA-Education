@@ -288,10 +288,14 @@ export function ReportManager({
             {/* Comments */}
             <div className="space-y-3 border-t border-border pt-3">
               <div className="space-y-1">
-                <Label htmlFor="teacherComments">Nhận xét chi tiết của Gia sư</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="teacherComments">Nhận xét chi tiết của Gia sư (Tối đa 200 ký tự)</Label>
+                  <span className="text-[10px] text-muted-foreground">{teacherComments.length}/200</span>
+                </div>
                 <Textarea
                   id="teacherComments"
                   required
+                  maxLength={200}
                   placeholder="Gia sư viết đánh giá thế mạnh, các điểm cần khắc phục và tinh thần học tập chung..."
                   rows={4}
                   value={teacherComments}
@@ -300,9 +304,13 @@ export function ReportManager({
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="nextMonthPlan">Định hướng & Lộ trình tiếp theo</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="nextMonthPlan">Định hướng & Lộ trình tiếp theo (Tối đa 200 ký tự)</Label>
+                  <span className="text-[10px] text-muted-foreground">{nextMonthPlan.length}/200</span>
+                </div>
                 <Textarea
                   id="nextMonthPlan"
+                  maxLength={200}
                   placeholder="Kiến thức sẽ tiếp tục học trong tháng tới..."
                   rows={3}
                   value={nextMonthPlan}

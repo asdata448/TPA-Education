@@ -190,12 +190,12 @@ export default async function PublicReportPage({ params }: { params: Params }) {
         <div className="w-[50%] p-6 flex flex-col justify-between bg-[#F8F5EC]/30 relative z-10">
           
           {/* Tutor Comments & Next Month Plan */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
             <div className="space-y-1">
               <p className="text-[#0F2A44] text-[9px] uppercase font-extrabold tracking-wider flex items-center gap-1">
                 <FileText className="h-3.5 w-3.5 text-[#D8B76A]" /> Nhận xét của Gia sư
               </p>
-              <div className="bg-white border border-[#E5E7EB] rounded-lg p-2 min-h-[110px] max-h-[125px] overflow-y-auto">
+              <div className="bg-white border border-[#E5E7EB] rounded-lg p-2 min-h-[70px] max-h-[80px] overflow-y-auto no-scrollbar">
                 <p className="text-[#4A5568] text-[10px] leading-normal whitespace-pre-line">
                   {report.teacherComments}
                 </p>
@@ -205,7 +205,7 @@ export default async function PublicReportPage({ params }: { params: Params }) {
               <p className="text-[#0F2A44] text-[9px] uppercase font-extrabold tracking-wider flex items-center gap-1">
                 <Sparkles className="h-3.5 w-3.5 text-[#D8B76A]" /> Định hướng tháng tới
               </p>
-              <div className="bg-white border border-[#E5E7EB] rounded-lg p-2 min-h-[110px] max-h-[125px] overflow-y-auto">
+              <div className="bg-white border border-[#E5E7EB] rounded-lg p-2 min-h-[70px] max-h-[80px] overflow-y-auto no-scrollbar">
                 <p className="text-[#4A5568] text-[10px] leading-normal whitespace-pre-line">
                   {report.nextMonthPlan || 'Tiếp tục bám sát lộ trình học tập hiện tại.'}
                 </p>

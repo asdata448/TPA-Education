@@ -360,4 +360,14 @@ a[href^="#"] {
   .animate-bounce-in {
     animation: bounceIn 0.75s ease-out;
   }
+
+  /* Hide scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
 }
+

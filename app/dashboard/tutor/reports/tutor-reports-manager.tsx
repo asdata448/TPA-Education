@@ -328,10 +328,14 @@ export function TutorReportsManager({
             {/* Comments */}
             <div className="space-y-3 border-t border-border pt-3">
               <div className="space-y-1">
-                <Label htmlFor="teacherComments">Nhận xét chi tiết của Gia sư</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="teacherComments">Nhận xét chi tiết của Gia sư (Tối đa 200 ký tự)</Label>
+                  <span className="text-[10px] text-muted-foreground">{teacherComments.length}/200</span>
+                </div>
                 <Textarea
                   id="teacherComments"
                   required
+                  maxLength={200}
                   placeholder="Gia sư viết nhận xét về điểm mạnh, điểm yếu và thái độ chung..."
                   rows={4}
                   value={teacherComments}
@@ -340,9 +344,13 @@ export function TutorReportsManager({
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="nextMonthPlan">Định hướng & Lộ trình tháng tới</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="nextMonthPlan">Định hướng & Lộ trình tháng tới (Tối đa 200 ký tự)</Label>
+                  <span className="text-[10px] text-muted-foreground">{nextMonthPlan.length}/200</span>
+                </div>
                 <Textarea
                   id="nextMonthPlan"
+                  maxLength={200}
                   placeholder="Các nội dung, phương án bồi dưỡng kiến thức tiếp theo..."
                   rows={3}
                   value={nextMonthPlan}
