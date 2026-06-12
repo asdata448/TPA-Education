@@ -11,6 +11,9 @@ import { getAdminMaterialData } from './materials-data'
 import { getAdminFeedbackItems } from './document-feedback-data'
 import { DocumentFeedbackManager } from './document-feedback-manager'
 import { listTutors } from './data'
+import { logout } from '@/app/(auth)/login/actions'
+import { Button } from '@/components/ui/button'
+import { LogOut } from 'lucide-react'
 
 function resultValue<T>(result: PromiseSettledResult<T>, fallback: T) { return result.status === 'fulfilled' ? result.value : fallback }
 function resultError(result: PromiseSettledResult<unknown>, label: string) { return result.status === 'fulfilled' ? null : `${label}: ${result.reason instanceof Error ? result.reason.message : 'Unable to load data'}` }
@@ -23,6 +26,18 @@ export default async function AdminDashboardPage() {
   const feedbackItems = resultValue(feedbackResult, [])
   const loadErrors = [resultError(tutorsResult, 'Tutors'), resultError(classDataResult, 'Classes'), resultError(materialDataResult, 'Materials'), resultError(feedbackResult, 'Document feedback')].filter(Boolean)
   return <main className="container mx-auto space-y-8 px-6 py-12">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-6 gap-4">
+      <div>
+        <h1 className="text-3xl font-black text-[#0F2A44] dark:text-[#F8F5EC] tracking-tight">TPA+ Admin Dashboard</h1>
+        <p className="text-sm text-muted-foreground">Hệ thống quản lý hoạt động nội bộ trung tâm gia sư TPA+</p>
+      </div>
+      <form action={logout}>
+        <Button type="submit" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 cursor-pointer gap-2">
+          <LogOut className="h-4 w-4" /> Đăng xuất
+        </Button>
+      </form>
+    </div>
+
     {loadErrors.length>0&&<Card className="border-destructive"><CardHeader><CardTitle>Some admin data could not load</CardTitle></CardHeader><CardContent className="space-y-1 text-sm text-destructive">{loadErrors.map(e=><p key={e}>{e}</p>)}</CardContent></Card>}
 
     <Card className="border-sky-500/20 bg-sky-50/10 dark:bg-sky-950/5">

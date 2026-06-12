@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { LogOut, ChevronsUpDown } from 'lucide-react'
+import { logout } from '@/app/(auth)/login/actions'
 
 export function SidebarFooterAvatar({ fullName }: { fullName: string }) {
   const router = useRouter()
@@ -21,8 +22,8 @@ export function SidebarFooterAvatar({ fullName }: { fullName: string }) {
     .toUpperCase() || 'GS'
 
   async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await logout()
+    router.refresh()
     router.push('/login')
   }
 

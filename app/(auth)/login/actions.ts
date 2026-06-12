@@ -2,6 +2,7 @@
 
 import { isAdmin, isTutor, isUserRole } from '@/lib/auth/role'
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 type LoginResult =
   | { error: string }
@@ -55,3 +56,10 @@ export async function login(email: string, password: string): Promise<LoginResul
   await supabase.auth.signOut()
   return { error: 'Unable to determine dashboard access for this account' }
 }
+
+export async function logout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}
+
