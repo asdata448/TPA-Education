@@ -8,6 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { createDocumentFeedback, type FeedbackActionState } from './document-feedback-actions'
 import type { AdminLibraryItem } from '../admin/materials-data'
 import { useMemo, useState } from 'react'
@@ -108,7 +116,7 @@ export function TutorMaterialLibrary({ items }: { items: AdminLibraryItem[] }) {
                         {item.title}
                       </h3>
                     </div>
-                    <ReportMaterialButton itemId={item.id} />
+                    <ReportMaterialButton itemId={item.id} itemTitle={item.title} />
                   </div>
                   
                   <p className="text-xs text-[#4A5568] leading-relaxed line-clamp-2">
@@ -147,7 +155,7 @@ export function TutorMaterialLibrary({ items }: { items: AdminLibraryItem[] }) {
   )
 }
 
-function ReportMaterialButton({ itemId }: { itemId: string }) {
+function ReportMaterialButton({ itemId, itemTitle }: { itemId: string; itemTitle: string }) {
   const [open, setOpen] = useState(false)
   const [state, action, pending] = useActionState(createDocumentFeedback, {} as FeedbackActionState)
   
@@ -155,65 +163,78 @@ function ReportMaterialButton({ itemId }: { itemId: string }) {
     <div className="text-right">
       <button 
         type="button" 
-        onClick={() => setOpen((value) => !value)} 
+        onClick={() => setOpen(true)} 
         className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-red-500 font-semibold transition-colors cursor-pointer bg-slate-50 hover:bg-red-50 px-2.5 py-1 rounded-md border border-transparent hover:border-red-100"
       >
         <Flag className="h-3.5 w-3.5" /> Báo lỗi
       </button>
 
-      {open && (
-        <form action={action} className="absolute right-5 left-5 mt-2 z-20 space-y-3 rounded-xl border border-red-100 bg-white p-4 shadow-xl text-left">
-          <input type="hidden" name="kind" value="material_report"/>
-          <input type="hidden" name="libraryItemId" value={itemId}/>
-          
-          {state.error && (
-            <Alert variant="destructive" className="py-2 px-3">
-              <AlertDescription className="text-xs">{state.error}</AlertDescription>
-            </Alert>
-          )}
-          {state.success && (
-            <Alert className="py-2 px-3 border-emerald-200 bg-emerald-50 text-emerald-800">
-              <AlertDescription className="text-xs flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-                {state.success}
-              </AlertDescription>
-            </Alert>
-          )}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md w-full rounded-xl p-6 shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-[#0F2A44] flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-500" /> Báo cáo sự cố tài liệu
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Bạn đang báo cáo sự cố hoặc đề xuất chỉnh sửa cho tài liệu: <strong className="text-[#0F2A44]">{itemTitle}</strong>
+            </DialogDescription>
+          </DialogHeader>
 
-          <div className="space-y-1">
+          <form action={action} className="space-y-4 pt-2">
+            <input type="hidden" name="kind" value="material_report"/>
+            <input type="hidden" name="libraryItemId" value={itemId}/>
+            
+            {state.error && (
+              <Alert variant="destructive" className="py-2 px-3">
+                <AlertDescription className="text-xs">{state.error}</AlertDescription>
+              </Alert>
+            )}
+            {state.success && (
+              <Alert className="py-2 px-3 border-emerald-200 bg-emerald-50 text-emerald-800">
+                <AlertDescription className="text-xs flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                  {state.success}
+                </AlertDescription>
+              </Alert>
+            )}
+
+          <div className="space-y-1.5">
             <Label className="text-xs font-bold text-[#0F2A44]" htmlFor={`report-${itemId}`}>
               Mô tả lỗi hoặc đề xuất cải tiến:
             </Label>
             <Textarea 
               id={`report-${itemId}`} 
               name="message" 
-              rows={2} 
-              className="text-xs focus:ring-red-400 focus:border-red-400"
+              rows={4} 
+              required
+              className="text-xs focus:ring-red-400 focus:border-red-400 bg-slate-50/50"
               placeholder="Ví dụ: Đề bị sai đáp án ở câu 3, tài liệu tải chậm..." 
             />
           </div>
 
-          <div className="flex gap-2 justify-end">
+          <DialogFooter className="flex gap-2 justify-end pt-3 border-t border-slate-100">
             <Button 
               type="button" 
               variant="ghost" 
               size="sm" 
               onClick={() => setOpen(false)} 
-              className="text-xs h-7 px-3 cursor-pointer"
+              className="text-xs h-9 px-4 cursor-pointer"
             >
               Hủy
             </Button>
             <Button 
+              type="submit"
               size="sm" 
               variant="destructive"
-              className="text-xs h-7 px-3 bg-red-600 hover:bg-red-700 cursor-pointer"
+              className="text-xs h-9 px-4 bg-red-600 hover:bg-red-700 cursor-pointer"
               disabled={pending}
             >
               {pending ? 'Đang gửi...' : 'Gửi báo cáo'}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      )}
-    </div>
+      </DialogContent>
+    </Dialog>
+  </div>
   )
 }
