@@ -8,13 +8,16 @@ Notifications are intentionally non-blocking: if Brevo is unavailable or an API 
 
 ## Provider and Sender
 
-- Provider: Brevo Transactional Email API
-- Sender name: `TPA+`
-- Sender email: `no-reply@tpaeducation.io.vn`
-- Primary helper: `sendEmail({ to, subject, html })`
-- React Email templates: `lib/email.tsx`
-- Logo asset: `public/logoTPA.png`
-- Logo URL in email: `${NEXT_PUBLIC_APP_URL || 'https://tpaeducation.io.vn'}/logoTPA.png`
+| Item | Value |
+| --- | --- |
+| Provider | Brevo Transactional Email API |
+| REST endpoint | `https://api.brevo.com/v3/smtp/email` |
+| Sender name | `TPA+` |
+| Sender email | `no-reply@tpaeducation.io.vn` |
+| Primary helper | `sendEmail({ to, subject, html })` |
+| React Email templates | `lib/email.tsx` |
+| Logo asset | `public/logoTPA.png` |
+| Logo URL in email | `${NEXT_PUBLIC_APP_URL}/logoTPA.png` |
 
 ## Environment Variables
 
@@ -25,22 +28,19 @@ BREVO_API_KEY=<brevo-transactional-api-key>
 NEXT_PUBLIC_APP_URL=https://tpaeducation.io.vn
 ```
 
-If `BREVO_API_KEY` is missing, `sendEmail()` logs and skips sending. This is expected in local environments where email is not being tested.
+If `BREVO_API_KEY` is missing, `sendEmail()` logs a warning and skips sending. This is expected in local environments where email is not being tested.
 
 ## Admin Recipient Settings
 
 Admin notification recipients are not hardcoded. They are stored in Supabase:
 
-- Table: `public.email_settings`
-- Singleton row: `id = true`
-- Column: `admin_notification_emails text[]`
-- Admin UI: `/dashboard/admin/settings`
-
-Migration:
-
-```text
-supabase/migrations/20260612000001_create_email_settings.sql
-```
+| Property | Value |
+| --- | --- |
+| Table | `public.email_settings` |
+| Singleton row | `id = true` |
+| Column | `admin_notification_emails text[]` |
+| Admin UI | `/dashboard/admin/settings` |
+| Migration | `supabase/migrations/20260612000001_create_email_settings.sql` |
 
 Initial seed values:
 
@@ -53,37 +53,50 @@ Only active Admin users can read/update settings through RLS. Server-side notifi
 
 ## Template Inventory
 
-All templates live in `lib/email.tsx`.
+All templates live in `lib/email.tsx`. Each template renders a branded HTML email with:
+- TPA+ gradient accent bar (navy → gold)
+- Logo and brand line
+- Status pill (success/info)
+- Body content with CTA button
+- Footer with no-reply notice
 
-| Function | Recipient | Purpose |
+### Tutor-facing Emails
+
+| Function | Trigger | Content |
 | --- | --- | --- |
-| `sendTutorWelcomeEmail` | Tutor | New Tutor account created; includes temporary password. |
-| `sendTutorPasswordResetEmail` | Tutor | Admin reset Tutor password; includes temporary password. |
-| `sendTutorPasswordChangedEmail` | Tutor | Tutor self-service password change security alert. |
-| `sendAdminClassRequestEmail` | Admin recipients | Tutor requested to take an open class. |
-| `sendTutorClassRequestApprovedEmail` | Tutor | Admin approved a Tutor class request. |
-| `sendTutorClassRequestRejectedEmail` | Tutor | Admin rejected a Tutor class request. |
-| `sendTutorClassAssignedEmail` | Tutor | Admin directly assigned Tutor when creating a class. |
-| `sendAdminFeedbackReceivedEmail` | Admin recipients | Tutor submitted material request or library issue report. |
-| `sendTutorFeedbackResolvedEmail` | Tutor | Admin marked feedback done/rejected. |
-| `sendAdminReportSubmittedEmail` | Admin recipients | Tutor submitted/saved monthly progress report. |
-| `sendTutorPaymentNotificationEmail` | Tutor | Admin confirmed Tutor payment for a class billing month. |
+| `sendTutorWelcomeEmail` | Admin creates new Tutor | Welcome message + temporary password |
+| `sendTutorPasswordResetEmail` | Admin resets Tutor password | New temporary password |
+| `sendTutorPasswordChangedEmail` | Tutor changes own password | Security alert (no password content) |
+| `sendTutorClassRequestApprovedEmail` | Admin approves class request | Class name + link to class detail |
+| `sendTutorClassRequestRejectedEmail` | Admin rejects class request | Links to open classes |
+| `sendTutorClassAssignedEmail` | Admin creates class with Tutor | Class name + link to class detail |
+| `sendTutorFeedbackResolvedEmail` | Admin resolves document feedback | Status (done/rejected) + admin note |
+| `sendTutorPaymentNotificationEmail` | Admin confirms Tutor payment | Amount (95% of tuition) + link to bank settings |
+
+### Admin-facing Emails
+
+| Function | Trigger | Content |
+| --- | --- | --- |
+| `sendAdminClassRequestEmail` | Tutor requests open class | Tutor name + class name + message |
+| `sendAdminFeedbackReceivedEmail` | Tutor submits feedback | Feedback type + message |
+| `sendAdminReportSubmittedEmail` | Tutor saves progress report | Class name + reporting month |
 
 ## Trigger Matrix
 
-| Product event | Action file | Email function | Notes |
+| Product Event | Action File | Email Function | Recipient |
 | --- | --- | --- | --- |
-| Admin creates Tutor | `app/dashboard/admin/actions.ts` | `sendTutorWelcomeEmail` | Sends generated temporary password. |
-| Admin resets Tutor password | `app/dashboard/admin/actions.ts` | `sendTutorPasswordResetEmail` | Password is still shown once in Admin UI and emailed to Tutor. |
-| Tutor changes own password | `app/dashboard/tutor/change-password/actions.ts` | `sendTutorPasswordChangedEmail` | Security alert only; no password content. |
-| Tutor requests open class | `app/dashboard/tutor/class-actions.ts` | `sendAdminClassRequestEmail` | Sent to configured Admin recipients. |
-| Admin approves class request | `app/dashboard/admin/class-actions.ts` | `sendTutorClassRequestApprovedEmail` | Links to assigned class detail. |
-| Admin rejects class request | `app/dashboard/admin/class-actions.ts` | `sendTutorClassRequestRejectedEmail` | Links to open classes. |
-| Admin creates assigned class | `app/dashboard/admin/class-actions.ts` | `sendTutorClassAssignedEmail` | Only fires when class is created with a specific Tutor, not open. |
-| Tutor submits material request/report | `app/dashboard/tutor/document-feedback-actions.ts` | `sendAdminFeedbackReceivedEmail` | Sent to Admin recipients. |
-| Admin resolves document feedback | `app/dashboard/admin/document-feedback-actions.ts` | `sendTutorFeedbackResolvedEmail` | Includes admin note/rejection reason when present. |
-| Tutor saves progress report | `app/dashboard/tutor/reports/report-actions.ts` and `app/dashboard/tutor/classes/[classId]/report-actions.ts` | `sendAdminReportSubmittedEmail` | Sent to Admin recipients for review. |
-| Admin confirms Tutor paid | `app/dashboard/admin/finance/finance-actions.ts` | `sendTutorPaymentNotificationEmail` | Sent after tutor payment status becomes `paid`. |
+| Admin creates Tutor | `app/dashboard/admin/actions.ts` | `sendTutorWelcomeEmail` | Tutor |
+| Admin resets Tutor password | `app/dashboard/admin/actions.ts` | `sendTutorPasswordResetEmail` | Tutor |
+| Tutor changes own password | `app/dashboard/tutor/change-password/actions.ts` | `sendTutorPasswordChangedEmail` | Tutor |
+| Tutor requests open class | `app/dashboard/tutor/class-actions.ts` | `sendAdminClassRequestEmail` | Admin |
+| Admin approves class request | `app/dashboard/admin/class-actions.ts` | `sendTutorClassRequestApprovedEmail` | Tutor |
+| Admin rejects class request | `app/dashboard/admin/class-actions.ts` | `sendTutorClassRequestRejectedEmail` | Tutor |
+| Admin creates assigned class | `app/dashboard/admin/class-actions.ts` | `sendTutorClassAssignedEmail` | Tutor |
+| Tutor submits material request/report | `app/dashboard/tutor/document-feedback-actions.ts` | `sendAdminFeedbackReceivedEmail` | Admin |
+| Admin resolves document feedback | `app/dashboard/admin/document-feedback-actions.ts` | `sendTutorFeedbackResolvedEmail` | Tutor |
+| Tutor saves progress report | `app/dashboard/tutor/reports/report-actions.ts` | `sendAdminReportSubmittedEmail` | Admin |
+| Tutor saves progress report (class detail) | `app/dashboard/tutor/classes/[classId]/report-actions.ts` | `sendAdminReportSubmittedEmail` | Admin |
+| Admin confirms Tutor paid | `app/dashboard/admin/finance/finance-actions.ts` | `sendTutorPaymentNotificationEmail` | Tutor |
 
 ## Non-Blocking Error Policy
 
@@ -114,30 +127,103 @@ The PRD/addendum says automatic parent report delivery is deferred. Therefore:
 - Parent-facing delivery remains manual/public-link based for now.
 - Parent notifications can be added later when Parent records/workflows are reintroduced.
 
-## Manual Test Plan
+---
 
-### Local
+## Testing Guide
 
-1. Add `BREVO_API_KEY` to `.env.local`.
-2. Set `NEXT_PUBLIC_APP_URL=http://localhost:3000` or the deployed URL if testing logo rendering.
-3. Restart `pnpm dev`.
-4. Trigger any notification flow.
-5. Check recipient inbox and Brevo Transactional logs.
+### Prerequisites
 
-### Production
+1. **Brevo account** with a verified sender domain (`tpaeducation.io.vn`)
+2. **Brevo API key** (Transactional section → SMTP & API → API Keys)
+3. **Admin email recipients** configured at `/dashboard/admin/settings`
 
-1. Ensure Vercel Production env includes:
-   - `BREVO_API_KEY`
-   - `NEXT_PUBLIC_APP_URL=https://tpaeducation.io.vn`
-2. Deploy production.
-3. Open `/dashboard/admin/settings` and confirm Admin recipients.
-4. Test:
-   - Tutor password reset
-   - Tutor request open class
-   - Tutor document feedback
-   - Tutor progress report save
-5. Check Brevo Transactional logs for accepted/delivered/bounced status.
+### Step-by-Step: Configure Admin Recipients
+
+1. Login as Admin at `https://tpaeducation.io.vn/login`
+2. Navigate to **Settings** (`/dashboard/admin/settings`)
+3. In the **Admin Notification Emails** textarea, enter one email per line:
+   ```
+   admin1@gmail.com
+   admin2@gmail.com
+   ```
+4. Click **Save email settings**
+5. Confirm the green success message appears
+
+### Step-by-Step: Test Each Notification
+
+#### Test 1: Tutor Welcome Email
+1. Login as Admin → `/dashboard/admin`
+2. Click **Create Tutor**
+3. Fill in Tutor name, email, phone
+4. Submit → The Tutor receives a welcome email with temporary password
+
+#### Test 2: Tutor Password Reset Email
+1. Login as Admin → `/dashboard/admin`
+2. Find an existing Tutor → Click to open detail page
+3. Click **Reset Password**
+4. Confirm → The Tutor receives an email with the new temporary password
+
+#### Test 3: Tutor Password Changed Email
+1. Login as Tutor → `/dashboard/tutor`
+2. Navigate to **Change Password** (`/dashboard/tutor/change-password`)
+3. Enter current password, new password, confirm
+4. Submit → The Tutor receives a security alert email
+
+#### Test 4: Admin Class Request Email
+1. Login as Tutor → `/dashboard/tutor`
+2. Navigate to **Open Classes** (`/dashboard/tutor/open-classes`)
+3. Click **Request** on an open class
+4. Optionally add a message → Submit
+5. Check Admin recipient inbox for `[TPA+] Class request from ...`
+
+#### Test 5: Admin Feedback Received Email
+1. Login as Tutor → `/dashboard/tutor`
+2. Navigate to **Document Feedback** (`/dashboard/tutor/document-feedback`)
+3. Submit a new material request or library issue report
+4. Check Admin recipient inbox for `[TPA+] Material request from ...` or `[TPA+] Library issue report from ...`
+
+#### Test 6: Admin Report Submitted Email
+1. Login as Tutor → `/dashboard/tutor`
+2. Navigate to **Reports** (`/dashboard/tutor/reports`)
+3. Create or edit a monthly progress report
+4. Save → Check Admin recipient inbox for `[TPA+] Progress report submitted ...`
+
+#### Test 7: Tutor Feedback Resolved Email
+1. Login as Admin → `/dashboard/admin/document-feedback`
+2. Find a pending feedback item
+3. Mark as **Done** or **Rejected** (with optional note)
+4. Submit → The Tutor receives a feedback update email
+
+#### Test 8: Tutor Payment Notification Email
+1. Login as Admin → `/dashboard/admin/finance`
+2. Find a Tutor with unpaid status
+3. Mark payment as **Paid**
+4. Submit → The Tutor receives a payment confirmation email with amount
+
+### Verifying Delivery
+
+1. **Brevo Dashboard**: Login at https://app.brevo.com → Transactional → Logs
+   - Filter by date range and email address
+   - Status: `delivered`, `sent`, `bounced`, `error`
+2. **Vercel Logs**: `vercel logs --environment production --level error`
+   - Look for `Failed to send ... email:` messages
+3. **Recipient Inbox**: Check spam/junk folder if not in inbox
+
+### Troubleshooting
+
+| Symptom | Likely Cause | Fix |
+| --- | --- | --- |
+| No email sent, no error log | `BREVO_API_KEY` missing | Add to Vercel env / `.env.local` |
+| `401 Unauthorized` from Brevo | Invalid API key | Regenerate key in Brevo dashboard |
+| `550 Sender rejected` | Domain not verified in Brevo | Setup DNS records for `tpaeducation.io.vn` |
+| Email sent but not received | Spam filter | Check Brevo logs for `bounced`; check spam folder |
+| Admin not getting notifications | No recipients configured | Visit `/dashboard/admin/settings` and save |
+| Wrong amount in payment email | `amount` is null | Check `class_payments` record has non-null `tuition_fee` |
+
+---
 
 ## Deployment Notes
 
-The project now uses `pnpm-lock.yaml` as the canonical lockfile. Avoid committing `package-lock.json`; Vercel detects pnpm and uses `pnpm install`.
+The project uses `pnpm-lock.yaml` as the canonical lockfile. Avoid committing `package-lock.json`; Vercel detects pnpm and uses `pnpm install`.
+
+**Important pnpm strict mode:** All packages that are directly imported in source code must be listed as direct dependencies in `package.json`. pnpm does not hoist transitive dependencies. For example, `@react-email/render` is used by `lib/email.tsx` and must be a direct dependency even though it is also a sub-dependency of `react-email`.
