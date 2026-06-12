@@ -17,7 +17,7 @@ function FeedbackCard({ item }: { item: AdminFeedbackItem }) {
   const [state, action, pending] = useActionState(resolveDocumentFeedback, {} as ResolveFeedbackState)
   const resolved = item.status !== 'pending'
   return <Card className={item.status==='pending'?'border-primary/30':''}>
-    <CardHeader><div className="flex flex-wrap items-center justify-between gap-2"><div><CardTitle className="text-base">{labelForKind(item.kind)} · {item.tutorName}</CardTitle><CardDescription>{item.libraryTitle||'General material request'} · {item.status}</CardDescription></div><span className="rounded-full bg-secondary px-2 py-1 text-xs">{new Date(item.createdAt).toLocaleDateString()}</span></div></CardHeader>
+    <CardHeader><div className="flex flex-wrap items-center justify-between gap-2"><div><CardTitle className="text-base">{labelForKind(item.kind)} · {item.tutorName}</CardTitle><CardDescription>{item.libraryTitle||'General material request'} · {item.status}</CardDescription></div><span className="rounded-full bg-secondary px-2 py-1 text-xs">{new Date(item.createdAt).toLocaleDateString('vi-VN')}</span></div></CardHeader>
     <CardContent className="space-y-4 text-sm">
       <p className="whitespace-pre-wrap">{item.message}</p>
       {item.rejectReason&&<p className="text-destructive">Reject reason: {item.rejectReason}</p>}

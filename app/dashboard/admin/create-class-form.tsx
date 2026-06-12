@@ -29,17 +29,17 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
 
   return (
     <form action={action} className="space-y-4">
-      {state.error&&<Alert variant="destructive"><AlertTitle>Class not created</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
-      {state.success&&<Alert><AlertTitle>Saved</AlertTitle><AlertDescription>{state.success}</AlertDescription></Alert>}
+      {state.error&&<Alert variant="destructive"><AlertTitle>Không thể tạo lớp</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
+      {state.success&&<Alert><AlertTitle>Đã lưu</AlertTitle><AlertDescription>{state.success}</AlertDescription></Alert>}
       
       <div className="grid gap-4 md:grid-cols-3">
-        <Field label="Student name" name="studentName" required/>
-        <Field label="Grade" name="studentGrade"/>
+        <Field label="Tên học sinh" name="studentName" required/>
+        <Field label="Khối/lớp" name="studentGrade"/>
         <div className="space-y-2">
           <Label>Subject</Label>
           <Select name="subjectId" required>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select subject"/>
+              <SelectValue placeholder="Chọn môn học"/>
             </SelectTrigger>
             <SelectContent>
               {subjects.map(s=><SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -49,9 +49,9 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Field label="Parent name" name="parentName"/>
-        <Field label="Parent phone" name="parentPhone"/>
-        <Field label="Parent email" name="parentEmail" type="email"/>
+        <Field label="Tên phụ huynh" name="parentName"/>
+        <Field label="SĐT phụ huynh" name="parentPhone"/>
+        <Field label="Email phụ huynh" name="parentEmail" type="email"/>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -59,10 +59,10 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
           <Label>Tutor</Label>
           <Select name="tutorId" defaultValue="open">
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Open/unassigned"/>
+              <SelectValue placeholder="Mở / Chưa phân công"/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="open">Open/unassigned</SelectItem>
+              <SelectItem value="open">Mở / Chưa phân công</SelectItem>
               {tutors.map(t=><SelectItem key={t.id} value={t.id}>{t.fullName}</SelectItem>)}
             </SelectContent>
           </Select>
@@ -80,12 +80,12 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
             </SelectContent>
           </Select>
         </div>
-        <Field label="Tuition fee" name="tuitionFee" type="number"/>
+        <Field label="Học phí" name="tuitionFee" type="number"/>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Start date (optional)" name="startDate" type="date"/>
-        <Field label="Location" name="location"/>
+        <Field label="Ngày bắt đầu (tuỳ chọn)" name="startDate" type="date"/>
+        <Field label="Địa điểm" name="location"/>
       </div>
 
       {/* Lịch học hàng tuần lặp lại */}
@@ -170,12 +170,12 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <TextBox label="Schedule notes" name="scheduleNotes"/>
-        <TextBox label="Requirements" name="requirements"/>
-        <TextBox label="Internal notes" name="notes"/>
+        <TextBox label="Ghi chú lịch học" name="scheduleNotes"/>
+        <TextBox label="Yêu cầu" name="requirements"/>
+        <TextBox label="Ghi chú nội bộ" name="notes"/>
       </div>
 
-      <Button disabled={pending}>{pending?'Creating...':'Create class'}</Button>
+      <Button disabled={pending}>{pending?'Đang tạo...':'Tạo lớp học'}</Button>
     </form>
   )
 }
