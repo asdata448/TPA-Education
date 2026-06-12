@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useActionState } from 'react'
+import { useState, useActionState, useEffect } from 'react'
 import { createClass, reviewClassRequest, type ClassActionState } from './class-actions'
 import type { ClassRequest, SubjectOption, TutorOption } from './classes-data'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -14,21 +14,17 @@ import { X } from 'lucide-react'
 export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tutors:TutorOption[]}){
   const [state,action,pending]=useActionState(createClass,{} as ClassActionState)
 
-  // Controlled field values. Survive React 19's automatic form reset (which would
-  // otherwise wipe uncontrolled inputs after the action resolves), and are repopulated
-  // from the server's echoed `values` on error so nothing the user typed is lost.
   const [values,setValues]=useState<Record<string,string>>({})
   const [scheduleRows, setScheduleRows] = useState<{ weekday: number; startTime: string; endTime: string }[]>([])
 
-  // React's recommended way to adjust local state when the action result changes:
-  // repopulate fields from the echoed values on error, or clear the form on success.
-  // Runs during render (not in an effect), so it applies exactly once per submission.
-  const [applied, setApplied]=useState<ClassActionState|undefined>(undefined)
-  if(state!==applied){
-    setApplied(state)
-    if(state.success){ setValues({}); setScheduleRows([]) }
-    else if(state.values) setValues(state.values)
-  }
+  useEffect(() => {
+    if (state.success) {
+      setValues({})
+      setScheduleRows([])
+    } else if (state.values) {
+      setValues(state.values)
+    }
+  }, [state])
 
   const set=(name:string)=>(v:string)=>setValues(prev=>({...prev,[name]:v}))
   const fieldErr=(name:string)=>state.fieldErrors?.[name]
