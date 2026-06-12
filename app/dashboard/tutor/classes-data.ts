@@ -3,12 +3,36 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
+const WEEKDAY_NAMES = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy']
+
+function formatSchedules(schedules: any[] | null | undefined, scheduleNotes: string | null): string | null {
+  const formattedParts: string[] = []
+  if (schedules && schedules.length > 0) {
+    const sorted = [...schedules].sort((a, b) => {
+      if (a.weekday !== b.weekday) return a.weekday - b.weekday
+      return (a.start_time || '').localeCompare(b.start_time || '')
+    })
+    sorted.forEach(s => {
+      const dayName = WEEKDAY_NAMES[s.weekday] || `Thứ ${s.weekday}`
+      const start = s.start_time?.slice(0, 5) || ''
+      const end = s.end_time?.slice(0, 5) || ''
+      formattedParts.push(`${dayName} (${start} - ${end})`)
+    })
+  }
+  
+  if (scheduleNotes && scheduleNotes.trim()) {
+    formattedParts.push(scheduleNotes.trim())
+  }
+  
+  return formattedParts.join('; ') || null
+}
+
 export type TutorClass={id:string; subjectName:string|null; studentName:string; studentGrade:string|null; parentName:string|null; parentPhone:string|null; mode:string; location:string|null; status:string; tuitionFee:number|null; scheduleNotes:string|null; requirements:string|null; notes:string|null}
 export async function requireTutorId(){const supabase=await createClient(); const {data:{user}}=await supabase.auth.getUser(); if(!user) throw new Error('Unauthorized'); const {data,error}=await supabase.from('tutors').select('id,active').eq('profile_id',user.id).single(); if(error||!data||!data.active) throw new Error('Unauthorized'); return data.id as string}
-function mapClass(c:any):TutorClass{return {id:c.id,subjectName:(Array.isArray(c.subjects)?c.subjects[0]:c.subjects)?.name??null,studentName:c.student_name,studentGrade:c.student_grade,parentName:c.parent_name,parentPhone:c.parent_phone,mode:c.mode,location:c.location,status:c.status,tuitionFee:c.tuition_fee,scheduleNotes:c.schedule_notes,requirements:c.requirements,notes:c.notes}}
-export async function listAssignedClasses(){const tutorId=await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,parent_name,parent_phone,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name)').eq('tutor_id',tutorId).order('updated_at',{ascending:false}); if(error) throw new Error(error.message); return (data??[]).map(mapClass)}
-export async function listOpenClasses(){await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name)').eq('status','open').is('tutor_id',null).order('updated_at',{ascending:false}); if(error) throw new Error(error.message); return (data??[]).map((c:any)=>({...mapClass(c),parentName:null,parentPhone:null}))}
-export async function getAssignedClass(classId:string){const tutorId=await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,parent_name,parent_phone,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name)').eq('id',classId).eq('tutor_id',tutorId).maybeSingle(); if(error) throw new Error(error.message); return data?mapClass(data):null}
+function mapClass(c:any):TutorClass{return {id:c.id,subjectName:(Array.isArray(c.subjects)?c.subjects[0]:c.subjects)?.name??null,studentName:c.student_name,studentGrade:c.student_grade,parentName:c.parent_name,parentPhone:c.parent_phone,mode:c.mode,location:c.location,status:c.status,tuitionFee:c.tuition_fee,scheduleNotes:formatSchedules(c.class_schedules, c.schedule_notes),requirements:c.requirements,notes:c.notes}}
+export async function listAssignedClasses(){const tutorId=await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,parent_name,parent_phone,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name),class_schedules(weekday,start_time,end_time)').eq('tutor_id',tutorId).order('updated_at',{ascending:false}); if(error) throw new Error(error.message); return (data??[]).map(mapClass)}
+export async function listOpenClasses(){await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name),class_schedules(weekday,start_time,end_time)').eq('status','open').is('tutor_id',null).order('updated_at',{ascending:false}); if(error) throw new Error(error.message); return (data??[]).map((c:any)=>({...mapClass(c),parentName:null,parentPhone:null}))}
+export async function getAssignedClass(classId:string){const tutorId=await requireTutorId(); const admin=createAdminClient(); const {data,error}=await admin.from('classes').select('id,student_name,student_grade,parent_name,parent_phone,mode,location,status,tuition_fee,schedule_notes,requirements,notes,subjects(name),class_schedules(weekday,start_time,end_time)').eq('id',classId).eq('tutor_id',tutorId).maybeSingle(); if(error) throw new Error(error.message); return data?mapClass(data):null}
 
 export type TutorProfile = { tutorId: string; fullName: string }
 export async function getTutorProfile(): Promise<TutorProfile> {
