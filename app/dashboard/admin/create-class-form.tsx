@@ -67,7 +67,19 @@ export function CreateClassForm({subjects,tutors}:{subjects:SubjectOption[]; tut
             </SelectContent>
           </Select>
         </div>
-        <Field label="Mode" name="mode" defaultValue="online"/>
+        <div className="space-y-2">
+          <Label>Hình thức</Label>
+          <Select name="mode" defaultValue="online">
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Chọn hình thức"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="online">Online</SelectItem>
+              <SelectItem value="offline">Offline</SelectItem>
+              <SelectItem value="hybrid">Hybrid</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Field label="Tuition fee" name="tuitionFee" type="number"/>
       </div>
 
