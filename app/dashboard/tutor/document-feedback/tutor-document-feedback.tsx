@@ -1,12 +1,12 @@
 'use client'
 
-import { useActionState } from 'react'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useActionState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { toast } from 'sonner'
 import { 
   Send, 
   MessageSquare, 
@@ -16,13 +16,22 @@ import {
   XCircle, 
   Clock, 
   FileQuestion,
-  AlertCircle
+  AlertTriangle
 } from 'lucide-react'
 import { createDocumentFeedback, type FeedbackActionState } from '../document-feedback-actions'
 import type { TutorFeedbackContext } from '../document-feedback-data'
 
 export function TutorDocumentFeedback({ context }: { context: TutorFeedbackContext }) {
   const [state, action, pending] = useActionState(createDocumentFeedback, {} as FeedbackActionState)
+
+  // Trigger toasts on action status changes
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.success)
+    } else if (state.error) {
+      toast.error(state.error)
+    }
+  }, [state])
 
   return (
     <div className="space-y-6">
@@ -39,24 +48,6 @@ export function TutorDocumentFeedback({ context }: { context: TutorFeedbackConte
         <CardContent className="p-6">
           <form action={action} className="space-y-4">
             <input type="hidden" name="kind" value="material_request" />
-            
-            {state.error && (
-              <Alert variant="destructive" className="py-2 px-3">
-                <AlertDescription className="text-xs flex items-center gap-1.5">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
-                  {state.error}
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            {state.success && (
-              <Alert className="py-2 px-3 border-emerald-200 bg-emerald-50 text-emerald-800">
-                <AlertDescription className="text-xs flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-                  {state.success}
-                </AlertDescription>
-              </Alert>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="message" className="text-xs font-bold text-[#0F2A44]">
@@ -104,14 +95,25 @@ export function TutorDocumentFeedback({ context }: { context: TutorFeedbackConte
             ) : (
               context.feedback.map((item) => {
                 const statusConfig = getStatusConfig(item.status)
+                const isReport = item.kind === 'material_report'
+                
+                // Color cards differently based on type (Request: Blue/Indigo vs Report: Rose/Red)
+                const cardStyles = isReport
+                  ? 'bg-rose-50/30 border-rose-100 hover:border-rose-300'
+                  : 'bg-blue-50/30 border-blue-100 hover:border-blue-300'
+
                 return (
                   <div 
                     key={item.id} 
-                    className="rounded-xl border border-slate-100 p-4 text-xs bg-slate-50/30 hover:bg-slate-50/60 hover:border-[#D8B76A]/20 transition-all duration-200"
+                    className={`rounded-xl border p-4 text-xs transition-all duration-200 ${cardStyles}`}
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2 mb-2">
-                      <span className="font-bold text-[#0F2A44] flex items-center gap-1.5">
-                        <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100/60 pb-2 mb-2">
+                      <span className={`font-bold flex items-center gap-1.5 ${isReport ? 'text-rose-900' : 'text-blue-900'}`}>
+                        {isReport ? (
+                          <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
+                        ) : (
+                          <FileText className="h-3.5 w-3.5 text-blue-500" />
+                        )}
                         {labelForKind(item.kind)}
                       </span>
                       <Badge className={`${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} border shadow-none font-bold text-[9px] px-2 py-0.5 rounded-md flex items-center gap-1`}>
@@ -121,7 +123,7 @@ export function TutorDocumentFeedback({ context }: { context: TutorFeedbackConte
                     </div>
 
                     {item.libraryTitle && (
-                      <p className="mb-2 text-[#4A5568] bg-white border border-slate-100 rounded-md p-2">
+                      <p className="mb-2 text-[#4A5568] bg-white/85 border border-slate-100 rounded-md p-2">
                         <strong className="text-[#0F2A44]">Tài liệu liên quan:</strong> {item.libraryTitle}
                       </p>
                     )}
@@ -131,14 +133,14 @@ export function TutorDocumentFeedback({ context }: { context: TutorFeedbackConte
                     </p>
 
                     {item.status === 'done' && item.adminNote && (
-                      <div className="mt-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-100 text-emerald-800">
+                      <div className="mt-3 p-3 rounded-lg bg-emerald-50/65 border border-emerald-100 text-emerald-800">
                         <strong className="font-bold block mb-1">✓ Phản hồi từ Admin:</strong>
                         <p className="leading-relaxed">{item.adminNote}</p>
                       </div>
                     )}
 
                     {item.status === 'rejected' && item.rejectReason && (
-                      <div className="mt-3 p-3 rounded-lg bg-red-50/50 border border-red-100 text-red-800">
+                      <div className="mt-3 p-3 rounded-lg bg-red-50/65 border border-red-100 text-red-800">
                         <strong className="font-bold block mb-1">✗ Lý do từ chối:</strong>
                         <p className="leading-relaxed">{item.rejectReason}</p>
                       </div>

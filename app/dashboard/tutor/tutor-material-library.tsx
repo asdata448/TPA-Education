@@ -1,13 +1,13 @@
 'use client'
 
 import { Flag, Search, BookOpen, FileDown, AlertTriangle, FileText, ChevronDown, CheckCircle2 } from 'lucide-react'
-import { useActionState } from 'react'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useActionState, useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/dialog'
 import { createDocumentFeedback, type FeedbackActionState } from './document-feedback-actions'
 import type { AdminLibraryItem } from '../admin/materials-data'
-import { useMemo, useState } from 'react'
 
 const SUBJECT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   'Math': { bg: 'bg-indigo-50/80', text: 'text-indigo-700', border: 'border-indigo-100' },
@@ -159,6 +158,16 @@ function ReportMaterialButton({ itemId, itemTitle }: { itemId: string; itemTitle
   const [open, setOpen] = useState(false)
   const [state, action, pending] = useActionState(createDocumentFeedback, {} as FeedbackActionState)
   
+  // Trigger toasts on action status changes
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.success)
+      setOpen(false)
+    } else if (state.error) {
+      toast.error(state.error)
+    }
+  }, [state])
+
   return (
     <div className="text-right">
       <button 
@@ -183,58 +192,44 @@ function ReportMaterialButton({ itemId, itemTitle }: { itemId: string; itemTitle
           <form action={action} className="space-y-4 pt-2">
             <input type="hidden" name="kind" value="material_report"/>
             <input type="hidden" name="libraryItemId" value={itemId}/>
-            
-            {state.error && (
-              <Alert variant="destructive" className="py-2 px-3">
-                <AlertDescription className="text-xs">{state.error}</AlertDescription>
-              </Alert>
-            )}
-            {state.success && (
-              <Alert className="py-2 px-3 border-emerald-200 bg-emerald-50 text-emerald-800">
-                <AlertDescription className="text-xs flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-                  {state.success}
-                </AlertDescription>
-              </Alert>
-            )}
 
-          <div className="space-y-1.5">
-            <Label className="text-xs font-bold text-[#0F2A44]" htmlFor={`report-${itemId}`}>
-              Mô tả lỗi hoặc đề xuất cải tiến:
-            </Label>
-            <Textarea 
-              id={`report-${itemId}`} 
-              name="message" 
-              rows={4} 
-              required
-              className="text-xs focus:ring-red-400 focus:border-red-400 bg-slate-50/50"
-              placeholder="Ví dụ: Đề bị sai đáp án ở câu 3, tài liệu tải chậm..." 
-            />
-          </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-[#0F2A44]" htmlFor={`report-${itemId}`}>
+                Mô tả lỗi hoặc đề xuất cải tiến:
+              </Label>
+              <Textarea 
+                id={`report-${itemId}`} 
+                name="message" 
+                rows={4} 
+                required
+                className="text-xs focus:ring-red-400 focus:border-red-400 bg-slate-50/50"
+                placeholder="Ví dụ: Đề bị sai đáp án ở câu 3, tài liệu tải chậm..." 
+              />
+            </div>
 
-          <DialogFooter className="flex gap-2 justify-end pt-3 border-t border-slate-100">
-            <Button 
-              type="button" 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setOpen(false)} 
-              className="text-xs h-9 px-4 cursor-pointer"
-            >
-              Hủy
-            </Button>
-            <Button 
-              type="submit"
-              size="sm" 
-              variant="destructive"
-              className="text-xs h-9 px-4 bg-red-600 hover:bg-red-700 cursor-pointer"
-              disabled={pending}
-            >
-              {pending ? 'Đang gửi...' : 'Gửi báo cáo'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  </div>
+            <DialogFooter className="flex gap-2 justify-end pt-3 border-t border-slate-100">
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setOpen(false)} 
+                className="text-xs h-9 px-4 cursor-pointer"
+              >
+                Hủy
+              </Button>
+              <Button 
+                type="submit"
+                size="sm" 
+                variant="destructive"
+                className="text-xs h-9 px-4 bg-red-600 hover:bg-red-700 cursor-pointer"
+                disabled={pending}
+              >
+                {pending ? 'Đang gửi...' : 'Gửi báo cáo'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
