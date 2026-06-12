@@ -13,26 +13,26 @@ export function CreateTutorForm() {
 
   return (
     <form action={action} className="space-y-5">
-      {state.error && <Alert variant="destructive"><AlertTitle>Account not created</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
+      {state.error && <Alert variant="destructive"><AlertTitle>Không thể tạo tài khoản</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
       {state.password && (
         <Alert className="border-emerald-500 bg-emerald-50">
-          <AlertTitle>Tutor account created</AlertTitle>
+          <AlertTitle>Đã tạo tài khoản Gia sư thành công</AlertTitle>
           <AlertDescription className="space-y-2">
-            <p>Copy this initial password now. It will not be shown again.</p>
+            <p>Hãy sao chép mật khẩu khởi tạo này ngay bây giờ. Nó sẽ không hiển thị lại lần sau.</p>
             <code className="block select-all rounded bg-white p-3 text-base font-semibold">{state.password}</code>
-            <p className="text-xs">Account: {state.email}</p>
+            <p className="text-xs">Tài khoản: {state.email}</p>
           </AlertDescription>
         </Alert>
       )}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Full name" name="fullName" required />
+        <Field label="Họ và tên" name="fullName" required />
         <Field label="Email" name="email" type="email" required />
-        <Field label="Phone" name="phone" />
-        <Field label="Subjects" name="subjects" placeholder="Math, English" />
-        <Field label="Specialties" name="specialties" className="sm:col-span-2" />
+        <Field label="Số điện thoại" name="phone" />
+        <Field label="Môn học giảng dạy" name="subjects" placeholder="Toán học, Tiếng Anh" />
+        <Field label="Chuyên môn/Kinh nghiệm" name="specialties" className="sm:col-span-2" />
       </div>
-      <div className="space-y-2"><Label htmlFor="notes">Notes</Label><Textarea id="notes" name="notes" rows={4} /></div>
-      <Button type="submit" disabled={pending}>{pending ? 'Creating Tutor...' : 'Create Tutor account'}</Button>
+      <div className="space-y-2"><Label htmlFor="notes">Ghi chú nội bộ</Label><Textarea id="notes" name="notes" rows={4} /></div>
+      <Button type="submit" disabled={pending}>{pending ? 'Đang tạo...' : 'Tạo tài khoản Gia sư'}</Button>
     </form>
   )
 }
