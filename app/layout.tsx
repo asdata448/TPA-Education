@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ScrollProgress } from '@/components/ui/scroll-progress'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const plusJakartaSans = Plus_Jakarta_Sans({ 
@@ -27,10 +28,10 @@ export const metadata: Metadata = {
       },
     ],
     type: 'website',
-  },
-  icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png',
+    icons: {
+      icon: '/favicon.png',
+      apple: '/favicon.png',
+    },
   },
 }
 
@@ -50,6 +51,7 @@ export default function RootLayout({
         <div id="main-content" tabIndex={-1}>
           {children}
         </div>
+        <Toaster position="top-right" richColors closeButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
