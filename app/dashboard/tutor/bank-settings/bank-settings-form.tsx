@@ -6,8 +6,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { GlassCard } from '@/components/ui/glass-card'
-import { Check, UploadCloud, Image as ImageIcon } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { TutorPageHeader } from '../_components/tutor-page-header'
+import { Check, UploadCloud, Image as ImageIcon, Wallet } from 'lucide-react'
 
 type TutorBankDetails = {
   bankName: string
@@ -36,15 +37,8 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <GlassCard className="p-6 md:p-8 border border-white/10 shadow-xl">
-        <div className="mb-6 space-y-2">
-          <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">
-            Thông tin ngân hàng & QR Code
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Cập nhật thông tin nhận thanh toán học phí. Mã QR tĩnh sẽ được sử dụng để Admin chuyển khoản trực tiếp qua ngân hàng.
-          </p>
-        </div>
+      <TutorPageHeader color="rose" icon={Wallet} title="Thông tin thanh toán" subtitle="Cập nhật thông tin nhận thanh toán học phí. Mã QR tĩnh sẽ được Admin chuyển khoản trực tiếp qua ngân hàng." />
+      <Card className="border-[#E2E8F0] p-6 shadow-sm md:p-8">
 
         <form action={action} className="space-y-6">
           {state.error && (
@@ -74,7 +68,6 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
                   required
                   placeholder="Ví dụ: Vietcombank, Techcombank"
                   defaultValue={initialData?.bankName || ''}
-                  className="bg-background/50 backdrop-blur-sm"
                 />
               </div>
 
@@ -86,7 +79,6 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
                   required
                   placeholder="Nhập số tài khoản ngân hàng"
                   defaultValue={initialData?.bankAccountNo || ''}
-                  className="bg-background/50 backdrop-blur-sm"
                 />
               </div>
             </div>
@@ -107,7 +99,7 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
               <Label>Mã QR ngân hàng tĩnh (Static QR Code)</Label>
               <div className="grid md:grid-cols-2 gap-4 items-center">
                 {/* Upload Area */}
-                <div className="relative border-2 border-dashed border-muted-foreground/20 hover:border-primary/50 transition rounded-lg p-6 text-center cursor-pointer bg-background/30 backdrop-blur-sm">
+                <div className="relative border-2 border-dashed border-muted-foreground/20 hover:border-primary/50 transition rounded-lg p-6 text-center cursor-pointer bg-muted/30">
                   <input
                     type="file"
                     id="qrFile"
@@ -124,7 +116,7 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
                 </div>
 
                 {/* Preview Area */}
-                <div className="flex flex-col items-center justify-center border border-muted-foreground/10 rounded-lg p-4 bg-background/20 h-40">
+                <div className="flex flex-col items-center justify-center border border-muted-foreground/10 rounded-lg p-4 bg-muted/30 h-40">
                   {previewUrl ? (
                     <div className="relative group w-full h-full flex items-center justify-center">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -145,11 +137,11 @@ export function BankSettingsForm({ initialData }: { initialData: TutorBankDetail
             </div>
           </div>
 
-          <Button type="submit" disabled={pending} className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium shadow-md transition-all">
+          <Button type="submit" disabled={pending} className="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium shadow-md transition-all">
             {pending ? 'Đang cập nhật...' : 'Cập nhật thông tin ngân hàng'}
           </Button>
         </form>
-      </GlassCard>
+      </Card>
     </div>
   )
 }

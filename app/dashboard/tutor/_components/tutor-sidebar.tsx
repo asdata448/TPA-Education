@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar'
 import { SidebarHeaderBranding } from './sidebar-header'
 import { SidebarFooterAvatar } from './sidebar-footer'
+import { TUTOR_COLORS, type TutorColorKey } from './tutor-theme'
 import {
   Home,
   BookOpen,
@@ -33,30 +34,30 @@ const menuGroups = [
   {
     label: '',
     items: [
-      { label: 'Trang tổng quan', href: '/dashboard/tutor', icon: Home, color: 'text-amber-600 dark:text-amber-400' },
+      { label: 'Trang tổng quan', href: '/dashboard/tutor', icon: Home, colorKey: 'amber' as TutorColorKey },
     ],
   },
   {
     label: 'Dạy học',
     items: [
-      { label: 'Lớp của tôi', href: '/dashboard/tutor/classes', icon: BookOpen, color: 'text-blue-600 dark:text-blue-400' },
-      { label: 'Lớp mở', href: '/dashboard/tutor/open-classes', icon: FolderOpen, color: 'text-teal-600 dark:text-teal-400' },
-      { label: 'Lịch & Điểm danh', href: '/dashboard/tutor/calendar', icon: CalendarDays, color: 'text-emerald-600 dark:text-emerald-400' },
-      { label: 'Báo cáo học tập', href: '/dashboard/tutor/reports', icon: FileText, color: 'text-violet-600 dark:text-violet-400' },
+      { label: 'Lớp của tôi', href: '/dashboard/tutor/classes', icon: BookOpen, colorKey: 'blue' as TutorColorKey },
+      { label: 'Lớp mở', href: '/dashboard/tutor/open-classes', icon: FolderOpen, colorKey: 'teal' as TutorColorKey },
+      { label: 'Lịch & Điểm danh', href: '/dashboard/tutor/calendar', icon: CalendarDays, colorKey: 'emerald' as TutorColorKey },
+      { label: 'Báo cáo học tập', href: '/dashboard/tutor/reports', icon: FileText, colorKey: 'violet' as TutorColorKey },
     ],
   },
   {
     label: 'Tài nguyên',
     items: [
-      { label: 'Thư viện tài liệu', href: '/dashboard/tutor/library', icon: FolderArchive, color: 'text-orange-600 dark:text-orange-400' },
-      { label: 'Yêu cầu & Phản hồi', href: '/dashboard/tutor/document-feedback', icon: MessageSquare, color: 'text-pink-600 dark:text-pink-400' },
+      { label: 'Thư viện tài liệu', href: '/dashboard/tutor/library', icon: FolderArchive, colorKey: 'orange' as TutorColorKey },
+      { label: 'Yêu cầu & Phản hồi', href: '/dashboard/tutor/document-feedback', icon: MessageSquare, colorKey: 'pink' as TutorColorKey },
     ],
   },
   {
     label: 'Tài khoản',
     items: [
-      { label: 'Thông tin thanh toán', href: '/dashboard/tutor/bank-settings', icon: Wallet, color: 'text-rose-600 dark:text-rose-400' },
-      { label: 'Đổi mật khẩu', href: '/dashboard/tutor/change-password', icon: KeyRound, color: 'text-indigo-600 dark:text-indigo-400' },
+      { label: 'Thông tin thanh toán', href: '/dashboard/tutor/bank-settings', icon: Wallet, colorKey: 'rose' as TutorColorKey },
+      { label: 'Đổi mật khẩu', href: '/dashboard/tutor/change-password', icon: KeyRound, colorKey: 'indigo' as TutorColorKey },
     ],
   },
 ]
@@ -77,14 +78,15 @@ export function TutorSidebar({ fullName }: { fullName: string }) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => {
+                  const c = TUTOR_COLORS[item.colorKey]
                   const isActive = item.href === '/dashboard/tutor'
                     ? pathname === '/dashboard/tutor'
                     : pathname === item.href || pathname.startsWith(item.href + '/')
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.label}>
+                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.label} className={isActive ? c.activeClass : ''}>
                         <Link href={item.href}>
-                          <item.icon className={`h-4 w-4 ${item.color}`} />
+                          <item.icon className={`h-4 w-4 ${isActive ? 'text-white' : c.text}`} />
                           <span>{item.label}</span>
                         </Link>
                       </SidebarMenuButton>

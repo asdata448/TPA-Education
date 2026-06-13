@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { createDocumentFeedback, type FeedbackActionState } from '../document-feedback-actions'
 import type { TutorFeedbackContext } from '../document-feedback-data'
+import { TutorPageHeader } from '../_components/tutor-page-header'
 
 export function TutorDocumentFeedback({ context }: { context: TutorFeedbackContext }) {
   const [state, action, pending] = useActionState(createDocumentFeedback, {} as FeedbackActionState)
@@ -35,6 +36,8 @@ export function TutorDocumentFeedback({ context }: { context: TutorFeedbackConte
 
   return (
     <div className="space-y-6">
+      <TutorPageHeader color="pink" icon={MessageSquare} title="Yêu cầu & Phản hồi" subtitle="Gửi yêu cầu tài liệu và xem phản hồi từ Ban chuyên môn TPA+." />
+
       {/* Request Form Card */}
       <Card className="border-[#E2E8F0] shadow-sm overflow-hidden bg-white">
         <CardHeader className="border-b border-slate-100 bg-[#F8F5EC]/30">

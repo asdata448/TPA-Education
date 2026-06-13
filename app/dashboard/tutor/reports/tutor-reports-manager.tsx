@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Star, Plus, Edit3, Copy, ExternalLink, Check, Calendar, BookOpen, CircleDollarSign, GraduationCap, ClipboardList } from 'lucide-react'
+import { TutorPageHeader } from '../_components/tutor-page-header'
 import { saveProgressReportFromDashboard, type ReportActionState } from './report-actions'
 import { toast } from 'sonner'
 import Link from 'next/link'
@@ -195,20 +196,11 @@ export function TutorReportsManager({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
-        <div>
-          <h2 className="text-2xl font-black tracking-tight text-[#0F2A44] dark:text-[#F8F5EC] flex items-center gap-2">
-            <ClipboardList className="h-6 w-6 text-[#D8B76A]" />
-            Báo cáo tiến độ học tập
-          </h2>
-          <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">
-            Viết và gửi các phiếu báo cáo học tập & thông tin đóng học phí hàng tháng cho phụ huynh.
-          </p>
-        </div>
-        <Button onClick={openCreateModal} className="bg-[#0F2A44] hover:bg-[#1a3a5c] text-white font-bold shadow-md hover:shadow-lg transition-all rounded-lg shrink-0">
+      <TutorPageHeader color="violet" icon={ClipboardList} title="Báo cáo tiến độ học tập" subtitle="Viết và gửi các phiếu báo cáo học tập & thông tin đóng học phí hàng tháng cho phụ huynh.">
+        <Button onClick={openCreateModal} className="bg-white text-violet-700 hover:bg-white/90 font-bold shadow-md hover:shadow-lg transition-all rounded-lg shrink-0">
           <Plus className="h-4 w-4 mr-1.5" /> Viết báo cáo mới
         </Button>
-      </div>
+      </TutorPageHeader>
 
       <Card className="border-[#E2E8F0] shadow-sm overflow-hidden bg-white dark:bg-slate-950 rounded-xl">
         <CardContent className="p-0">
@@ -229,7 +221,7 @@ export function TutorReportsManager({
                   <TableRow>
                     <TableCell colSpan={6} className="py-12 text-center text-slate-400">
                       <BookOpen className="h-10 w-10 mx-auto text-slate-300 mb-3" />
-                      Bạn chưa tạo phiếu báo cáo nào. Hãy nhấn "Viết báo cáo mới" để bắt đầu.
+                      Bạn chưa tạo phiếu báo cáo nào. Hãy nhấn &ldquo;Viết báo cáo mới&rdquo; để bắt đầu.
                     </TableCell>
                   </TableRow>
                 ) : (

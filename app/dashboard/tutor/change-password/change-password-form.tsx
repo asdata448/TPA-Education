@@ -3,10 +3,12 @@
 import { useActionState, useEffect, useRef } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { changeTutorPassword, type ChangePasswordState } from './actions'
+import { KeyRound } from 'lucide-react'
+import { TutorPageHeader } from '../_components/tutor-page-header'
 
 export function ChangePasswordForm() {
   const [state, action, pending] = useActionState(changeTutorPassword, {} as ChangePasswordState)
@@ -17,12 +19,10 @@ export function ChangePasswordForm() {
   }, [state.success])
 
   return (
-    <Card className="mx-auto w-full max-w-xl">
-      <CardHeader>
-        <CardTitle>Change password</CardTitle>
-        <CardDescription>Update the login password for your Tutor account.</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="mx-auto w-full max-w-xl space-y-6">
+      <TutorPageHeader color="indigo" icon={KeyRound} title="Đổi mật khẩu" subtitle="Cập nhật mật khẩu đăng nhập cho tài khoản gia sư của bạn." />
+      <Card>
+        <CardContent className="pt-6">
         <form ref={formRef} action={action} className="space-y-5">
           {state.error && (
             <Alert variant="destructive">
@@ -47,6 +47,7 @@ export function ChangePasswordForm() {
         </form>
       </CardContent>
     </Card>
+    </div>
   )
 }
 

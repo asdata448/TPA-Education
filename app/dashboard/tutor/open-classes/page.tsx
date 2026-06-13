@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { listOpenClasses } from '../classes-data'
 import { RequestClassForm } from './request-class-form'
-import { BookOpen, Calendar, DollarSign, Activity, Sparkles } from 'lucide-react'
+import { BookOpen, Calendar, DollarSign, Activity, Sparkles, FolderOpen } from 'lucide-react'
+import { TutorPageHeader } from '../_components/tutor-page-header'
 
 const SUBJECT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   'Math': { bg: 'bg-indigo-50/80', text: 'text-indigo-700', border: 'border-indigo-100' },
@@ -18,10 +19,7 @@ export default async function OpenClassesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-black tracking-tight text-[#0F2A44] dark:text-[#F8F5EC]">Lớp học mới tuyển</h2>
-        <p className="text-sm text-muted-foreground">Thông tin phụ huynh/học sinh sẽ hiện đầy đủ sau khi Admin phê duyệt phân lớp.</p>
-      </div>
+      <TutorPageHeader color="teal" icon={FolderOpen} title="Lớp học mới tuyển" subtitle="Thông tin phụ huynh/học sinh sẽ hiện đầy đủ sau khi Admin phê duyệt phân lớp." />
 
       <div className="grid gap-6 md:grid-cols-2">
         {classes.length === 0 ? (

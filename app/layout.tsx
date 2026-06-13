@@ -1,14 +1,22 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Plus_Jakarta_Sans, Newsreader } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ScrollProgress } from '@/components/ui/scroll-progress'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const plusJakartaSans = Plus_Jakarta_Sans({ 
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans"
+})
+
+// Editorial serif for headings (Notion-warm aesthetic)
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
 })
 
 export const metadata: Metadata = {
@@ -42,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className="bg-background" suppressHydrationWarning>
-      <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
+      <body className={`${plusJakartaSans.variable} ${newsreader.variable} font-sans antialiased`}>
         <ScrollProgress />
         {/* Skip to content link for accessibility */}
         <a href="#main-content" className="skip-to-content">

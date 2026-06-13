@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { listAssignedClasses } from '../classes-data'
 import Link from 'next/link'
 import { BookOpen, Calendar, DollarSign, User, Activity, MapPin } from 'lucide-react'
+import { TutorPageHeader } from '../_components/tutor-page-header'
 
 const SUBJECT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   'Math': { bg: 'bg-indigo-50/80', text: 'text-indigo-700', border: 'border-indigo-100' },
@@ -18,10 +19,7 @@ export default async function TutorClassesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-black tracking-tight text-[#0F2A44] dark:text-[#F8F5EC]">Lớp của tôi</h2>
-        <p className="text-sm text-muted-foreground">Danh sách các lớp học bạn đang đảm nhận giảng dạy.</p>
-      </div>
+      <TutorPageHeader color="blue" icon={BookOpen} title="Lớp của tôi" subtitle="Danh sách các lớp học bạn đang đảm nhận giảng dạy." />
 
       <div className="grid gap-6 md:grid-cols-2">
         {classes.length === 0 ? (
