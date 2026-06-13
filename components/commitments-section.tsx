@@ -54,14 +54,14 @@ export function CommitmentsSection() {
           </div>
         </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {commitments.map((commitment, index) => (
             <ScrollReveal key={index} direction="up" delay={index * 100}>
-              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2 cursor-pointer">
-                <div className="w-14 h-14 bg-[#0F2A44] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#D8B76A] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                  <commitment.icon className="w-7 h-7 text-white group-hover:text-[#0F2A44] transition-colors" />
+              <div className="bg-white rounded-2xl p-5 sm:p-6 lg:p-8 shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2 cursor-pointer">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#0F2A44] rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-[#D8B76A] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <commitment.icon className="w-5 h-5 sm:w-7 sm:h-7 text-white group-hover:text-[#0F2A44] transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-[#0F2A44] mb-3 group-hover:text-[#D8B76A] transition-colors">
+                <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#0F2A44] mb-2 sm:mb-3 group-hover:text-[#D8B76A] transition-colors">
                   {commitment.title}
                 </h3>
                 <p className="text-[#0F2A44]/70 leading-relaxed">

@@ -52,7 +52,7 @@ export function TrustSection() {
         </div>
 
         {/* Trust Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 stagger-children">
           {trustItems.map((item, index) => {
             // Use glassmorphism for the last card as example
             const useGlass = index === trustItems.length - 1
@@ -62,14 +62,14 @@ export function TrustSection() {
                 <Card3D key={index} intensity={15}>
                   <GlassCard intensity="light" blur="8px" className="group cursor-pointer">
                     <div
-                      className={`w-14 h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
                     >
-                      <item.icon className={`w-7 h-7 ${item.color}`} />
+                      <item.icon className={`w-5 h-5 sm:w-7 sm:h-7 ${item.color}`} />
                     </div>
-                    <h3 className="text-lg font-bold text-[#0F2A44] mb-2 group-hover:text-[#D8B76A] transition-colors">
+                    <h3 className="text-base sm:text-lg font-bold text-[#0F2A44] mb-1.5 sm:mb-2 group-hover:text-[#D8B76A] transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-[#6B7280] text-sm leading-relaxed">
+                    <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
                       {item.description}
                     </p>
                   </GlassCard>
@@ -82,16 +82,16 @@ export function TrustSection() {
                 <Card
                   className="group border-2 border-transparent hover:border-[#D8B76A]/30 transition-all duration-300 hover:shadow-xl cursor-pointer"
                 >
-                  <CardContent className="p-6 lg:p-8">
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
                     <div
-                      className={`w-14 h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 ${item.bgColor} rounded-2xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}
                     >
-                      <item.icon className={`w-7 h-7 ${item.color}`} />
+                      <item.icon className={`w-5 h-5 sm:w-7 sm:h-7 ${item.color}`} />
                     </div>
-                    <h3 className="text-lg font-bold text-[#0F2A44] mb-2 group-hover:text-[#D8B76A] transition-colors">
+                    <h3 className="text-base sm:text-lg font-bold text-[#0F2A44] mb-1.5 sm:mb-2 group-hover:text-[#D8B76A] transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-[#6B7280] text-sm leading-relaxed">
+                    <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
                       {item.description}
                     </p>
                   </CardContent>

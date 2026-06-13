@@ -49,9 +49,8 @@ const subjects = [
 
 export function SubjectsSection() {
   return (
-    <section id="subjects" className="py-20 lg:py-28 bg-white">
+    <section className="py-12 sm:py-16 lg:py-28 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Section Header */}
         <ScrollReveal direction="up">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <p className="text-[#D8B76A] font-semibold text-sm uppercase tracking-wider mb-3">

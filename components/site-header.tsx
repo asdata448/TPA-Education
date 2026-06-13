@@ -52,7 +52,7 @@ export function SiteHeader() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "bg-white/95 backdrop-blur-md shadow-lg py-3"
-          : "bg-transparent py-5"
+          : "bg-white shadow-sm py-3"
       )}
     >
       <div className="container mx-auto px-4 lg:px-8">
@@ -160,7 +160,7 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-3 text-[#1F2937] font-medium rounded-lg hover:bg-[#F8F5EC] transition-colors cursor-pointer"
+                  className="px-4 py-3 min-h-[44px] flex items-center text-[#1F2937] font-medium rounded-lg hover:bg-[#F8F5EC] transition-colors cursor-pointer"
                 >
                   {item.label}
                 </Link>

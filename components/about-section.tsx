@@ -12,7 +12,7 @@ const benefits = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-20 lg:py-28 bg-[#F8F5EC]/50">
+    <section id="about" className="py-12 sm:py-16 lg:py-28 bg-[#F8F5EC]/50">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
