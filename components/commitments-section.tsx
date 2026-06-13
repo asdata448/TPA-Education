@@ -45,7 +45,7 @@ export function CommitmentsSection() {
             <span className="inline-block px-4 py-2 bg-[#D8B76A]/20 text-[#0F2A44] rounded-full text-sm font-medium mb-4 hover:bg-[#D8B76A]/30 transition-colors cursor-pointer">
               Cam kết của TPA+
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0F2A44] mb-6 text-balance">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#0F2A44] mb-6 text-balance">
               Những giá trị chúng tôi mang lại
             </h2>
             <p className="text-lg text-[#0F2A44]/70 max-w-2xl mx-auto text-pretty">

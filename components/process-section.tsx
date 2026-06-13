@@ -26,7 +26,7 @@ export function ProcessSection() {
             <p className="text-[#D8B76A] font-semibold text-sm uppercase tracking-wider mb-3">
               Quy trình
             </p>
-            <h2 className="text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
+            <h2 className="font-heading text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
               Quy trình tư vấn & đăng ký
             </h2>
             <p className="text-[#6B7280] text-lg">

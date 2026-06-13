@@ -254,7 +254,7 @@ export function TutorsSection() {
           <p className="text-[#D8B76A] font-semibold text-sm uppercase tracking-wider mb-3">
             Đội ngũ gia sư
           </p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
+          <h2 className="font-heading text-3xl lg:text-4xl font-bold text-[#0F2A44] mb-4 text-balance">
             Những người sẽ đồng hành cùng các em học sinh
           </h2>
           <p className="text-[#6B7280] text-lg text-pretty">
@@ -265,7 +265,7 @@ export function TutorsSection() {
         {/* 1. Founder Row */}
         {founder && (
           <div className="mb-20 text-center space-y-6">
-            <h3 className="text-2xl font-bold text-[#0F2A44] relative inline-block pb-2 border-b-2 border-[#D8B76A]">
+            <h3 className="font-heading text-2xl font-bold text-[#0F2A44] relative inline-block pb-2 border-b-2 border-[#D8B76A]">
               Founder TPA+
             </h3>
             <div className="max-w-md mx-auto">
